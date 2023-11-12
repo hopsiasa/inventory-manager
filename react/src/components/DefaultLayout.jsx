@@ -4,7 +4,7 @@ import axiosClient from "../axios-client.js";
 import { useEffect } from "react";
 
 export default function DefaultLayout() {
-  const { user, token, setUser, setToken } = useStateContext();
+  const { user, token, notification, setUser, setToken } = useStateContext();
 
   const onLogout = (e) => {
     e.preventDefault();
@@ -43,6 +43,7 @@ export default function DefaultLayout() {
           <Outlet />
         </main>
       </div>
+      {notification && <div className="notification">{notification}</div>}
     </div>
   );
 }
