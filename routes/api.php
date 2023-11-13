@@ -24,13 +24,14 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/signup', [AuthController::class, 'signup']);
+
     Route::apiResource('/users', UserController::class);
+    Route::apiResource('/categories', CategoryController::class);
+    Route::apiResource('/products', ProductController::class);
+    Route::apiResource('/orders', OrderController::class);
 });
 
-Route::post('/signup', [AuthController::class, 'signup']);
 Route::post('/login', [AuthController::class, 'login']);
 
 
-Route::apiResource('/categories', CategoryController::class);
-Route::apiResource('/products', ProductController::class);
-Route::apiResource('/orders', OrderController::class);
