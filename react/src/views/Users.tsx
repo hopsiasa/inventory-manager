@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import axiosClient from "../axios-client.ts";
 import { Link } from "react-router-dom";
 import { useStateContext } from "../contexts/ContextProvider.tsx";
+import { UserType } from "../types.ts";
 
 export default function Users() {
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState<UserType[]>([]);
   const [loading, setLoading] = useState(false);
   const { setNotification } = useStateContext();
 
@@ -21,7 +22,7 @@ export default function Users() {
       });
   };
 
-  const onDelete = (user) => {
+  const onDelete = (user: UserType) => {
     if (!window.confirm("Are you sure you want to delete this user?")) {
       return;
     }

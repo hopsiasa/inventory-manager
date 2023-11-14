@@ -2,19 +2,26 @@ import { Link } from "react-router-dom";
 import { useRef, useState } from "react";
 import axiosClient from "../axios-client.ts";
 import { useStateContext } from "../contexts/ContextProvider.tsx";
+import { FormEvent } from "../types.ts";
+import { AxiosError } from "axios";
+
+interface ErrorResponse {
+  errors: Record<string, string[]>;
+  message?: string;
+}
 
 export default function Login() {
-  const emailRef = useRef();
-  const passwordRef = useRef();
-  const [errors, setErrors] = useState(null);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+  const [errors, setErrors] = useState<ErrorResponse | null>(null);
   const { setUser, setToken } = useStateContext();
 
-  const onSubmit = (e) => {
-    e.preventDefault();
+  const onSubmit = (event: FormEvent) => {
+    event.preventDefault();
 
     const payload = {
-      email: emailRef.current.value,
-      password: passwordRef.current.value,
+      email: emailRef.current!.value,
+      password: passwordRef.current!.value,
     };
 
     setErrors(null);
@@ -25,14 +32,16 @@ export default function Login() {
         setUser(data.user);
         setToken(data.token);
       })
-      .catch((error) => {
+      .catch((error: AxiosError<ErrorResponse>) => {
         const response = error.response;
 
         if (response && response.status === 422) {
           if (response.data.errors) {
-            setErrors(response.data.errors);
+            setErrors({ errors: response.data.errors });
           } else {
-            setErrors({ email: [response.data.message] });
+            setErrors({
+              errors: { email: [response.data.message || "An error occurred"] },
+            });
           }
         }
       });
@@ -46,7 +55,7 @@ export default function Login() {
           {errors && (
             <div className="alert">
               {Object.keys(errors).map((key) => (
-                <p key={key}>{errors[key][0]}</p>
+                <p key={key}>{(errors as never)[key][0]}</p>
               ))}
             </div>
           )}

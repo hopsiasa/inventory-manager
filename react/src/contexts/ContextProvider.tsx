@@ -1,26 +1,32 @@
-import { createContext, ReactNode, useContext, useMemo, useState } from "react";
-
-interface Props {
-  children?: ReactNode;
-}
+import {
+  createContext,
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  useContext,
+  useMemo,
+  useState,
+} from "react";
+import { UserType } from "../types.ts";
 
 type StateContextProps = {
-  user?: object;
+  user: UserType | null;
   currentUser?: null;
   token: string;
   notification: string;
-  setUser: object;
-  setToken: object;
-  setNotification: object;
+  setUser: Dispatch<SetStateAction<UserType>>;
+  setToken: (token: string) => void;
+  setNotification: (message: string) => void;
 };
 
 const StateContext = createContext<StateContextProps>({
+  user: null,
   currentUser: null,
   token: "",
   notification: "",
   setUser: () => {},
   setToken: () => {},
-  setNotification: () => {},
+  setNotification: () => undefined,
 });
 
 /** Below is for the Chrome React dev Tools extension
@@ -32,6 +38,7 @@ StateContext.displayName = "StateContext";
 /** Custom Hook for importing the
  *  state in other areas of the app.
  **/
+// eslint-disable-next-line react-refresh/only-export-components
 export const useStateContext = () => {
   const context = useContext(StateContext);
 
@@ -47,7 +54,12 @@ export const useStateContext = () => {
 
 const usePassedDownValues = () => {
   // In this case we want this value variable and it's setter function to be available globally.
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState({
+    id: 0,
+    name: "",
+    email: "",
+    created_at: "",
+  });
   const [notification, _setNotification] = useState("");
   const [token, _setToken] = useState(
     localStorage.getItem("ACCESS_TOKEN") as string,
@@ -73,6 +85,10 @@ const usePassedDownValues = () => {
     };
     return { user, token, setUser, setToken, notification, setNotification };
   }, [user, token, setUser, _setToken, notification, _setNotification]);
+};
+
+type Props = {
+  children?: ReactNode;
 };
 
 const ContextProvider = ({ children }: Props) => {

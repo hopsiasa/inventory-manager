@@ -2,6 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axiosClient from "../axios-client.ts";
 import { useStateContext } from "../contexts/ContextProvider.tsx";
+import { FormEvent } from "../types.ts";
 
 export default function UserForm() {
   const { id } = useParams();
@@ -17,8 +18,8 @@ export default function UserForm() {
     password_confirmation: "",
   });
 
-  if (id) {
-    useEffect(() => {
+  useEffect(() => {
+    if (id) {
       setLoading(true);
 
       axiosClient
@@ -28,11 +29,11 @@ export default function UserForm() {
           setUser(data.data);
         })
         .catch(() => setLoading(false));
-    }, []);
-  }
+    }
+  }, [id]);
 
-  const onSubmit = (e) => {
-    e.preventDefault();
+  const onSubmit = (event: FormEvent) => {
+    event.preventDefault();
 
     if (user.id) {
       axiosClient

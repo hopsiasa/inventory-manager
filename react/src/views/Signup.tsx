@@ -2,22 +2,23 @@ import { Link } from "react-router-dom";
 import { useRef, useState } from "react";
 import axiosClient from "../axios-client.ts";
 import { useStateContext } from "../contexts/ContextProvider.tsx";
+import { FormEvent } from "../types.ts";
 
 export default function Signup() {
-  const nameRef = useRef();
-  const emailRef = useRef();
-  const passwordRef = useRef();
-  const passwordConfirmationRef = useRef();
+  const nameRef = useRef<HTMLInputElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+  const passwordConfirmationRef = useRef<HTMLInputElement>(null);
   const [errors, setErrors] = useState(null);
   const { setUser, setToken } = useStateContext();
 
-  const onSubmit = (e) => {
-    e.preventDefault();
+  const onSubmit = (event: FormEvent) => {
+    event.preventDefault();
     const payload = {
-      name: nameRef.current.value,
-      email: emailRef.current.value,
-      password: passwordRef.current.value,
-      password_confirmation: passwordConfirmationRef.current.value,
+      name: nameRef.current!.value,
+      email: emailRef.current!.value,
+      password: passwordRef.current!.value,
+      password_confirmation: passwordConfirmationRef.current!.value,
     };
 
     axiosClient

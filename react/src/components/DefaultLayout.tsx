@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -18,26 +19,19 @@ import { Navigate, Outlet } from "react-router-dom";
 import { Button, Menu, MenuItem } from "@mui/material";
 import { useStateContext } from "../contexts/ContextProvider.tsx";
 import axiosClient from "../axios-client.ts";
-import { useEffect, useState } from "react";
-import { FormEvent, MouseEvent } from "../types";
+import { MouseEvent } from "../types";
 
 const drawerWidth = 240;
 
 const DefaultLayout = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
-
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { user, token, notification, setUser, setToken } = useStateContext();
 
-  const onLogout = (event: FormEvent) => {
-    event.preventDefault();
-
+  const onLogout = () => {
     axiosClient.post("/logout").then(() => {
-      setUser({});
-      setToken(null);
+      setUser({ id: 0, name: "", email: "", created_at: new Date() });
+      setToken("");
     });
   };
 
@@ -48,6 +42,10 @@ const DefaultLayout = () => {
   if (!token) {
     return <Navigate to="/login" />;
   }
+
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
 
   const handleMenu = (event: MouseEvent) => {
     setAnchorEl(event.currentTarget);
@@ -114,7 +112,7 @@ const DefaultLayout = () => {
           </Typography>
           <div>
             <Button onClick={handleMenu} color="inherit">
-              {user.name}
+              {user?.name}
             </Button>
             <Menu
               id="menu-appbar"
