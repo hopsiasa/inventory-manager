@@ -1,39 +1,35 @@
 import { Link } from "react-router-dom";
 import { useRef, useState } from "react";
-import axiosClient from "../axios-client.js";
-import { useStateContext } from "../contexts/ContextProvider.jsx";
+import axiosClient from "../axios-client.ts";
+import { useStateContext } from "../contexts/ContextProvider.tsx";
 
-export default function Login() {
+export default function Signup() {
+  const nameRef = useRef();
   const emailRef = useRef();
   const passwordRef = useRef();
+  const passwordConfirmationRef = useRef();
   const [errors, setErrors] = useState(null);
   const { setUser, setToken } = useStateContext();
 
   const onSubmit = (e) => {
     e.preventDefault();
-
     const payload = {
+      name: nameRef.current.value,
       email: emailRef.current.value,
       password: passwordRef.current.value,
+      password_confirmation: passwordConfirmationRef.current.value,
     };
 
-    setErrors(null);
-
     axiosClient
-      .post("/login", payload)
+      .post("/signup", payload)
       .then(({ data }) => {
         setUser(data.user);
         setToken(data.token);
       })
       .catch((error) => {
         const response = error.response;
-
         if (response && response.status === 422) {
-          if (response.data.errors) {
-            setErrors(response.data.errors);
-          } else {
-            setErrors({ email: [response.data.message] });
-          }
+          setErrors(response.data.errors);
         }
       });
   };
@@ -42,7 +38,7 @@ export default function Login() {
     <div className="login-signup-form animated fadeInDown">
       <div className="form">
         <form onSubmit={onSubmit}>
-          <h1 className="title">Login into your account</h1>
+          <h1 className="title">Signup for free</h1>
           {errors && (
             <div className="alert">
               {Object.keys(errors).map((key) => (
@@ -50,13 +46,19 @@ export default function Login() {
               ))}
             </div>
           )}
+          <input ref={nameRef} type="text" placeholder="Full Name" />
           <input ref={emailRef} type="email" placeholder="Email" />
           <input ref={passwordRef} type="password" placeholder="Password" />
+          <input
+            ref={passwordConfirmationRef}
+            type="password"
+            placeholder="Password Confirmation"
+          />
           <button type="submit" className="btn btn-block">
-            Login
+            Sign up
           </button>
           <p className="message">
-            Not Registered? <Link to="/signup">Create and account</Link>
+            Already Registered? <Link to="/login">Sign in</Link>
           </p>
         </form>
       </div>

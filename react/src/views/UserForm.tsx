@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import axiosClient from "../axios-client.js";
-import { useStateContext } from "../contexts/ContextProvider.jsx";
+import axiosClient from "../axios-client.ts";
+import { useStateContext } from "../contexts/ContextProvider.tsx";
 
 export default function UserForm() {
   const { id } = useParams();
@@ -96,7 +96,10 @@ export default function UserForm() {
             />
             <input
               onChange={(e) =>
-                setUser({ ...user, password_confirmation: e.target.value })
+                setUser({
+                  ...user,
+                  password_confirmation: e.target.value,
+                })
               }
               type="password"
               placeholder="Password Confirmation"
