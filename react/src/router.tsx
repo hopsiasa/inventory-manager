@@ -3,7 +3,7 @@ import Login from "./views/Login.jsx";
 import Signup from "./views/Signup.jsx";
 import Users from "./views/Users.jsx";
 import NotFound from "./views/NotFound.jsx";
-import DefaultLayout from "./components/DefaultLayout.jsx";
+import App from "./App.jsx";
 import GuestLayout from "./components/GuestLayout.jsx";
 import Dashboard from "./views/Dashboard.jsx";
 import UserForm from "./views/UserForm.jsx";
@@ -11,7 +11,7 @@ import UserForm from "./views/UserForm.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <DefaultLayout />,
+    element: <App />,
     children: [
       {
         path: "/",

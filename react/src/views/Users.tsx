@@ -36,7 +36,7 @@ export default function Users() {
   useEffect(() => {
     getUsers();
   }, []);
-
+  console.log(users);
   return (
     <div>
       <div
