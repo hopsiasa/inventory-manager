@@ -15,7 +15,7 @@ import MailIcon from "@mui/icons-material/Mail";
 import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import { Navigate, Outlet } from "react-router-dom";
+import { useNavigate, Outlet } from "react-router-dom";
 import { Button, Menu, MenuItem } from "@mui/material";
 import { useStateContext } from "../contexts/ContextProvider.tsx";
 import axiosClient from "../axios-client.ts";
@@ -27,21 +27,23 @@ const DefaultLayout = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { user, token, notification, setUser, setToken } = useStateContext();
+  const navigate = useNavigate();
 
   const onLogout = () => {
     axiosClient.post("/logout").then(() => {
-      setUser({ id: 0, name: "", email: "", created_at: new Date() });
+      setUser({ id: 0, name: "", email: "", created_at: "" });
       setToken("");
     });
   };
 
   useEffect(() => {
-    axiosClient.get("/user").then(({ data }) => setUser(data));
-  }, []);
+    if (!token) {
+      navigate("/login");
+      return;
+    }
 
-  if (!token) {
-    return <Navigate to="/login" />;
-  }
+    axiosClient.get("/user").then(({ data }) => setUser(data));
+  }, [token, setUser]);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);

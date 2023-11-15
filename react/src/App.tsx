@@ -1,16 +1,11 @@
-import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import DefaultLayout from "./components/DefaultLayout.tsx";
-
-const darkTheme = createTheme({
-  palette: {
-    mode: "dark",
-  },
-});
+import theme from "./theme.ts";
 
 export default function App() {
   return (
-    <ThemeProvider theme={darkTheme}>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
       <DefaultLayout />
     </ThemeProvider>
