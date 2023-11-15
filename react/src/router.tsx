@@ -4,7 +4,7 @@ import Signup from "./views/Signup.jsx";
 import Users from "./views/Users.jsx";
 import NotFound from "./views/NotFound.jsx";
 import App from "./App.jsx";
-import GuestLayout from "./components/GuestLayout.jsx";
+import GuestLayout from "./layouts/GuestLayout.tsx";
 import Dashboard from "./views/Dashboard.jsx";
 import UserForm from "./views/UserForm.jsx";
 
