@@ -17,7 +17,7 @@ interface Navbar {
 const Navbar = ({ drawerWidth, handleDrawerToggle }: Navbar) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { user, setUser, setToken } = useStateContext();
-  
+
   const handleMenu = (event: MouseEvent) => {
     setAnchorEl(event.currentTarget);
   };
@@ -58,7 +58,7 @@ const Navbar = ({ drawerWidth, handleDrawerToggle }: Navbar) => {
           <MenuIcon />
         </IconButton>
         <Typography variant="h6" noWrap component="div">
-          Responsive drawer
+          Inventory Manager
         </Typography>
         <div>
           <Button onClick={handleMenu} color="inherit">

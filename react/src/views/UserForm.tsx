@@ -2,7 +2,23 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axiosClient from "../axios-client.ts";
 import { useStateContext } from "../contexts/ContextProvider.tsx";
-import { FormEvent } from "../types.ts";
+import { SubmitHandler, useForm } from "react-hook-form";
+
+type FormValues = {
+  id: number;
+  name: string;
+  email: string;
+  password: string;
+  password_confirmation: string;
+};
+
+const initialState = {
+  id: null,
+  name: "",
+  email: "",
+  password: "",
+  password_confirmation: "",
+};
 
 export default function UserForm() {
   const { id } = useParams();
@@ -10,13 +26,9 @@ export default function UserForm() {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState(null);
   const { setNotification } = useStateContext();
-  const [user, setUser] = useState({
-    id: null,
-    name: "",
-    email: "",
-    password: "",
-    password_confirmation: "",
-  });
+  const [user, setUser] = useState(initialState);
+
+  const { register, handleSubmit } = useForm<FormValues>();
 
   useEffect(() => {
     if (id) {
@@ -32,9 +44,7 @@ export default function UserForm() {
     }
   }, [id]);
 
-  const onSubmit = (event: FormEvent) => {
-    event.preventDefault();
-
+  const onSubmit: SubmitHandler<FormValues> = (user: FormValues) => {
     if (user.id) {
       axiosClient
         .put(`/users/${user.id}`, user)
@@ -77,31 +87,35 @@ export default function UserForm() {
           </div>
         )}
         {!loading && (
-          <form onSubmit={onSubmit}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <input
-              onChange={(e) => setUser({ ...user, name: e.target.value })}
-              value={user.name}
+              {...register("name")}
+              // onChange={(e) => setUser({ ...user, name: e.target.value })}
+              // value={user.name}
               type="text"
               placeholder="Name"
             />
             <input
-              onChange={(e) => setUser({ ...user, email: e.target.value })}
-              value={user.email}
+              {...register("email")}
+              // onChange={(e) => setUser({ ...user, email: e.target.value })}
+              // value={user.email}
               type="email"
               placeholder="Email"
             />
             <input
-              onChange={(e) => setUser({ ...user, password: e.target.value })}
+              {...register("password")}
+              // onChange={(e) => setUser({ ...user, password: e.target.value })}
               type="password"
               placeholder="Password"
             />
             <input
-              onChange={(e) =>
-                setUser({
-                  ...user,
-                  password_confirmation: e.target.value,
-                })
-              }
+              {...register("password_confirmation")}
+              // onChange={(e) =>
+              // //   setUser({
+              // //     ...user,
+              // //     password_confirmation: e.target.value,
+              // //   })
+              // }
               type="password"
               placeholder="Password Confirmation"
             />

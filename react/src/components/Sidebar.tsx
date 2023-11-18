@@ -2,13 +2,15 @@ import Toolbar from "@mui/material/Toolbar";
 import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
 import ListItemText from "@mui/material/ListItemText";
+import InventoryIcon from "@mui/icons-material/Inventory";
+import CategoryIcon from "@mui/icons-material/Category";
+import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
+import PeopleIcon from "@mui/icons-material/People";
 import Drawer from "@mui/material/Drawer";
 import Box from "@mui/material/Box";
+import { Link } from "react-router-dom";
 
 interface Sidebar {
   drawerWidth: number;
@@ -16,39 +18,67 @@ interface Sidebar {
   handleDrawerToggle: () => void;
 }
 
+const SideMenuData = [
+  {
+    title: "Products",
+    path: "/products",
+    icon: <InventoryIcon />,
+    cName: "nav-text",
+  },
+  {
+    title: "Categories",
+    path: "/categories",
+    icon: <CategoryIcon />,
+    cName: "nav-text",
+  },
+  {
+    title: "Orders",
+    path: "/orders",
+    icon: <ShoppingCartCheckoutIcon />,
+    cName: "nav-text",
+  },
+  {
+    title: "Divider",
+    path: "-",
+    icon: null,
+    cName: "-t",
+  },
+  {
+    title: "Users",
+    path: "/users",
+    icon: <PeopleIcon />,
+    cName: "nav-text",
+  },
+];
+
 const Sidebar = ({ drawerWidth, mobileOpen, handleDrawerToggle }: Sidebar) => {
   const drawer = (
     <div>
       <Toolbar />
       <Divider />
       <List>
-        {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {["All mail", "Trash", "Spam"].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
+        {SideMenuData.map((item, index) => {
+          if (item.title === "Divider") {
+            return <Divider key={index} />;
+          } else {
+            return (
+              <Link
+                key={index}
+                to={item.path}
+                style={{ color: "inherit", textDecoration: "inherit" }}
+              >
+                <ListItem key={item.title}>
+                  <ListItemIcon>{item.icon}</ListItemIcon>
+                  <ListItemText primary={item.title} />
+                </ListItem>
+              </Link>
+            );
+          }
+        })}
       </List>
     </div>
   );
-  
+
   return (
     <Box
       component="nav"

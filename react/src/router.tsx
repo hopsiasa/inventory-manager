@@ -1,4 +1,4 @@
-import { createBrowserRouter, Navigate } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import Login from "./views/Login.jsx";
 import Signup from "./views/Signup.jsx";
 import Users from "./views/Users.jsx";
@@ -13,12 +13,12 @@ const router = createBrowserRouter([
     path: "/",
     element: <App />,
     children: [
+      // {
+      //   path: "/",
+      //   element: <Navigate to="/users" />,
+      // },
       {
         path: "/",
-        element: <Navigate to="/users" />,
-      },
-      {
-        path: "/dashboard",
         element: <Dashboard />,
       },
       {
