@@ -17,7 +17,7 @@ interface Navbar {
 const Navbar = ({ drawerWidth, handleDrawerToggle }: Navbar) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { user, setUser, setToken } = useStateContext();
-
+  
   const handleMenu = (event: MouseEvent) => {
     setAnchorEl(event.currentTarget);
   };
@@ -27,7 +27,14 @@ const Navbar = ({ drawerWidth, handleDrawerToggle }: Navbar) => {
 
   const onLogout = () => {
     axiosClient.post("/logout").then(() => {
-      setUser({ id: 0, name: "", email: "", created_at: "" });
+      setUser({
+        id: 0,
+        name: "",
+        email: "",
+        role: [],
+        permissions: [],
+        created_at: "",
+      });
       setToken("");
     });
   };
