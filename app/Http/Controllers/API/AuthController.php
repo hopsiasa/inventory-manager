@@ -5,12 +5,12 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\SignupRequest;
-use App\Models\Role;
+use App\Http\Resources\UserResource;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
 class AuthController extends Controller
@@ -21,7 +21,6 @@ class AuthController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', Password::defaults()],
-            'role_id' => ['required', Rule::in(Role::ROLE_MANAGER, Role::ROLE_CUSTOMER)],
         ]);
 
         /** @var User */
@@ -29,7 +28,6 @@ class AuthController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role_id' => $request->role_id,
         ]);
 
         return response()->json([
@@ -54,6 +52,10 @@ class AuthController extends Controller
         return response(compact('user', 'token'));
     }
 
+    public function user(): JsonResponse
+    {
+        return response()->json(new UserResource(auth()->user()), 200);
+    }
 
     public function logout(Request $request)
     {

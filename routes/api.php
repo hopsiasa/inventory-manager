@@ -3,11 +3,8 @@
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CategoryController;
 use App\Http\Controllers\API\OrderController;
-use App\Http\Controllers\API\Permissions\CustomerController;
-use App\Http\Controllers\API\Permissions\ManagerController;
 use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\UserController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,14 +18,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group(['middleware' => ['auth:sanctum', 'role:admin']], function () {
-//Route::group(['middleware' => 'auth:sanctum'], function () {
-    Route::get('/user', function (Request $request) {
-        return $request->user();
-    });
-
-    Route::get('permissions/manager', [ManagerController::class, 'index']);
-    Route::get('permissions/customer', [CustomerController::class, 'index']);
+Route::group(['middleware' => 'auth:sanctum'], function () {
+    Route::get('/user', [AuthController::class, 'user']);
 
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/signup', [AuthController::class, 'signup']);

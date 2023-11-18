@@ -10,16 +10,18 @@ import {
 import { UserType } from "../types.ts";
 
 type StateContextProps = {
+  can: (permission: string, user?: UserType | undefined) => boolean;
   user: UserType | null;
   currentUser?: null;
   token: string;
   notification: string;
-  setUser: Dispatch<SetStateAction<UserType>>;
+  setUser: Dispatch<SetStateAction<UserType | null>>;
   setToken: (token: string) => void;
   setNotification: (message: string) => void;
 };
 
 const StateContext = createContext<StateContextProps>({
+  can: () => true,
   user: null,
   currentUser: null,
   token: "",
@@ -54,10 +56,12 @@ export const useStateContext = () => {
 
 const usePassedDownValues = () => {
   // In this case we want this value variable and it's setter function to be available globally.
-  const [user, setUser] = useState({
+  const [user, setUser] = useState<UserType | null>({
     id: 0,
     name: "",
     email: "",
+    role: [],
+    permissions: [],
     created_at: "",
   });
   const [notification, _setNotification] = useState("");
@@ -83,7 +87,21 @@ const usePassedDownValues = () => {
         localStorage.removeItem("ACCESS_TOKEN");
       }
     };
-    return { user, token, setUser, setToken, notification, setNotification };
+
+    const can = (permission: string): boolean => {
+      const userPermissions: string[] = user?.permissions || [];
+      return userPermissions.includes(permission);
+    };
+
+    return {
+      can,
+      user,
+      token,
+      setUser,
+      setToken,
+      notification,
+      setNotification,
+    };
   }, [user, token, setUser, _setToken, notification, _setNotification]);
 };
 

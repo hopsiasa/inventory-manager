@@ -8,20 +8,20 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 export default function Users() {
   const [users, setUsers] = useState<UserType[]>([]);
-  const [loading, setLoading] = useState(false);
-  const { setNotification } = useStateContext();
+  const [loading, setLoading] = useState<boolean>(false);
+  const { setNotification, can } = useStateContext();
 
   const getUsers = useCallback(() => {
     setLoading(true);
+
     axiosClient
       .get("/users")
       .then(({ data }) => {
         setLoading(false);
         setUsers(data.data);
       })
-      .catch((error) => {
+      .catch(() => {
         setLoading(false);
-        console.error("Error fetching users:", error);
         setNotification("Error fetching users. Please try again.");
       });
   }, [setNotification]);
@@ -38,8 +38,7 @@ export default function Users() {
           setNotification("User was successfully deleted");
           getUsers();
         })
-        .catch((error) => {
-          console.error("Error deleting user:", error);
+        .catch(() => {
           setNotification("Error deleting user. Please try again.");
         });
     },
@@ -89,9 +88,12 @@ export default function Users() {
         }}
       >
         <h1>Users</h1>
-        <Link to="/users/new" className="btn-add">
-          Add new
-        </Link>
+        {/*for test purpose*/}
+        {can("admin") && (
+          <Link to="/users/new" className="btn-add">
+            Add new
+          </Link>
+        )}
       </div>
       {loading ? (
         <p>Loading...</p>
