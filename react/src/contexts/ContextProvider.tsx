@@ -7,15 +7,15 @@ import {
   useMemo,
   useState,
 } from "react";
-import { UserType } from "../types.ts";
+import { IUserResponse } from "../types.ts";
 
 type StateContextProps = {
-  can: (permission: string, user?: UserType | undefined) => boolean;
-  user: UserType | null;
+  can: (permission: string, user?: IUserResponse | undefined) => boolean;
+  user: IUserResponse | null;
   currentUser?: null;
   token: string;
   notification: string;
-  setUser: Dispatch<SetStateAction<UserType | null>>;
+  setUser: Dispatch<SetStateAction<IUserResponse>>;
   setToken: (token: string) => void;
   setNotification: (message: string) => void;
 };
@@ -56,13 +56,13 @@ export const useStateContext = () => {
 
 const usePassedDownValues = () => {
   // In this case we want this value variable and it's setter function to be available globally.
-  const [user, setUser] = useState<UserType | null>({
-    id: 0,
+  const [user, setUser] = useState<IUserResponse>({
     name: "",
     email: "",
     role: [],
     permissions: [],
     created_at: "",
+    updated_at: "",
   });
   const [notification, _setNotification] = useState("");
   const [token, _setToken] = useState(

@@ -1,53 +1,31 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import axiosClient from "../axios-client.ts";
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useStateContext } from "../contexts/ContextProvider.tsx";
-import { UserType } from "../types.ts";
 import { DataGrid, GridActionsCellItem, GridColDef } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import userService from "../services/users.ts";
 
 export default function Users() {
-  const [users, setUsers] = useState<UserType[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const { setNotification, can } = useStateContext();
+  const queryClient = useQueryClient();
+  const { can } = useStateContext();
 
-  const getUsers = useCallback(() => {
-    setLoading(true);
-
-    axiosClient
-      .get("/users")
-      .then(({ data }) => {
-        setLoading(false);
-        setUsers(data.data);
-      })
-      .catch(() => {
-        setLoading(false);
-        setNotification("Error fetching users. Please try again.");
-      });
-  }, [setNotification]);
-
-  const deleteUser = useCallback(
-    (user: UserType) => () => {
-      if (!window.confirm("Are you sure you want to delete this user?")) {
-        return;
-      }
-
-      axiosClient
-        .delete(`/users/${user.id}`)
-        .then(() => {
-          setNotification("User was successfully deleted");
-          getUsers();
-        })
-        .catch(() => {
-          setNotification("Error deleting user. Please try again.");
-        });
+  const { isLoading, data: users } = useQuery(["users"], () =>
+    userService.findAllUsers(),
+  );
+  const { mutate: deleteUser } = useMutation(
+    (id: string) => userService.deleteUser(id),
+    {
+      onSuccess: async () => queryClient.invalidateQueries("users"),
     },
-    [getUsers, setNotification],
   );
 
-  useEffect(() => {
-    getUsers();
-  }, [getUsers]);
+  const handleDelete = (id: string) => {
+    if (!window.confirm("Are you sure you want to delete this user?")) {
+      return;
+    }
+    deleteUser(id);
+  };
 
   const columns = useMemo<GridColDef[]>(
     () => [
@@ -70,12 +48,12 @@ export default function Users() {
             key={params.id}
             icon={<DeleteIcon />}
             label="Delete"
-            onClick={deleteUser(params.row as UserType)}
+            onClick={() => handleDelete(params.row.id)}
           />,
         ],
       },
     ],
-    [deleteUser],
+    [],
   );
 
   return (
@@ -95,10 +73,14 @@ export default function Users() {
           </Link>
         )}
       </div>
-      {loading ? (
+      {isLoading ? (
         <p>Loading...</p>
       ) : (
-        <DataGrid rows={users} columns={columns} checkboxSelection />
+        <DataGrid
+          rows={users?.data || []}
+          columns={columns}
+          checkboxSelection
+        />
       )}
     </div>
   );
