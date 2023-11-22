@@ -17,14 +17,13 @@ export interface IUserResponse {
   id?: null | never;
   name: string;
   email: string;
-  role?: string[];
-  permissions?: string[];
+  role: string[];
+  permissions: string[];
   created_at: string;
   updated_at: string;
 }
 
 export interface IUsersResponse {
-  status: string;
   data: {
     data: IUserResponse[];
   };

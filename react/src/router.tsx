@@ -1,12 +1,13 @@
 import { createBrowserRouter } from "react-router-dom";
 import Login from "./views/Login.jsx";
 import Signup from "./views/Signup.jsx";
-import Users from "./views/Users.jsx";
+import Users from "./views/Users/Users.jsx";
 import NotFound from "./views/NotFound.jsx";
 import App from "./App.jsx";
 import GuestLayout from "./layouts/GuestLayout.tsx";
-import Dashboard from "./views/Dashboard.jsx";
-import UserForm from "./views/UserForm.jsx";
+import Dashboard from "./views/Dashboard.tsx";
+import AddUser from "./views/Users/AddUser.tsx";
+import EditUser from "./views/Users/EditUser.tsx";
 
 const router = createBrowserRouter([
   {
@@ -27,11 +28,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/users/new",
-        element: <UserForm key="userCreate" />,
+        element: <AddUser />,
       },
       {
         path: "/users/:id",
-        element: <UserForm key="userUpdate" />,
+        element: <EditUser />,
       },
     ],
   },

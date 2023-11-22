@@ -1,24 +1,14 @@
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
-import { useStateContext } from "../contexts/ContextProvider.tsx";
+import { useStateContext } from "../../contexts/ContextProvider.tsx";
 import { DataGrid, GridActionsCellItem, GridColDef } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import userService from "../services/users.ts";
+import { useDeleteUser, useGetUsers } from "../../hooks/use-users.hook.ts";
 
 export default function Users() {
-  const queryClient = useQueryClient();
   const { can } = useStateContext();
-
-  const { isLoading, data: users } = useQuery(["users"], () =>
-    userService.findAllUsers(),
-  );
-  const { mutate: deleteUser } = useMutation(
-    (id: string) => userService.deleteUser(id),
-    {
-      onSuccess: async () => queryClient.invalidateQueries("users"),
-    },
-  );
+  const { users, isLoading } = useGetUsers();
+  const { deleteUser } = useDeleteUser();
 
   const handleDelete = (id: string) => {
     if (!window.confirm("Are you sure you want to delete this user?")) {
@@ -30,7 +20,20 @@ export default function Users() {
   const columns = useMemo<GridColDef[]>(
     () => [
       { field: "id", headerName: "ID", width: 70, flex: 1 },
-      { field: "name", headerName: "Name", width: 130, flex: 1 },
+      {
+        field: "name",
+        headerName: "Name",
+        width: 130,
+        flex: 1,
+        renderCell: (params) => (
+          <Link
+            style={{ color: "white", textDecoration: "none" }}
+            to={`/users/${params.row.id}`}
+          >
+            {params.row.name}
+          </Link>
+        ),
+      },
       { field: "email", headerName: "Email", width: 130, flex: 1 },
       {
         field: "created_at",
@@ -77,9 +80,11 @@ export default function Users() {
         <p>Loading...</p>
       ) : (
         <DataGrid
-          rows={users?.data || []}
+          rows={users}
           columns={columns}
+          loading={isLoading}
           checkboxSelection
+          autoHeight
         />
       )}
     </div>
