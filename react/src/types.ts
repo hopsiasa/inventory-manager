@@ -24,6 +24,9 @@ export interface IUserResponse {
 }
 
 export interface IUsersResponse {
+  pagination: {
+    total: number;
+  };
   data: {
     data: IUserResponse[];
   };

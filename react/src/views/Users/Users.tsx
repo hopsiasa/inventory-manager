@@ -1,21 +1,41 @@
-import { useMemo } from "react";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { DataGrid, GridActionsCellItem, GridColDef } from "@mui/x-data-grid";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useStateContext } from "../../contexts/ContextProvider.tsx";
-import { DataGrid, GridActionsCellItem, GridColDef } from "@mui/x-data-grid";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { useDeleteUser, useGetUsers } from "../../hooks/use-users.hook.ts";
 
 export default function Users() {
   const { can } = useStateContext();
-  const { users, isLoading } = useGetUsers();
   const { deleteUser } = useDeleteUser();
+  const [paginationModel, setPaginationModel] = useState({
+    page: 0,
+    pageSize: 10,
+  });
 
-  const handleDelete = (id: string) => {
-    if (!window.confirm("Are you sure you want to delete this user?")) {
-      return;
-    }
-    deleteUser(id);
-  };
+  const { users, isLoading } = useGetUsers(paginationModel.page + 1);
+  // Some API clients return undefined while loading
+  // Following lines are here to prevent `rowCountState` from being undefined during the loading
+  const [rowCountState, setRowCountState] = useState(
+    users?.pagination?.total || 0,
+  );
+  useEffect(() => {
+    setRowCountState((prevRowCountState) =>
+      users?.pagination?.total !== undefined
+        ? users?.pagination?.total
+        : prevRowCountState,
+    );
+  }, [users?.pagination?.total, setRowCountState]);
+
+  const handleDelete = useCallback(
+    (id: string) => {
+      if (!window.confirm("Are you sure you want to delete this user?")) {
+        return;
+      }
+      deleteUser(id);
+    },
+    [deleteUser],
+  );
 
   const columns = useMemo<GridColDef[]>(
     () => [
@@ -56,7 +76,7 @@ export default function Users() {
         ],
       },
     ],
-    [],
+    [handleDelete],
   );
 
   return (
@@ -80,11 +100,17 @@ export default function Users() {
         <p>Loading...</p>
       ) : (
         <DataGrid
-          rows={users}
+          rows={users?.data || []}
+          rowCount={rowCountState}
           columns={columns}
-          loading={isLoading}
           checkboxSelection
+          disableRowSelectionOnClick
           autoHeight
+          loading={isLoading}
+          pageSizeOptions={[10]}
+          paginationModel={paginationModel}
+          paginationMode="server"
+          onPaginationModelChange={setPaginationModel}
         />
       )}
     </div>

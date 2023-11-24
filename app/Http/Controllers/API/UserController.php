@@ -7,8 +7,8 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class UserController extends Controller
 {
@@ -20,13 +20,28 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request): AnonymousResourceCollection
+    public function index(Request $request): JsonResponse
     {
-//        if ($request->user()->cannot('admin')) {
-//            abort(403, 'Unauthorized');
-//        }
+        //        if ($request->user()->cannot('admin')) {
+        //            abort(403, 'Unauthorized');
+        //        }
 
-        return UserResource::collection(User::query()->orderBy('id', 'desc')->paginate());
+        $perPage = $request->input('per_page', 10);
+        $users = User::query()->orderBy('id', 'desc')->paginate($perPage);
+
+        $data = [
+            'data' => UserResource::collection($users),
+            'pagination' => [
+                'total' => $users->total(),
+                'per_page' => $users->perPage(),
+                'current_page' => $users->currentPage(),
+                'last_page' => $users->lastPage(),
+            ],
+        ];
+
+        return response()->json($data);
+
+        // return UserResource::collection(User::query()->orderBy('id', 'desc')->paginate());
     }
 
     /**

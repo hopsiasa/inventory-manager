@@ -1,16 +1,17 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import userService from "../services/users.ts";
 
-export const useGetUsers = () => {
-  const { isLoading, data: users } = useQuery(
-    ["users"],
-    async () => await userService.findAllUsers(),
-    {
-      select: (data) => data?.data || [],
-    },
+export const useGetUsers = (page: number) => {
+  const {
+    isLoading,
+    data: users,
+    refetch,
+  } = useQuery(
+    ["users", page],
+    async () => await userService.findAllUsers(page),
   );
 
-  return { users, isLoading };
+  return { users, isLoading, refetch };
 };
 
 export const useGetUser = (userId: string | undefined) => {

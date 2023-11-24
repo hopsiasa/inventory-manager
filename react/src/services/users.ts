@@ -1,8 +1,8 @@
 import axiosClient from "../axios-client.ts";
 import { IUserResponse, IUsersResponse } from "../types.ts";
 
-const findAllUsers = async () => {
-  const response = await axiosClient.get<IUsersResponse>("/users");
+const findAllUsers = async (page: number) => {
+  const response = await axiosClient.get<IUsersResponse>(`/users?page=${page}`);
   return response.data;
 };
 
