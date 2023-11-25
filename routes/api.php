@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\JwtAuthController;
 use App\Http\Controllers\API\CategoryController;
 use App\Http\Controllers\API\OrderController;
 use App\Http\Controllers\API\ProductController;
@@ -20,10 +20,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 //Route::group(['middleware' => 'auth:sanctum'], function () {
-//    Route::get('/user', [AuthController::class, 'user']);
+//    Route::get('/user', [JwtAuthController::class, 'user']);
 //
-//    Route::post('/logout', [AuthController::class, 'logout']);
-//    Route::post('/signup', [AuthController::class, 'signup']);
+//    Route::post('/logout', [JwtAuthController::class, 'logout']);
+//    Route::post('/signup', [JwtAuthController::class, 'signup']);
 //
 //    Route::apiResource('/users', UserController::class);
 //    Route::apiResource('/categories', CategoryController::class);
@@ -32,16 +32,16 @@ use Illuminate\Support\Facades\Route;
 //    Route::apiResource('/roles', RoleController::class);
 //});
 //
-//Route::post('/login', [AuthController::class, 'login']);
+//Route::post('/login', [JwtAuthController::class, 'login']);
 
 Route::group([
     'middleware' => 'api',
     'prefix' => 'auth'
 ], function () {
-    Route::post('login', [AuthController::class, 'login']);
-    Route::post('logout', [AuthController::class, 'logout']);
-    Route::post('refresh', [AuthController::class, 'refresh']);
-    Route::get('me', [AuthController::class, 'me']);
+    Route::post('login', [JwtAuthController::class, 'login']);
+    Route::post('logout', [JwtAuthController::class, 'logout']);
+    Route::post('refresh', [JwtAuthController::class, 'refresh']);
+    Route::get('me', [JwtAuthController::class, 'me']);
 });
 
 
