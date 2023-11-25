@@ -19,20 +19,30 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group(['middleware' => 'auth:sanctum'], function () {
-    Route::get('/user', [AuthController::class, 'user']);
+//Route::group(['middleware' => 'auth:sanctum'], function () {
+//    Route::get('/user', [AuthController::class, 'user']);
+//
+//    Route::post('/logout', [AuthController::class, 'logout']);
+//    Route::post('/signup', [AuthController::class, 'signup']);
+//
+//    Route::apiResource('/users', UserController::class);
+//    Route::apiResource('/categories', CategoryController::class);
+//    Route::apiResource('/products', ProductController::class);
+//    Route::apiResource('/orders', OrderController::class);
+//    Route::apiResource('/roles', RoleController::class);
+//});
+//
+//Route::post('/login', [AuthController::class, 'login']);
 
-    Route::post('/logout', [AuthController::class, 'logout']);
-    Route::post('/signup', [AuthController::class, 'signup']);
-
-    Route::apiResource('/users', UserController::class);
-    Route::apiResource('/categories', CategoryController::class);
-    Route::apiResource('/products', ProductController::class);
-    Route::apiResource('/orders', OrderController::class);
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'auth'
+], function () {
+    Route::post('login', [AuthController::class, 'login']);
+    Route::post('logout', [AuthController::class, 'logout']);
+    Route::post('refresh', [AuthController::class, 'refresh']);
+    Route::get('me', [AuthController::class, 'me']);
 });
-    Route::apiResource('/roles', RoleController::class);
-
-Route::post('/login', [AuthController::class, 'login']);
 
 
 
