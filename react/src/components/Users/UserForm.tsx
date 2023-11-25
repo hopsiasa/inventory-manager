@@ -1,8 +1,16 @@
-import { FormHelperText, TextField } from "@mui/material";
+import {
+  FormControl,
+  FormHelperText,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from "@mui/material";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { IUserRequest, IUserResponse } from "../../types.ts";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
+import useGetRoles from "../../hooks/use-roles.hook.ts";
 
 interface UserFormProps {
   onSubmit: SubmitHandler<IUserRequest>;
@@ -20,6 +28,7 @@ const defaultValues: IUserRequest = {
 
 const UserForm = (props: UserFormProps) => {
   const { id } = useParams();
+  const { roles, isLoading } = useGetRoles();
   const {
     handleSubmit,
     control,
@@ -60,6 +69,37 @@ const UserForm = (props: UserFormProps) => {
       />
       <FormHelperText error={!!errors["email"]}>
         {errors["email"] ? errors["email"].message : ""}
+      </FormHelperText>
+
+      <Controller
+        control={control}
+        name="role"
+        render={({ field }) => (
+          <FormControl fullWidth>
+            <InputLabel id="role">Role</InputLabel>
+            <Select
+              {...field}
+              sx={{ mb: "1rem" }}
+              value={""}
+              label="Role"
+              disabled={isLoading}
+              // onChange={""}
+            >
+              {isLoading ? (
+                <MenuItem disabled>Loading...</MenuItem>
+              ) : (
+                roles?.map((role) => (
+                  <MenuItem key={role.id} value={role.id}>
+                    {role.name}
+                  </MenuItem>
+                ))
+              )}
+            </Select>
+          </FormControl>
+        )}
+      />
+      <FormHelperText error={!!errors["role"]}>
+        {errors["role"] ? errors["role"].message : ""}
       </FormHelperText>
 
       <Controller

@@ -4,8 +4,6 @@ import { useAddUser } from "../../hooks/use-users.hook.ts";
 import { IUserRequest } from "../../types.ts";
 
 const AddUser = () => {
-  // const navigate = useNavigate();
-
   const { createUser, isLoading } = useAddUser();
 
   const onSubmit: SubmitHandler<IUserRequest> = (data) => {

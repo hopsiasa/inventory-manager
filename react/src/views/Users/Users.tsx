@@ -12,8 +12,8 @@ export default function Users() {
     page: 0,
     pageSize: 10,
   });
-
   const { users, isLoading } = useGetUsers(paginationModel.page + 1);
+
   // Some API clients return undefined while loading
   // Following lines are here to prevent `rowCountState` from being undefined during the loading
   const [rowCountState, setRowCountState] = useState(

@@ -31,3 +31,10 @@ export interface IUsersResponse {
     data: IUserResponse[];
   };
 }
+
+export interface IRoleResponse {
+  roles: {
+    id: number;
+    name: string;
+  }[];
+}
