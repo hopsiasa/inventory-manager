@@ -1,62 +1,39 @@
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://user-images.githubusercontent.com/9113740/201498864-2a900c64-d88f-4ed4-b5cf-770bcb57e1f5.png">
-  <source media="(prefers-color-scheme: light)" srcset="https://user-images.githubusercontent.com/9113740/201498152-b171abb8-9225-487a-821c-6ff49ee48579.png">
-  <img alt="Shows all of the tools in the stack for this template, also listed in the README file." src="https://user-images.githubusercontent.com/9113740/201498152-b171abb8-9225-487a-821c-6ff49ee48579.png">
-</picture>
+<img width="800" alt="GitHub README banner_ Next App Router" src="https://github.com/avocado-media/nextjs-jwt-app-router/assets/32078923/3de51fd3-4c29-4010-9e5d-46d37d00e166">
 
-<div align="center"><strong>Next.js 13 Admin Dashboard Template</strong></div>
-<div align="center">Built with the Next.js App Router</div>
-<br />
-<div align="center">
-<a href="http://admin-dash-template.vercel.sh/">Demo</a>
-<span> · </span>
-<a href="https://vercel.com/templates/next.js/admin-dashboard-tailwind-planetscale-react-nextjs">Clone & Deploy</a>
-<span>
-</div>
 
-## Overview
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
-This is a starter template using the following stack:
+This repository contains a [Next.js](https://nextjs.org/) boilerplate with the new App Router paradigm and JWT authentication using a Laravel REST API.
 
-- Framework - [Next.js 13](https://nextjs.org/13)
-- Language - [TypeScript](https://www.typescriptlang.org)
-- Auth - [NextAuth.js](https://next-auth.js.org)
-- Database - [Vercel Postgres](https://vercel.com/postgres)
-- Deployment - [Vercel](https://vercel.com/docs/concepts/next.js/overview)
-- Styling - [Tailwind CSS](https://tailwindcss.com)
-- Components - [Tremor](https://www.tremor.so)
-- Analytics - [Vercel Analytics](https://vercel.com/analytics)
-- Linting - [ESLint](https://eslint.org)
-- Formatting - [Prettier](https://prettier.io)
+## Laravel backend
 
-This template uses the new Next.js App Router. This includes support for enhanced layouts, colocation of components, tests, and styles, component-level data fetching, and more.
+We created a [Laravel](https://laravel.com/) REST API inspired by Laravel Breeze. You can find the
+repository [here](https://github.com/avocado-media/laravel-jwt-rest-api).
 
-## Getting Started
+## Features
 
-During the deployment, Vercel will prompt you to create a new Postgres database. This will add the necessary environment variables to your project.
+- JWT authentication with [NextAuth.js](https://next-auth.js.org/) (login, register, password reset, email verification)
+- Profile updating
+- Password changing
+- TypeScript
 
-Inside the Vercel Postgres dashboard, create a table based on the schema defined in this repository.
+## Installation
 
-```
-CREATE TABLE users (
-  id SERIAL PRIMARY KEY,
-  email VARCHAR(255) NOT NULL,
-  name VARCHAR(255),
-  username VARCHAR(255)
-);
-```
+1. `npm install`
+2. `cp .env.example .env.local`
+3. `npm run dev`
 
-Insert a row for testing:
+## Authentication
 
-```
-INSERT INTO users (id, email, name, username) VALUES (1, 'me@site.com', 'Me', 'username');
-```
+The access token has a TTL of 1 hour until it expires. The access token should be refreshed within this time window to avoid becoming unauthenticated. The access token can be refreshed for two weeks. After that, the user has to log in again.
 
-Finally, run the following commands to start the development server:
+This behavior can be changed in the [REST API repository](https://github.com/avocado-media/laravel-jwt-rest-api).
 
-```
-pnpm install
-pnpm dev
-```
+## Contributing
 
-You should now be able to access the application at http://localhost:3000.
+Feel free to open a pull request if you want to contribute to this project. All contributions / suggestions are
+welcome ✨
+
+## License
+
+This project is open-sourced software licensed under the MIT license.
