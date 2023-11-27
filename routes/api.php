@@ -19,20 +19,32 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group(['middleware' => 'auth:sanctum'], function () {
-    Route::get('/user', [AuthController::class, 'user']);
+require __DIR__ . '/auth.php';
 
-    Route::post('/logout', [AuthController::class, 'logout']);
-    Route::post('/signup', [AuthController::class, 'signup']);
-
-    Route::apiResource('/users', UserController::class);
-    Route::apiResource('/categories', CategoryController::class);
-    Route::apiResource('/products', ProductController::class);
-    Route::apiResource('/orders', OrderController::class);
-    Route::apiResource('/roles', RoleController::class);
+Route::middleware('auth:api')->group(function () {
+    Route::get('/users', [UserController::class, 'show'])
+        ->name('users.show');
 });
 
-Route::post('/login', [AuthController::class, 'login']);
+Route::middleware(['auth:api', 'verified'])->group(function () {
+    Route::patch('/users', [UserController::class, 'update'])
+        ->name('users.update');
+});
+
+//Route::group(['middleware' => 'auth:sanctum'], function () {
+//    Route::get('/user', [AuthController::class, 'user']);
+//
+//    Route::post('/logout', [AuthController::class, 'logout']);
+//    Route::post('/signup', [AuthController::class, 'signup']);
+//
+//    Route::apiResource('/users', UserController::class);
+//    Route::apiResource('/categories', CategoryController::class);
+//    Route::apiResource('/products', ProductController::class);
+//    Route::apiResource('/orders', OrderController::class);
+//    Route::apiResource('/roles', RoleController::class);
+//});
+//
+//Route::post('/login', [AuthController::class, 'login']);
 
 
 
