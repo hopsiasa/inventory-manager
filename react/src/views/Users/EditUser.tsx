@@ -14,13 +14,12 @@ const EditUser = () => {
   // Read each isLoading state and convert them to a component-level value
   const isLoading = isUpdateUserLoading || isUserLoading;
 
-  const defaultValues = user;
-
   const onSubmit: SubmitHandler<IUserRequest> = (data) => {
     const formData = new FormData();
 
     formData.append("name", data.name);
     formData.append("email", data.email);
+    formData.append("role", JSON.stringify(data.role));
     formData.append("password", data.password);
     formData.append("password_confirmation", data.password_confirmation);
 
@@ -34,9 +33,7 @@ const EditUser = () => {
       <h1>{`Update user: ${user?.name}`}</h1>
       <div>
         {isLoading && <div className="text-center">Loading ...</div>}
-        {!isLoading && (
-          <UserForm onSubmit={onSubmit} defaultValues={defaultValues} />
-        )}
+        {!isLoading && <UserForm onSubmit={onSubmit} user={user} />}
       </div>
     </>
   );

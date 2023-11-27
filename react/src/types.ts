@@ -7,8 +7,8 @@ export type ChangeEvent = React.ChangeEvent<HTMLInputElement>;
 export interface IUserRequest {
   name: string;
   email: string;
-  role?: string[];
-  permissions?: string[];
+  role?: string;
+  // permissions?: string[];
   password: string;
   password_confirmation: string;
 }
@@ -17,7 +17,7 @@ export interface IUserResponse {
   id?: null | never;
   name: string;
   email: string;
-  role: string[];
+  role: string;
   permissions: string[];
   created_at: string;
   updated_at: string;

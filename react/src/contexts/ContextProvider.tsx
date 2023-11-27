@@ -59,7 +59,7 @@ const usePassedDownValues = () => {
   const [user, setUser] = useState<IUserResponse>({
     name: "",
     email: "",
-    role: [],
+    role: "",
     permissions: [],
     created_at: "",
     updated_at: "",

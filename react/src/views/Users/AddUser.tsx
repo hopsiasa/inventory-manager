@@ -11,6 +11,7 @@ const AddUser = () => {
 
     formData.append("name", data.name);
     formData.append("email", data.email);
+    formData.append("role", data.role as string);
     formData.append("password", data.password);
     formData.append("password_confirmation", data.password_confirmation);
 

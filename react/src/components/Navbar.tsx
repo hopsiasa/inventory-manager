@@ -28,12 +28,12 @@ const Navbar = ({ drawerWidth, handleDrawerToggle }: Navbar) => {
   const onLogout = () => {
     axiosClient.post("/logout").then(() => {
       setUser({
-        id: 0,
         name: "",
         email: "",
-        role: [],
+        role: "",
         permissions: [],
         created_at: "",
+        updated_at: "",
       });
       setToken("");
     });

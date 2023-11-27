@@ -54,6 +54,8 @@ class UserController extends Controller
 
         $user = User::create($data);
 
+        $user->assignRole($request->input('role'));
+
         return response(new UserResource($user), 201);
     }
 

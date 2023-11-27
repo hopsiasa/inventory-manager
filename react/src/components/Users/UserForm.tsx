@@ -4,24 +4,24 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  SelectChangeEvent,
   TextField,
 } from "@mui/material";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { IUserRequest, IUserResponse } from "../../types.ts";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import useGetRoles from "../../hooks/use-roles.hook.ts";
 
 interface UserFormProps {
   onSubmit: SubmitHandler<IUserRequest>;
-  defaultValues?: IUserResponse | undefined;
+  user?: IUserResponse | undefined;
 }
 
 const defaultValues: IUserRequest = {
   name: "",
   email: "",
-  role: [],
-  permissions: [],
+  role: "",
   password: "",
   password_confirmation: "",
 };
@@ -35,12 +35,15 @@ const UserForm = (props: UserFormProps) => {
     reset,
     formState: { errors, isSubmitSuccessful },
   } = useForm<IUserRequest>({
-    defaultValues: id ? props.defaultValues : defaultValues,
+    defaultValues: id ? props.user : defaultValues,
   });
 
-  const onSubmit: SubmitHandler<IUserRequest> = (data) => {
-    props.onSubmit(data);
-  };
+  const [role, setRole] = useState("");
+
+  const handleChange = (event: SelectChangeEvent) =>
+    setRole(event.target.value as string);
+
+  const onSubmit: SubmitHandler<IUserRequest> = (data) => props.onSubmit(data);
 
   useEffect(() => {
     reset();
@@ -74,22 +77,24 @@ const UserForm = (props: UserFormProps) => {
       <Controller
         control={control}
         name="role"
-        render={({ field }) => (
+        render={({ field: { onChange, value } }) => (
           <FormControl fullWidth>
             <InputLabel id="role">Role</InputLabel>
             <Select
-              {...field}
               sx={{ mb: "1rem" }}
-              value={""}
+              value={value}
               label="Role"
               disabled={isLoading}
-              // onChange={""}
+              onChange={(event) => {
+                onChange(event);
+                handleChange(event);
+              }}
             >
               {isLoading ? (
                 <MenuItem disabled>Loading...</MenuItem>
               ) : (
                 roles?.map((role) => (
-                  <MenuItem key={role.id} value={role.id}>
+                  <MenuItem key={role.id} value={role.name}>
                     {role.name}
                   </MenuItem>
                 ))
