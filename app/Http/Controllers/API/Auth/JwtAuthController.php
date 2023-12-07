@@ -35,7 +35,7 @@ class JwtAuthController extends Controller
         event(new Registered($user));
 
         return response()->json([
-            'status' => 'user-created'
+            'status' => 'user-created',
         ]);
     }
 
@@ -55,7 +55,7 @@ class JwtAuthController extends Controller
 
         if (!$token) {
             return response()->json([
-                'status' => 'wrong-credentials'
+                'status' => 'wrong-credentials',
             ], 401);
         }
 
@@ -87,8 +87,8 @@ class JwtAuthController extends Controller
         ]);
     }
 
-    public function user(): JsonResponse
+    public function user(): UserResource
     {
-        return response()->json(new UserResource(auth()->user()), 200);
+        return new UserResource(Auth::user());
     }
 }
