@@ -4,6 +4,7 @@ import { styled } from "@mui/material/styles";
 import PropTypes from "prop-types";
 import type { FC } from "react";
 import { useRef, useState } from "react";
+import { useAuth } from "src/hooks/use-auth";
 import { Menu as MenuIcon } from "../../icons/menu";
 import { UserCircle as UserCircleIcon } from "../../icons/user-circle";
 import { AccountPopover } from "./account-popover";
@@ -30,12 +31,7 @@ const DashboardNavbarRoot = styled(AppBar)(({ theme }) => ({
 const AccountButton = () => {
   const anchorRef = useRef<HTMLButtonElement | null>(null);
   const [openPopover, setOpenPopover] = useState<boolean>(false);
-  // To get the user from the authContext, you can use
-  // `const { user } = useAuth();`
-  const user = {
-    avatar: "/static/mock-images/avatars/avatar-anika_visser.png",
-    name: "Anika Visser",
-  };
+  const { user } = useAuth();
 
   const handleOpenPopover = (): void => {
     setOpenPopover(true);
@@ -62,7 +58,7 @@ const AccountButton = () => {
             height: 40,
             width: 40,
           }}
-          src={user.avatar}
+          src={`https://ui-avatars.com/api/?name=${user.name}&background=random`}
         >
           <UserCircleIcon fontSize="small" />
         </Avatar>
