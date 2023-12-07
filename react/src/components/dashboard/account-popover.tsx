@@ -1,13 +1,10 @@
 import LogoutIcon from "@mui/icons-material/Logout";
 import { Avatar, Box, Divider, ListItemIcon, ListItemText, MenuItem, Popover, Typography } from "@mui/material";
-import NextLink from "next/link";
 import { useRouter } from "next/router";
 import PropTypes from "prop-types";
 import type { FC } from "react";
 import toast from "react-hot-toast";
 import { useAuth } from "../../hooks/use-auth";
-import { Cog as CogIcon } from "../../icons/cog";
-import { SwitchHorizontalOutlined as SwitchHorizontalOutlinedIcon } from "../../icons/switch-horizontal-outlined";
 import { UserCircle as UserCircleIcon } from "../../icons/user-circle";
 
 interface AccountPopoverProps {
@@ -81,31 +78,6 @@ export const AccountPopover: FC<AccountPopoverProps> = (props) => {
       </Box>
       <Divider />
       <Box sx={{ my: 1 }}>
-        <NextLink href="/dashboard/social/profile" passHref>
-          <MenuItem component="a">
-            <ListItemIcon>
-              <UserCircleIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText primary={<Typography variant="body1">Profile</Typography>} />
-          </MenuItem>
-        </NextLink>
-        <NextLink href="/dashboard/account" passHref>
-          <MenuItem component="a">
-            <ListItemIcon>
-              <CogIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText primary={<Typography variant="body1">Settings</Typography>} />
-          </MenuItem>
-        </NextLink>
-        <NextLink href="/dashboard" passHref>
-          <MenuItem component="a">
-            <ListItemIcon>
-              <SwitchHorizontalOutlinedIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText primary={<Typography variant="body1">Change organization</Typography>} />
-          </MenuItem>
-        </NextLink>
-        <Divider />
         <MenuItem onClick={handleLogout}>
           <ListItemIcon>
             <LogoutIcon fontSize="small" />

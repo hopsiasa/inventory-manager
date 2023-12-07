@@ -23,13 +23,6 @@ import { OverviewLatestTransactions } from "src/components/dashboard/overview/ov
 import { OverviewPrivateWallet } from "src/components/dashboard/overview/overview-private-wallet";
 import { OverviewTotalBalance } from "src/components/dashboard/overview/overview-total-balance";
 import { OverviewTotalTransactions } from "src/components/dashboard/overview/overview-total-transactions";
-import { HomeClients } from "../components/home/home-clients";
-import { HomeDesigners } from "../components/home/home-designers";
-import { HomeDevelopers } from "../components/home/home-developers";
-import { HomeFeatures } from "../components/home/home-features";
-import { HomeHero } from "../components/home/home-hero";
-import { HomeTestimonials } from "../components/home/home-testimonials";
-import { MainLayout } from "../components/main-layout";
 import { ArrowRight as ArrowRightIcon } from "../icons/arrow-right";
 import { Briefcase as BriefcaseIcon } from "../icons/briefcase";
 import { Download as DownloadIcon } from "../icons/download";
@@ -37,34 +30,10 @@ import { ExternalLink as ExternalLinkIcon } from "../icons/external-link";
 import { InformationCircleOutlined as InformationCircleOutlinedIcon } from "../icons/information-circle-outlined";
 import { Reports as ReportsIcon } from "../icons/reports";
 import { Users as UsersIcon } from "../icons/users";
-import { gtm } from "../lib/gtm";
 
 const Home: NextPage = () => {
-  // useEffect(() => {
-  //   gtm.push({ event: "page_view" });
-  // }, []);
-  // return (
-  //   <>
-  //     <Head>
-  //       <title>Material Kit Pro</title>
-  //     </Head>
-  //     <main>
-  //       <HomeHero />
-  //       <Divider />
-  //       <HomeDevelopers />
-  //       <Divider />
-  //       <HomeDesigners />
-  //       <HomeTestimonials />
-  //       <HomeFeatures />
-  //       <Divider />
-  //       <HomeClients />
-  //     </main>
-  //   </>
-  // );
   const [displayBanner, setDisplayBanner] = useState<boolean>(true);
-  useEffect(() => {
-    gtm.push({ event: "page_view" });
-  }, []);
+
   useEffect(() => {
     // Restore the persistent state from local/session storage
     const value = globalThis.sessionStorage.getItem("dismiss-banner");
@@ -265,11 +234,6 @@ const Home: NextPage = () => {
   );
 };
 
-// Home.getLayout = (page) => (
-//   <AuthGuard>
-//     <MainLayout>{page}</MainLayout>
-//   </AuthGuard>
-// );
 Home.getLayout = (page) => (
   <AuthGuard>
     <DashboardLayout>{page}</DashboardLayout>
