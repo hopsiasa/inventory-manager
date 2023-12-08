@@ -52,7 +52,7 @@ export const AccountPopover: FC<AccountPopoverProps> = (props) => {
         }}
       >
         <Avatar
-          src={`https://ui-avatars.com/api/?name=${user.name}&background=random`}
+          src={`https://ui-avatars.com/api/?name=${user?.name}&background=random`}
           sx={{
             height: 40,
             width: 40,
@@ -65,7 +65,7 @@ export const AccountPopover: FC<AccountPopoverProps> = (props) => {
             ml: 1,
           }}
         >
-          <Typography variant="body1">{user.name}</Typography>
+          <Typography variant="body1">{user?.name}</Typography>
           <Typography color="textSecondary" variant="body2">
             Acme Inc
           </Typography>

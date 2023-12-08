@@ -1,9 +1,9 @@
-import { createSlice } from '@reduxjs/toolkit';
-import type { PayloadAction } from '@reduxjs/toolkit';
-import { chatApi } from '../__fake-api__/chat-api';
-import type { AppThunk } from '../store';
-import type { Contact, Message, Thread } from '../types/chat';
-import { objFromArray } from '../utils/obj-from-array';
+import type { PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
+import { chatApi } from "../__fake-api__/chat-api";
+import type { AppThunk } from "../store";
+import type { Contact, Message, Thread } from "../types/chat";
+import { objFromArray } from "../utils/obj-from-array";
 
 interface ChatState {
   activeThreadId?: string;
@@ -21,16 +21,16 @@ const initialState: ChatState = {
   activeThreadId: undefined,
   contacts: {
     byId: {},
-    allIds: []
+    allIds: [],
   },
   threads: {
     byId: {},
-    allIds: []
-  }
+    allIds: [],
+  },
 };
 
 const slice = createSlice({
-  name: 'chat',
+  name: "chat",
   initialState,
   reducers: {
     getContacts(state: ChatState, action: PayloadAction<Contact[]>): void {
@@ -67,62 +67,69 @@ const slice = createSlice({
     setActiveThread(state: ChatState, action: PayloadAction<string | undefined>): void {
       state.activeThreadId = action.payload;
     },
-    addMessage(state: ChatState,
-      action: PayloadAction<{ message: Message, threadId: string }>): void {
+    addMessage(state: ChatState, action: PayloadAction<{ message: Message; threadId: string }>): void {
       const { threadId, message } = action.payload;
       const thread = state.threads.byId[threadId];
 
       if (thread) {
         thread.messages.push(message);
       }
-    }
-  }
+    },
+  },
 });
 
 export const { reducer } = slice;
 
-export const getContacts = (): AppThunk => async (dispatch): Promise<void> => {
-  const data = await chatApi.getContacts();
+export const getContacts =
+  (): AppThunk =>
+  async (dispatch): Promise<void> => {
+    const data = await chatApi.getContacts();
 
-  dispatch(slice.actions.getContacts(data));
-};
+    dispatch(slice.actions.getContacts(data));
+  };
 
-export const getThreads = (): AppThunk => async (dispatch): Promise<void> => {
-  const data = await chatApi.getThreads();
+export const getThreads =
+  (): AppThunk =>
+  async (dispatch): Promise<void> => {
+    const data = await chatApi.getThreads();
 
-  dispatch(slice.actions.getThreads(data));
-};
+    dispatch(slice.actions.getThreads(data));
+  };
 
-export const getThread = (threadKey: string): AppThunk => async (dispatch): Promise<string | undefined> => {
-  const data = await chatApi.getThread(threadKey);
+export const getThread =
+  (threadKey: string): AppThunk =>
+  async (dispatch): Promise<string | undefined> => {
+    const data = await chatApi.getThread(threadKey);
 
-  dispatch(slice.actions.getThread(data));
+    dispatch(slice.actions.getThread(data));
 
-  return data?.id;
-};
+    return data?.id;
+  };
 
-export const markThreadAsSeen = (threadId: string): AppThunk => async (dispatch): Promise<void> => {
-  await chatApi.markThreadAsSeen(threadId);
+export const markThreadAsSeen =
+  (threadId: string): AppThunk =>
+  async (dispatch): Promise<void> => {
+    await chatApi.markThreadAsSeen(threadId);
 
-  dispatch(slice.actions.markThreadAsSeen(threadId));
-};
+    dispatch(slice.actions.markThreadAsSeen(threadId));
+  };
 
-export const setActiveThread = (threadId?: string): AppThunk => (dispatch): void => {
-  dispatch(slice.actions.setActiveThread(threadId));
-};
+export const setActiveThread =
+  (threadId?: string): AppThunk =>
+  (dispatch): void => {
+    dispatch(slice.actions.setActiveThread(threadId));
+  };
 
-export const addMessage = ({
-  threadId,
-  recipientIds,
-  body
-}: { threadId?: string; recipientIds?: string[]; body: string; }): AppThunk => async (dispatch): Promise<string> => {
-  const data = await chatApi.addMessage({
-    threadId,
-    recipientIds,
-    body
-  });
+export const addMessage =
+  ({ threadId, recipientIds, body }: { threadId?: string; recipientIds?: string[]; body: string }): AppThunk =>
+  async (dispatch): Promise<string> => {
+    const data = await chatApi.addMessage({
+      threadId,
+      recipientIds,
+      body,
+    });
 
-  dispatch(slice.actions.addMessage(data));
+    dispatch(slice.actions.addMessage(data));
 
-  return data.threadId;
-};
+    return data.threadId;
+  };

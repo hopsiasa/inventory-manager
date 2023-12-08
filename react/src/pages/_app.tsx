@@ -1,6 +1,5 @@
 import type { EmotionCache } from "@emotion/cache";
 import { CacheProvider } from "@emotion/react";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider } from "@mui/material/styles";
 import { LocalizationProvider } from "@mui/x-date-pickers";
@@ -11,17 +10,15 @@ import Head from "next/head";
 import Router from "next/router";
 import nProgress from "nprogress";
 import type { FC } from "react";
-import { useEffect } from "react";
 import { Toaster } from "react-hot-toast";
+import { QueryClient, QueryClientProvider } from "react-query";
 import { Provider as ReduxProvider } from "react-redux";
 import { RTL } from "../components/rtl";
 import { SettingsButton } from "../components/settings-button";
 import { SplashScreen } from "../components/splash-screen";
-import { gtmConfig } from "../config";
 import { AuthConsumer, AuthProvider } from "../contexts/jwt-context";
 import { SettingsConsumer, SettingsProvider } from "../contexts/settings-context";
 import "../i18n";
-import { gtm } from "../lib/gtm";
 import { store } from "../store";
 import { createTheme } from "../theme";
 import { createEmotionCache } from "../utils/create-emotion-cache";
@@ -42,9 +39,17 @@ const App: FC<EnhancedAppProps> = (props) => {
 
   const getLayout = Component.getLayout ?? ((page) => page);
 
-  useEffect(() => {
-    gtm.initialize(gtmConfig);
-  }, []);
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus: false,
+        refetchOnMount: false,
+        refetchOnReconnect: false,
+        retry: false,
+        staleTime: 5 * 60 * 1000,
+      },
+    },
+  });
 
   return (
     <CacheProvider value={emotionCache}>
@@ -70,7 +75,15 @@ const App: FC<EnhancedAppProps> = (props) => {
                       <Toaster position="top-center" />
                       <SettingsButton />
                       <AuthConsumer>
-                        {(auth) => (!auth.isInitialized ? <SplashScreen /> : getLayout(<Component {...pageProps} />))}
+                        {(auth) =>
+                          !auth.isInitialized ? (
+                            <SplashScreen />
+                          ) : (
+                            <QueryClientProvider client={queryClient}>
+                              {getLayout(<Component {...pageProps} />)}
+                            </QueryClientProvider>
+                          )
+                        }
                       </AuthConsumer>
                     </RTL>
                   </ThemeProvider>

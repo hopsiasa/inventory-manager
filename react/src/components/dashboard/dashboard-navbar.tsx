@@ -58,7 +58,7 @@ const AccountButton = () => {
             height: 40,
             width: 40,
           }}
-          src={`https://ui-avatars.com/api/?name=${user.name}&background=random`}
+          src={`https://ui-avatars.com/api/?name=${user?.name}&background=random`}
         >
           <UserCircleIcon fontSize="small" />
         </Avatar>

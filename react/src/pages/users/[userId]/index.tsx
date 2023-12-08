@@ -1,25 +1,25 @@
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { Avatar, Box, Button, Chip, Container, Divider, Grid, Link, Tab, Tabs, Typography } from "@mui/material";
+import type { NextPage } from "next";
+import Head from "next/head";
+import NextLink from "next/link";
 import type { ChangeEvent } from "react";
 import { useCallback, useEffect, useState } from "react";
-import type { NextPage } from "next";
-import NextLink from "next/link";
-import Head from "next/head";
-import { Avatar, Box, Button, Chip, Container, Divider, Grid, Link, Tab, Tabs, Typography } from "@mui/material";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { customerApi } from "../../../../api/customer-api";
-import { AuthGuard } from "../../../../components/authentication/auth-guard";
-import { DashboardLayout } from "../../../../components/dashboard/dashboard-layout";
-import { CustomerBasicDetails } from "../../../../components/dashboard/customer/customer-basic-details";
-import { CustomerDataManagement } from "../../../../components/dashboard/customer/customer-data-management";
-import { CustomerEmailsSummary } from "../../../../components/dashboard/customer/customer-emails-summary";
-import { CustomerInvoices } from "../../../../components/dashboard/customer/customer-invoices";
-import { CustomerPayment } from "../../../../components/dashboard/customer/customer-payment";
-import { CustomerLogs } from "../../../../components/dashboard/customer/customer-logs";
-import { useMounted } from "../../../../hooks/use-mounted";
-import { ChevronDown as ChevronDownIcon } from "../../../../icons/chevron-down";
-import { PencilAlt as PencilAltIcon } from "../../../../icons/pencil-alt";
-import { gtm } from "../../../../lib/gtm";
-import type { Customer } from "../../../../types/customer";
-import { getInitials } from "../../../../utils/get-initials";
+import { customerApi } from "../../../api/customer-api";
+import { AuthGuard } from "../../../components/authentication/auth-guard";
+import { CustomerBasicDetails } from "../../../components/dashboard/customer/customer-basic-details";
+import { CustomerDataManagement } from "../../../components/dashboard/customer/customer-data-management";
+import { CustomerEmailsSummary } from "../../../components/dashboard/customer/customer-emails-summary";
+import { CustomerInvoices } from "../../../components/dashboard/customer/customer-invoices";
+import { CustomerLogs } from "../../../components/dashboard/customer/customer-logs";
+import { CustomerPayment } from "../../../components/dashboard/customer/customer-payment";
+import { DashboardLayout } from "../../../components/dashboard/dashboard-layout";
+import { useMounted } from "../../../hooks/use-mounted";
+import { ChevronDown as ChevronDownIcon } from "../../../icons/chevron-down";
+import { PencilAlt as PencilAltIcon } from "../../../icons/pencil-alt";
+import { gtm } from "../../../lib/gtm";
+import type { Customer } from "../../../types/customer";
+import { getInitials } from "../../../utils/get-initials";
 
 const tabs = [
   { label: "Details", value: "details" },
@@ -79,7 +79,7 @@ const CustomerDetails: NextPage = () => {
         <Container maxWidth="md">
           <div>
             <Box sx={{ mb: 4 }}>
-              <NextLink href="/dashboard/customers" passHref>
+              <NextLink href="/users" passHref>
                 <Link
                   color="textPrimary"
                   component="a"
@@ -126,7 +126,7 @@ const CustomerDetails: NextPage = () => {
                 </div>
               </Grid>
               <Grid item sx={{ m: -1 }}>
-                <NextLink href="/dashboard/customers/1/edit" passHref>
+                <NextLink href="/users/1/edit" passHref>
                   <Button component="a" endIcon={<PencilAltIcon fontSize="small" />} sx={{ m: 1 }} variant="outlined">
                     Edit
                   </Button>

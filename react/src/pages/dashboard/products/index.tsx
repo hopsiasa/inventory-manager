@@ -1,68 +1,63 @@
-import { useState, useEffect, useCallback, MouseEvent, ChangeEvent } from 'react';
-import type { NextPage } from 'next';
-import Head from 'next/head';
-import NextLink from 'next/link';
-import { Box, Button, Card, Container, Grid, Typography } from '@mui/material';
-import { productApi } from '../../../__fake-api__/product-api';
-import { AuthGuard } from '../../../components/authentication/auth-guard';
-import { DashboardLayout } from '../../../components/dashboard/dashboard-layout';
-import { ProjectListFilters } from '../../../components/dashboard/product/product-list-filters';
-import type { Filters } from '../../../components/dashboard/product/product-list-filters';
-import { ProductListTable } from '../../../components/dashboard/product/product-list-table';
-import { useMounted } from '../../../hooks/use-mounted';
-import { Download as DownloadIcon } from '../../../icons/download';
-import { Upload as UploadIcon } from '../../../icons/upload';
-import { Plus as PlusIcon } from '../../../icons/plus';
-import { gtm } from '../../../lib/gtm';
-import type { Product } from '../../../types/product';
+import { useState, useEffect, useCallback, MouseEvent, ChangeEvent } from "react";
+import type { NextPage } from "next";
+import Head from "next/head";
+import NextLink from "next/link";
+import { Box, Button, Card, Container, Grid, Typography } from "@mui/material";
+import { productApi } from "../../../api/product-api";
+import { AuthGuard } from "../../../components/authentication/auth-guard";
+import { DashboardLayout } from "../../../components/dashboard/dashboard-layout";
+import { ProjectListFilters } from "../../../components/dashboard/product/product-list-filters";
+import type { Filters } from "../../../components/dashboard/product/product-list-filters";
+import { ProductListTable } from "../../../components/dashboard/product/product-list-table";
+import { useMounted } from "../../../hooks/use-mounted";
+import { Download as DownloadIcon } from "../../../icons/download";
+import { Upload as UploadIcon } from "../../../icons/upload";
+import { Plus as PlusIcon } from "../../../icons/plus";
+import { gtm } from "../../../lib/gtm";
+import type { Product } from "../../../types/product";
 
-const applyFilters = (
-  products: Product[],
-  filters: Filters
-): Product[] => products.filter((product) => {
-  if (filters.name) {
-    const nameMatched = product.name.toLowerCase().includes(filters.name.toLowerCase());
+const applyFilters = (products: Product[], filters: Filters): Product[] =>
+  products.filter((product) => {
+    if (filters.name) {
+      const nameMatched = product.name.toLowerCase().includes(filters.name.toLowerCase());
 
-    if (!nameMatched) {
-      return false;
+      if (!nameMatched) {
+        return false;
+      }
     }
-  }
 
-  // It is possible to select multiple category options
-  if (filters.category?.length > 0) {
-    const categoryMatched = filters.category.includes(product.category);
+    // It is possible to select multiple category options
+    if (filters.category?.length > 0) {
+      const categoryMatched = filters.category.includes(product.category);
 
-    if (!categoryMatched) {
-      return false;
+      if (!categoryMatched) {
+        return false;
+      }
     }
-  }
 
-  // It is possible to select multiple status options
-  if (filters.status?.length > 0) {
-    const statusMatched = filters.status.includes(product.status);
+    // It is possible to select multiple status options
+    if (filters.status?.length > 0) {
+      const statusMatched = filters.status.includes(product.status);
 
-    if (!statusMatched) {
-      return false;
+      if (!statusMatched) {
+        return false;
+      }
     }
-  }
 
-  // Present only if filter required
-  if (typeof filters.inStock !== 'undefined') {
-    const stockMatched = product.inStock === filters.inStock;
+    // Present only if filter required
+    if (typeof filters.inStock !== "undefined") {
+      const stockMatched = product.inStock === filters.inStock;
 
-    if (!stockMatched) {
-      return false;
+      if (!stockMatched) {
+        return false;
+      }
     }
-  }
 
-  return true;
-});
+    return true;
+  });
 
-const applyPagination = (
-  products: Product[],
-  page: number,
-  rowsPerPage: number
-): Product[] => products.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+const applyPagination = (products: Product[], page: number, rowsPerPage: number): Product[] =>
+  products.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
 const ProductList: NextPage = () => {
   const isMounted = useMounted();
@@ -73,11 +68,11 @@ const ProductList: NextPage = () => {
     name: undefined,
     category: [],
     status: [],
-    inStock: undefined
+    inStock: undefined,
   });
 
   useEffect(() => {
-    gtm.push({ event: 'page_view' });
+    gtm.push({ event: "page_view" });
   }, []);
 
   const getProducts = useCallback(async () => {
@@ -119,39 +114,24 @@ const ProductList: NextPage = () => {
   return (
     <>
       <Head>
-        <title>
-          Dashboard: Product List | Material Kit Pro
-        </title>
+        <title>Dashboard: Product List | Material Kit Pro</title>
       </Head>
       <Box
         component="main"
         sx={{
           flexGrow: 1,
-          py: 8
+          py: 8,
         }}
       >
         <Container maxWidth="xl">
           <Box sx={{ mb: 4 }}>
-            <Grid
-              container
-              justifyContent="space-between"
-              spacing={3}
-            >
+            <Grid container justifyContent="space-between" spacing={3}>
               <Grid item>
-                <Typography variant="h4">
-                  Products
-                </Typography>
+                <Typography variant="h4">Products</Typography>
               </Grid>
               <Grid item>
-                <NextLink
-                  href="/dashboard/products/new"
-                  passHref
-                >
-                  <Button
-                    component="a"
-                    startIcon={<PlusIcon fontSize="small" />}
-                    variant="contained"
-                  >
+                <NextLink href="/dashboard/products/new" passHref>
+                  <Button component="a" startIcon={<PlusIcon fontSize="small" />} variant="contained">
                     Add
                   </Button>
                 </NextLink>
@@ -160,19 +140,13 @@ const ProductList: NextPage = () => {
             <Box
               sx={{
                 m: -1,
-                mt: 3
+                mt: 3,
               }}
             >
-              <Button
-                startIcon={<UploadIcon fontSize="small" />}
-                sx={{ m: 1 }}
-              >
+              <Button startIcon={<UploadIcon fontSize="small" />} sx={{ m: 1 }}>
                 Import
               </Button>
-              <Button
-                startIcon={<DownloadIcon fontSize="small" />}
-                sx={{ m: 1 }}
-              >
+              <Button startIcon={<DownloadIcon fontSize="small" />} sx={{ m: 1 }}>
                 Export
               </Button>
             </Box>
@@ -196,9 +170,7 @@ const ProductList: NextPage = () => {
 
 ProductList.getLayout = (page) => (
   <AuthGuard>
-    <DashboardLayout>
-      {page}
-    </DashboardLayout>
+    <DashboardLayout>{page}</DashboardLayout>
   </AuthGuard>
 );
 

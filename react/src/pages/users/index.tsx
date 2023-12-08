@@ -1,7 +1,3 @@
-import { useState, useEffect, useCallback, FormEvent, useRef } from "react";
-import type { ChangeEvent, MouseEvent } from "react";
-import type { NextPage } from "next";
-import Head from "next/head";
 import {
   Box,
   Button,
@@ -15,17 +11,20 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { customerApi } from "../../../api/customer-api";
-import { AuthGuard } from "../../../components/authentication/auth-guard";
-import { DashboardLayout } from "../../../components/dashboard/dashboard-layout";
-import { CustomerListTable } from "../../../components/dashboard/customer/customer-list-table";
-import { useMounted } from "../../../hooks/use-mounted";
-import { Download as DownloadIcon } from "../../../icons/download";
-import { Plus as PlusIcon } from "../../../icons/plus";
-import { Search as SearchIcon } from "../../../icons/search";
-import { Upload as UploadIcon } from "../../../icons/upload";
-import { gtm } from "../../../lib/gtm";
-import type { Customer } from "../../../types/customer";
+import type { NextPage } from "next";
+import Head from "next/head";
+import type { ChangeEvent, MouseEvent } from "react";
+import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
+import { useGetUsers } from "src/hooks/use-users";
+import { AuthGuard } from "../../components/authentication/auth-guard";
+import { DashboardLayout } from "../../components/dashboard/dashboard-layout";
+import { UserListTable } from "../../components/users/user-list-table";
+import { useMounted } from "../../hooks/use-mounted";
+import { Download as DownloadIcon } from "../../icons/download";
+import { Plus as PlusIcon } from "../../icons/plus";
+import { Search as SearchIcon } from "../../icons/search";
+import { Upload as UploadIcon } from "../../icons/upload";
+import type { User } from "../../types/user";
 
 interface Filters {
   query?: string;
@@ -90,14 +89,14 @@ const sortOptions: SortOption[] = [
   },
 ];
 
-const applyFilters = (customers: Customer[], filters: Filters): Customer[] =>
-  customers.filter((customer) => {
+const applyFilters = (users: User[], filters: Filters): User[] =>
+  users?.filter((user) => {
     if (filters.query) {
       let queryMatched = false;
       const properties: ("email" | "name")[] = ["email", "name"];
 
       properties.forEach((property) => {
-        if (customer[property].toLowerCase().includes(filters.query!.toLowerCase())) {
+        if (user[property].toLowerCase().includes(filters.query!.toLowerCase())) {
           queryMatched = true;
         }
       });
@@ -107,22 +106,22 @@ const applyFilters = (customers: Customer[], filters: Filters): Customer[] =>
       }
     }
 
-    if (filters.hasAcceptedMarketing && !customer.hasAcceptedMarketing) {
+    if (filters.hasAcceptedMarketing && !user.hasAcceptedMarketing) {
       return false;
     }
 
-    if (filters.isProspect && !customer.isProspect) {
+    if (filters.isProspect && !user.isProspect) {
       return false;
     }
 
-    if (filters.isReturning && !customer.isReturning) {
+    if (filters.isReturning && !user.isReturning) {
       return false;
     }
 
     return true;
   });
 
-const descendingComparator = (a: Customer, b: Customer, sortBy: SortField): number => {
+const descendingComparator = (a: User, b: User, sortBy: SortField): number => {
   // When compared to something undefined, always returns false.
   // This means that if a field does not exist from either element ('a' or 'b') the return will be 0.
 
@@ -139,15 +138,15 @@ const descendingComparator = (a: Customer, b: Customer, sortBy: SortField): numb
 
 const getComparator = (sortDir: SortDir, sortBy: SortField) =>
   sortDir === "desc"
-    ? (a: Customer, b: Customer) => descendingComparator(a, b, sortBy)
-    : (a: Customer, b: Customer) => -descendingComparator(a, b, sortBy);
+    ? (a: User, b: User) => descendingComparator(a, b, sortBy)
+    : (a: User, b: User) => -descendingComparator(a, b, sortBy);
 
-const applySort = (customers: Customer[], sort: Sort): Customer[] => {
+const applySort = (users: User[], sort: Sort): User[] => {
   const [sortBy, sortDir] = sort.split("|") as [SortField, SortDir];
   const comparator = getComparator(sortDir, sortBy);
-  const stabilizedThis = customers.map((el, index) => [el, index]);
+  const stabilizedThis = users?.map((el, index) => [el, index]);
 
-  stabilizedThis.sort((a, b) => {
+  stabilizedThis?.sort((a, b) => {
     // @ts-ignore
     const newOrder = comparator(a[0], b[0]);
 
@@ -160,16 +159,15 @@ const applySort = (customers: Customer[], sort: Sort): Customer[] => {
   });
 
   // @ts-ignore
-  return stabilizedThis.map((el) => el[0]);
+  return stabilizedThis?.map((el) => el[0]);
 };
 
-const applyPagination = (customers: Customer[], page: number, rowsPerPage: number): Customer[] =>
-  customers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+const applyPagination = (users: User[], page: number, rowsPerPage: number): User[] =>
+  users?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
-const CustomerList: NextPage = () => {
+const UserList: NextPage = () => {
   const isMounted = useMounted();
   const queryRef = useRef<HTMLInputElement | null>(null);
-  const [customers, setCustomers] = useState<Customer[]>([]);
   const [currentTab, setCurrentTab] = useState<TabValue>("all");
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
@@ -181,29 +179,7 @@ const CustomerList: NextPage = () => {
     isReturning: undefined,
   });
 
-  useEffect(() => {
-    gtm.push({ event: "page_view" });
-  }, []);
-
-  const getCustomers = useCallback(async () => {
-    try {
-      const data = await customerApi.getCustomers();
-
-      if (isMounted()) {
-        setCustomers(data);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  }, [isMounted]);
-
-  useEffect(
-    () => {
-      getCustomers();
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
+  const { users, isLoading } = useGetUsers(page + 1);
 
   const handleTabsChange = (event: ChangeEvent<{}>, value: TabValue): void => {
     const updatedFilters: Filters = {
@@ -242,14 +218,14 @@ const CustomerList: NextPage = () => {
   };
 
   // Usually query is done on backend with indexing solutions
-  const filteredCustomers = applyFilters(customers, filters);
-  const sortedCustomers = applySort(filteredCustomers, sort);
-  const paginatedCustomers = applyPagination(sortedCustomers, page, rowsPerPage);
+  const filteredUsers = applyFilters(users, filters);
+  const sortedUsers = applySort(filteredUsers, sort);
+  const paginatedUsers = applyPagination(sortedUsers, page, rowsPerPage);
 
   return (
     <>
       <Head>
-        <title>Dashboard: Customer List | Material Kit Pro</title>
+        <title>Dashboard: User List | Material Kit Pro</title>
       </Head>
       <Box
         component="main"
@@ -262,7 +238,7 @@ const CustomerList: NextPage = () => {
           <Box sx={{ mb: 4 }}>
             <Grid container justifyContent="space-between" spacing={3}>
               <Grid item>
-                <Typography variant="h4">Customers</Typography>
+                <Typography variant="h4">Users</Typography>
               </Grid>
               <Grid item>
                 <Button startIcon={<PlusIcon fontSize="small" />} variant="contained">
@@ -327,7 +303,7 @@ const CustomerList: NextPage = () => {
                       </InputAdornment>
                     ),
                   }}
-                  placeholder="Search customers"
+                  placeholder="Search users"
                 />
               </Box>
               <TextField
@@ -346,9 +322,9 @@ const CustomerList: NextPage = () => {
                 ))}
               </TextField>
             </Box>
-            <CustomerListTable
-              customers={paginatedCustomers}
-              customersCount={filteredCustomers.length}
+            <UserListTable
+              users={paginatedUsers}
+              usersCount={filteredUsers?.length}
               onPageChange={handlePageChange}
               onRowsPerPageChange={handleRowsPerPageChange}
               rowsPerPage={rowsPerPage}
@@ -361,10 +337,10 @@ const CustomerList: NextPage = () => {
   );
 };
 
-CustomerList.getLayout = (page) => (
+UserList.getLayout = (page) => (
   <AuthGuard>
     <DashboardLayout>{page}</DashboardLayout>
   </AuthGuard>
 );
 
-export default CustomerList;
+export default UserList;

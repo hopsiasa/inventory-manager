@@ -1,17 +1,17 @@
-import { useState, useCallback, useEffect } from "react";
-import type { NextPage } from "next";
-import NextLink from "next/link";
-import Head from "next/head";
-import { Avatar, Box, Chip, Container, Link, Typography } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { customerApi } from "../../../../api/customer-api";
-import { AuthGuard } from "../../../../components/authentication/auth-guard";
-import { DashboardLayout } from "../../../../components/dashboard/dashboard-layout";
-import { CustomerEditForm } from "../../../../components/dashboard/customer/customer-edit-form";
-import { useMounted } from "../../../../hooks/use-mounted";
-import { gtm } from "../../../../lib/gtm";
-import type { Customer } from "../../../../types/customer";
-import { getInitials } from "../../../../utils/get-initials";
+import { Avatar, Box, Chip, Container, Link, Typography } from "@mui/material";
+import type { NextPage } from "next";
+import Head from "next/head";
+import NextLink from "next/link";
+import { useCallback, useEffect, useState } from "react";
+import { customerApi } from "../../../api/customer-api";
+import { AuthGuard } from "../../../components/authentication/auth-guard";
+import { CustomerEditForm } from "../../../components/dashboard/customer/customer-edit-form";
+import { DashboardLayout } from "../../../components/dashboard/dashboard-layout";
+import { useMounted } from "../../../hooks/use-mounted";
+import { gtm } from "../../../lib/gtm";
+import type { Customer } from "../../../types/customer";
+import { getInitials } from "../../../utils/get-initials";
 
 const CustomerEdit: NextPage = () => {
   const isMounted = useMounted();

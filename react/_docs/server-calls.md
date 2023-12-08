@@ -15,35 +15,31 @@ alternative could be [Fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fe
 
 ```jsx
 class CustomerApi {
-  getCustomers() {
-    return Promise.resolve([
-      {
-        id: '238339KDC',
-        name: 'John'   
-      }
-    ]);
-  }
-};
+    getCustomers() {
+        return Promise.resolve([
+            {
+                id: "238339KDC",
+                name: "John",
+            },
+        ]);
+    }
+}
 
 const customerApi = new CustomerApi();
 
 const Customers = () => {
-  const [customers, setCustomers] = useState(null);
+    const [customers, setCustomers] = useState(null);
 
-  useEffect(() => {
-    const getCustomers = async () => {
-      const result = await customerApi.getCustomers();
-      setCustomers(result);
-    };
+    useEffect(() => {
+        const getCustomers = async () => {
+            const result = await customerApi.getCustomers();
+            setCustomers(result);
+        };
 
-    getCustomers();
-  }, []);
+        getCustomers();
+    }, []);
 
-  return (
-    <div>
-      {/* render content */}
-    </div>
-  );
+    return <div>{/* render content */}</div>;
 };
 ```
 
@@ -55,48 +51,40 @@ server request to process your input and output data.
 
 ```jsx
 const Customers = () => {
-  const [customers, setCustomers] = useState(null);
+    const [customers, setCustomers] = useState(null);
 
-  useEffect(() => {
-    const getCustomers = async () => {
-      const response = await fetch('/api/customers');
-      const data = await response.json();
-      setCustomers(data);
-    };
+    useEffect(() => {
+        const getCustomers = async () => {
+            const response = await fetch("/api/customers");
+            const data = await response.json();
+            setCustomers(data);
+        };
 
-    getCustomers();
-  }, []);
+        getCustomers();
+    }, []);
 
-  return (
-    <div>
-      {/* render content */}
-    </div>
-  );
+    return <div>{/* render content */}</div>;
 };
 ```
 
 ## Example with Axios
 
 ```jsx
-import axios from 'axios'; // You need to install it
+import axios from "axios"; // You need to install it
 
 const Customers = () => {
-  const [customers, setCustomers] = useState(null);
+    const [customers, setCustomers] = useState(null);
 
-  useEffect(() => {
-    const getCustomers = async () => {
-      const response = await axios.get('/api/customers');
-      setCustomers(response.data);
-    };
+    useEffect(() => {
+        const getCustomers = async () => {
+            const response = await axios.get("/api/customers");
+            setCustomers(response.data);
+        };
 
-    getCustomers();
-  }, []);
+        getCustomers();
+    }, []);
 
-  return (
-    <div>
-      {/* render content */}
-    </div>
-  );
+    return <div>{/* render content */}</div>;
 };
 ```
 
@@ -114,23 +102,23 @@ It takes ony a few seconds to add a new http request listener. The interceptor h
 to Express JS, for example:
 
 ```js
-import axios from 'axios';  // You need to install it
-import AxiosMockAdapter from 'axios-mock-adapter';  // You need to install it
+import axios from "axios"; // You need to install it
+import AxiosMockAdapter from "axios-mock-adapter"; // You need to install it
 
 export const axiosInstance = axios.create();
 
 axiosInstance.interceptors.response.use(
-  (response) => response,
-  (error) => Promise.reject((error.response && error.response.data) || 'Something went wrong')
+    (response) => response,
+    (error) => Promise.reject((error.response && error.response.data) || "Something went wrong")
 );
 
-const mock = new AxiosMockAdapter(axiosInstance, {delayResponse: 0});
+const mock = new AxiosMockAdapter(axiosInstance, { delayResponse: 0 });
 
-mock.onGet('/__fake-api__/invoices').reply(200, {
-  invoices: [
-    {id: 1, total: 32.43},
-    {id: 2, total: 67.00}
-  ]
+mock.onGet("/api/invoices").reply(200, {
+    invoices: [
+        { id: 1, total: 32.43 },
+        { id: 2, total: 67.0 },
+    ],
 });
 ```
 

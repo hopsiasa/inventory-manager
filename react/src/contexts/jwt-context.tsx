@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import type { FC, ReactNode } from "react";
 import { createContext, useEffect, useReducer } from "react";
-import { authApi } from "../__fake-api__/auth-api";
+import { authApi } from "../api/auth-api";
 import type { User } from "../types/user";
 
 interface State {

@@ -1,40 +1,29 @@
-import { useCallback, useState, useEffect } from 'react';
-import type { NextPage } from 'next';
-import Head from 'next/head';
-import NextLink from 'next/link';
-import {
-  Avatar,
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Container,
-  Grid,
-  IconButton,
-  Link,
-  Typography
-} from '@mui/material';
-import { jobApi } from '../../../__fake-api__/job-api';
-import { AuthGuard } from '../../../components/authentication/auth-guard';
-import { DashboardLayout } from '../../../components/dashboard/dashboard-layout';
-import { JobsBrowseFilter } from '../../../components/dashboard/jobs/jobs-browse-filter';
-import { CompanyJobs } from '../../../components/dashboard/jobs/company-jobs';
-import { useMounted } from '../../../hooks/use-mounted';
-import { BadgeCheckOutlined as BadgeCheckOutlinedIcon } from '../../../icons/badge-check-outlined';
-import { ChevronLeft as ChevronLeftIcon } from '../../../icons/chevron-left';
-import { ChevronRight as ChevronRightIcon } from '../../../icons/chevron-right';
-import { Star as StarIcon } from '../../../icons/star';
-import { Users as UsersIcon } from '../../../icons/users';
-import { gtm } from '../../../lib/gtm';
-import type { Company } from '../../../types/job';
-import { getInitials } from '../../../utils/get-initials';
+import { useCallback, useState, useEffect } from "react";
+import type { NextPage } from "next";
+import Head from "next/head";
+import NextLink from "next/link";
+import { Avatar, Box, Button, Card, CardContent, Container, Grid, IconButton, Link, Typography } from "@mui/material";
+import { jobApi } from "../../../api/job-api";
+import { AuthGuard } from "../../../components/authentication/auth-guard";
+import { DashboardLayout } from "../../../components/dashboard/dashboard-layout";
+import { JobsBrowseFilter } from "../../../components/dashboard/jobs/jobs-browse-filter";
+import { CompanyJobs } from "../../../components/dashboard/jobs/company-jobs";
+import { useMounted } from "../../../hooks/use-mounted";
+import { BadgeCheckOutlined as BadgeCheckOutlinedIcon } from "../../../icons/badge-check-outlined";
+import { ChevronLeft as ChevronLeftIcon } from "../../../icons/chevron-left";
+import { ChevronRight as ChevronRightIcon } from "../../../icons/chevron-right";
+import { Star as StarIcon } from "../../../icons/star";
+import { Users as UsersIcon } from "../../../icons/users";
+import { gtm } from "../../../lib/gtm";
+import type { Company } from "../../../types/job";
+import { getInitials } from "../../../utils/get-initials";
 
 const JobBrowse: NextPage = () => {
   const isMounted = useMounted();
   const [companies, setCompanies] = useState<Company[]>([]);
 
   useEffect(() => {
-    gtm.push({ event: 'page_view' });
+    gtm.push({ event: "page_view" });
   }, []);
 
   const getCompanies = useCallback(async () => {
@@ -60,15 +49,13 @@ const JobBrowse: NextPage = () => {
   return (
     <>
       <Head>
-        <title>
-          Dashboard: Job Browse | Material Kit Pro
-        </title>
+        <title>Dashboard: Job Browse | Material Kit Pro</title>
       </Head>
       <Box
         component="main"
         sx={{
           flexGrow: 1,
-          py: 8
+          py: 8,
         }}
       >
         <Container maxWidth="md">
@@ -76,37 +63,21 @@ const JobBrowse: NextPage = () => {
             alignItems="center"
             container
             sx={{
-              backgroundColor: 'neutral.900',
+              backgroundColor: "neutral.900",
               borderRadius: 1,
-              color: '#FFFFFF',
+              color: "#FFFFFF",
               px: 4,
-              py: 8
+              py: 8,
             }}
           >
-            <Grid
-              item
-              xs={12}
-              sm={7}
-            >
-              <Typography
-                color="inherit"
-                variant="h3"
-              >
+            <Grid item xs={12} sm={7}>
+              <Typography color="inherit" variant="h3">
                 Reach 50K+ potential candidates.
               </Typography>
-              <Typography
-                color="neutral.500"
-                sx={{ mt: 2 }}
-                variant="body1"
-              >
+              <Typography color="neutral.500" sx={{ mt: 2 }} variant="body1">
                 Post your job today for free. Promotions start at $99.
               </Typography>
-              <Button
-                color="secondary"
-                size="large"
-                sx={{ mt: 3 }}
-                variant="contained"
-              >
+              <Button color="secondary" size="large" sx={{ mt: 3 }} variant="contained">
                 Post a job
               </Button>
             </Grid>
@@ -115,15 +86,12 @@ const JobBrowse: NextPage = () => {
               sm={5}
               sx={{
                 display: {
-                  xs: 'none',
-                  sm: 'block'
-                }
+                  xs: "none",
+                  sm: "block",
+                },
               }}
             >
-              <img
-                alt=""
-                src="/static/mock-images/jobs/job_browse_header.svg"
-              />
+              <img alt="" src="/static/mock-images/jobs/job_browse_header.svg" />
             </Grid>
           </Grid>
           <Box sx={{ mt: 4 }}>
@@ -131,34 +99,28 @@ const JobBrowse: NextPage = () => {
           </Box>
           <div>
             {companies.map((company) => (
-              <Card
-                key={company.id}
-                sx={{ mt: 4 }}
-              >
+              <Card key={company.id} sx={{ mt: 4 }}>
                 <CardContent>
                   <Box
                     sx={{
-                      display: 'flex',
+                      display: "flex",
                       flexDirection: {
-                        xs: 'column',
-                        sm: 'row'
-                      }
+                        xs: "column",
+                        sm: "row",
+                      },
                     }}
                   >
-                    <NextLink
-                      href="/dashboard/jobs/companies/1"
-                      passHref
-                    >
+                    <NextLink href="/dashboard/jobs/companies/1" passHref>
                       <Avatar
                         component="a"
                         src={company.logo}
                         sx={{
-                          background: 'transparent',
+                          background: "transparent",
                           mr: 2,
                           mb: {
                             xs: 2,
-                            md: 0
-                          }
+                            md: 0,
+                          },
                         }}
                         variant="rounded"
                       >
@@ -166,67 +128,43 @@ const JobBrowse: NextPage = () => {
                       </Avatar>
                     </NextLink>
                     <div>
-                      <NextLink
-                        href="/dashboard/jobs/companies/1"
-                        passHref
-                      >
-                        <Link
-                          color="textPrimary"
-                          variant="h6"
-                        >
+                      <NextLink href="/dashboard/jobs/companies/1" passHref>
+                        <Link color="textPrimary" variant="h6">
                           {company.name}
                         </Link>
                       </NextLink>
-                      <Typography variant="body2">
-                        {company.shortDescription}
-                      </Typography>
+                      <Typography variant="body2">{company.shortDescription}</Typography>
                       <Box
                         sx={{
-                          alignItems: 'center',
-                          display: 'flex',
-                          flexWrap: 'wrap',
+                          alignItems: "center",
+                          display: "flex",
+                          flexWrap: "wrap",
                           ml: -3,
-                          '& > *': {
+                          "& > *": {
                             ml: 3,
-                            mt: 1
-                          }
+                            mt: 1,
+                          },
                         }}
                       >
                         <Box
                           sx={{
-                            alignItems: 'center',
-                            display: 'flex'
+                            alignItems: "center",
+                            display: "flex",
                           }}
                         >
-                          <UsersIcon
-                            color="action"
-                            fontSize="small"
-                            sx={{ mr: 1 }}
-                          />
-                          <Typography
-                            color="textSecondary"
-                            noWrap
-                            variant="overline"
-                          >
+                          <UsersIcon color="action" fontSize="small" sx={{ mr: 1 }} />
+                          <Typography color="textSecondary" noWrap variant="overline">
                             {company.employees}
                           </Typography>
                         </Box>
                         <Box
                           sx={{
-                            alignItems: 'center',
-                            display: 'flex'
+                            alignItems: "center",
+                            display: "flex",
                           }}
                         >
-                          <StarIcon
-                            color="action"
-                            fontSize="small"
-                            sx={{ mr: 1 }}
-                          />
-                          <Typography
-                            color="textSecondary"
-                            noWrap
-                            variant="overline"
-                          >
+                          <StarIcon color="action" fontSize="small" sx={{ mr: 1 }} />
+                          <Typography color="textSecondary" noWrap variant="overline">
                             {company.averageRating}
                             /5
                           </Typography>
@@ -234,20 +172,12 @@ const JobBrowse: NextPage = () => {
                         {company.isVerified && (
                           <Box
                             sx={{
-                              alignItems: 'center',
-                              display: 'flex'
+                              alignItems: "center",
+                              display: "flex",
                             }}
                           >
-                            <BadgeCheckOutlinedIcon
-                              color="success"
-                              fontSize="small"
-                              sx={{ mr: 1 }}
-                            />
-                            <Typography
-                              color="success"
-                              noWrap
-                              variant="overline"
-                            >
+                            <BadgeCheckOutlinedIcon color="success" fontSize="small" sx={{ mr: 1 }} />
+                            <Typography color="success" noWrap variant="overline">
                               Verified
                             </Typography>
                           </Box>
@@ -264,11 +194,11 @@ const JobBrowse: NextPage = () => {
           </div>
           <Box
             sx={{
-              display: 'flex',
-              justifyContent: 'flex-end',
+              display: "flex",
+              justifyContent: "flex-end",
               mt: 4,
               px: 3,
-              py: 2
+              py: 2,
             }}
           >
             <IconButton disabled>
@@ -286,9 +216,7 @@ const JobBrowse: NextPage = () => {
 
 JobBrowse.getLayout = (page) => (
   <AuthGuard>
-    <DashboardLayout>
-      {page}
-    </DashboardLayout>
+    <DashboardLayout>{page}</DashboardLayout>
   </AuthGuard>
 );
 

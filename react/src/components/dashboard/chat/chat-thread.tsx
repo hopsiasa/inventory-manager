@@ -1,17 +1,17 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import type { FC } from 'react';
-import { useRouter } from 'next/router';
-import PropTypes from 'prop-types';
-import { Box, Divider } from '@mui/material';
-import { chatApi } from '../../../__fake-api__/chat-api';
-import { addMessage, getThread, markThreadAsSeen, setActiveThread } from '../../../slices/chat';
-import { useDispatch, useSelector } from '../../../store';
-import type { RootState } from '../../../store';
-import type { Participant, Thread } from '../../../types/chat';
-import { Scrollbar } from '../../scrollbar';
-import { ChatMessageAdd } from './chat-message-add';
-import { ChatMessages } from './chat-messages';
-import { ChatThreadToolbar } from './chat-thread-toolbar';
+import { useCallback, useEffect, useRef, useState } from "react";
+import type { FC } from "react";
+import { useRouter } from "next/router";
+import PropTypes from "prop-types";
+import { Box, Divider } from "@mui/material";
+import { chatApi } from "../../../api/chat-api";
+import { addMessage, getThread, markThreadAsSeen, setActiveThread } from "../../../slices/chat";
+import { useDispatch, useSelector } from "../../../store";
+import type { RootState } from "../../../store";
+import type { Participant, Thread } from "../../../types/chat";
+import { Scrollbar } from "../../scrollbar";
+import { ChatMessageAdd } from "./chat-message-add";
+import { ChatMessages } from "./chat-messages";
+import { ChatThreadToolbar } from "./chat-thread-toolbar";
 
 interface ChatThreadProps {
   threadKey: string;
@@ -33,7 +33,7 @@ export const ChatThread: FC<ChatThreadProps> = (props) => {
   // To get the user from the authContext, you can use
   // `const { user } = useAuth();`
   const user = {
-    id: '5e86809283e28b96d2d38537'
+    id: "5e86809283e28b96d2d38537",
   };
 
   const getDetails = async (): Promise<void> => {
@@ -65,17 +65,14 @@ export const ChatThread: FC<ChatThreadProps> = (props) => {
     [threadKey]
   );
 
-  useEffect(
-    () => {
-      // Scroll to bottom of the messages after loading the thread
-      if (thread?.messages && messagesRef?.current) {
-        const scrollElement = messagesRef.current.getScrollElement();
+  useEffect(() => {
+    // Scroll to bottom of the messages after loading the thread
+    if (thread?.messages && messagesRef?.current) {
+      const scrollElement = messagesRef.current.getScrollElement();
 
-        scrollElement.scrollTop = messagesRef.current.el.scrollHeight;
-      }
-    },
-    [thread]
-  );
+      scrollElement.scrollTop = messagesRef.current.el.scrollHeight;
+    }
+  }, [thread]);
 
   // If we have the thread, we use its ID to add a new message
   // Otherwise we use the recipients IDs. When using participant IDs, it means that we have to
@@ -83,19 +80,23 @@ export const ChatThread: FC<ChatThreadProps> = (props) => {
   const handleSendMessage = async (body: string): Promise<void> => {
     try {
       if (thread) {
-        await dispatch(addMessage({
-          threadId: thread.id,
-          body
-        }));
+        await dispatch(
+          addMessage({
+            threadId: thread.id,
+            body,
+          })
+        );
       } else {
         const recipientIds = participants
           .filter((participant) => participant.id !== user.id)
           .map((participant) => participant.id);
 
-        const threadId = await dispatch(addMessage({
-          recipientIds,
-          body
-        }));
+        const threadId = await dispatch(
+          addMessage({
+            recipientIds,
+            body,
+          })
+        );
 
         // @ts-ignore
         await dispatch(getThread(threadId));
@@ -109,7 +110,7 @@ export const ChatThread: FC<ChatThreadProps> = (props) => {
 
         scrollElement.scrollTo({
           top: messagesRef.current.el.scrollHeight,
-          behavior: 'smooth'
+          behavior: "smooth",
         });
       }
     } catch (err) {
@@ -120,40 +121,31 @@ export const ChatThread: FC<ChatThreadProps> = (props) => {
   return (
     <Box
       sx={{
-        display: 'flex',
-        flexDirection: 'column',
+        display: "flex",
+        flexDirection: "column",
         flexGrow: 1,
-        overflow: 'hidden'
+        overflow: "hidden",
       }}
       {...props}
     >
       <ChatThreadToolbar participants={participants} />
       <Box
         sx={{
-          backgroundColor: 'background.default',
+          backgroundColor: "background.default",
           flexGrow: 1,
-          overflow: 'hidden'
+          overflow: "hidden",
         }}
       >
-        <Scrollbar
-          ref={messagesRef}
-          sx={{ maxHeight: '100%' }}
-        >
-          <ChatMessages
-            messages={thread?.messages || []}
-            participants={thread?.participants || []}
-          />
+        <Scrollbar ref={messagesRef} sx={{ maxHeight: "100%" }}>
+          <ChatMessages messages={thread?.messages || []} participants={thread?.participants || []} />
         </Scrollbar>
       </Box>
       <Divider />
-      <ChatMessageAdd
-        disabled={false}
-        onSend={handleSendMessage}
-      />
+      <ChatMessageAdd disabled={false} onSend={handleSendMessage} />
     </Box>
   );
 };
 
 ChatThread.propTypes = {
-  threadKey: PropTypes.string.isRequired
+  threadKey: PropTypes.string.isRequired,
 };

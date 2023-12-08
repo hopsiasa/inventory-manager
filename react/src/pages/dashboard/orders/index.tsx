@@ -1,43 +1,33 @@
-import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
-import type { ChangeEvent, MouseEvent } from 'react';
-import type { NextPage } from 'next';
-import Head from 'next/head';
-import {
-  Box,
-  Button,
-  Divider,
-  Grid,
-  InputAdornment,
-  Tab,
-  Tabs,
-  TextField,
-  Typography
-} from '@mui/material';
-import { styled } from '@mui/material/styles';
-import { orderApi } from '../../../__fake-api__/order-api';
-import { AuthGuard } from '../../../components/authentication/auth-guard';
-import { DashboardLayout } from '../../../components/dashboard/dashboard-layout';
-import { OrderDrawer } from '../../../components/dashboard/order/order-drawer';
-import { OrderListTable } from '../../../components/dashboard/order/order-list-table';
-import { useMounted } from '../../../hooks/use-mounted';
-import { Plus as PlusIcon } from '../../../icons/plus';
-import { Search as SearchIcon } from '../../../icons/search';
-import { gtm } from '../../../lib/gtm';
-import type { Order, OrderStatus } from '../../../types/order';
+import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
+import type { ChangeEvent, MouseEvent } from "react";
+import type { NextPage } from "next";
+import Head from "next/head";
+import { Box, Button, Divider, Grid, InputAdornment, Tab, Tabs, TextField, Typography } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import { orderApi } from "../../../api/order-api";
+import { AuthGuard } from "../../../components/authentication/auth-guard";
+import { DashboardLayout } from "../../../components/dashboard/dashboard-layout";
+import { OrderDrawer } from "../../../components/dashboard/order/order-drawer";
+import { OrderListTable } from "../../../components/dashboard/order/order-list-table";
+import { useMounted } from "../../../hooks/use-mounted";
+import { Plus as PlusIcon } from "../../../icons/plus";
+import { Search as SearchIcon } from "../../../icons/search";
+import { gtm } from "../../../lib/gtm";
+import type { Order, OrderStatus } from "../../../types/order";
 
 interface Filters {
   query?: string;
   status?: OrderStatus;
 }
 
-type SortDir = 'asc' | 'desc';
+type SortDir = "asc" | "desc";
 
 interface SortOption {
   label: string;
   value: SortDir;
 }
 
-type TabValue = 'all' | 'canceled' | 'complete' | 'pending' | 'rejected';
+type TabValue = "all" | "canceled" | "complete" | "pending" | "rejected";
 
 interface Tab {
   label: string;
@@ -46,101 +36,94 @@ interface Tab {
 
 const tabs: Tab[] = [
   {
-    label: 'All',
-    value: 'all'
+    label: "All",
+    value: "all",
   },
   {
-    label: 'Canceled',
-    value: 'canceled'
+    label: "Canceled",
+    value: "canceled",
   },
   {
-    label: 'Completed',
-    value: 'complete'
+    label: "Completed",
+    value: "complete",
   },
   {
-    label: 'Pending',
-    value: 'pending'
+    label: "Pending",
+    value: "pending",
   },
   {
-    label: 'Rejected',
-    value: 'rejected'
-  }
+    label: "Rejected",
+    value: "rejected",
+  },
 ];
 
 const sortOptions: SortOption[] = [
   {
-    label: 'Newest',
-    value: 'desc'
+    label: "Newest",
+    value: "desc",
   },
   {
-    label: 'Oldest',
-    value: 'asc'
-  }
+    label: "Oldest",
+    value: "asc",
+  },
 ];
 
-const applyFilters = (
-  orders: Order[],
-  filters: Filters
-) => orders.filter((order) => {
-  if (filters.query) {
-    // Checks only the order number, but can be extended to support other fields, such as customer
-    // name, email, etc.
-    const containsQuery = (order.number || '').toLowerCase().includes(filters.query.toLowerCase());
+const applyFilters = (orders: Order[], filters: Filters) =>
+  orders.filter((order) => {
+    if (filters.query) {
+      // Checks only the order number, but can be extended to support other fields, such as customer
+      // name, email, etc.
+      const containsQuery = (order.number || "").toLowerCase().includes(filters.query.toLowerCase());
 
-    if (!containsQuery) {
-      return false;
+      if (!containsQuery) {
+        return false;
+      }
     }
-  }
 
-  if (typeof filters.status !== 'undefined') {
-    const statusMatched = order.status === filters.status;
+    if (typeof filters.status !== "undefined") {
+      const statusMatched = order.status === filters.status;
 
-    if (!statusMatched) {
-      return false;
+      if (!statusMatched) {
+        return false;
+      }
     }
-  }
 
-  return true;
-});
+    return true;
+  });
 
-const applySort = (orders: Order[], sortDir: SortDir): Order[] => orders.sort((a, b) => {
-  const comparator = a.createdAt > b.createdAt ? -1 : 1;
+const applySort = (orders: Order[], sortDir: SortDir): Order[] =>
+  orders.sort((a, b) => {
+    const comparator = a.createdAt > b.createdAt ? -1 : 1;
 
-  return sortDir === 'desc' ? comparator : -comparator;
-});
+    return sortDir === "desc" ? comparator : -comparator;
+  });
 
-const applyPagination = (
-  orders: Order[],
-  page: number,
-  rowsPerPage: number
-): Order[] => orders.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+const applyPagination = (orders: Order[], page: number, rowsPerPage: number): Order[] =>
+  orders.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
-const OrderListInner = styled(
-  'div',
-  { shouldForwardProp: (prop) => prop !== 'open' }
-)<{ open?: boolean; }>(
+const OrderListInner = styled("div", { shouldForwardProp: (prop) => prop !== "open" })<{ open?: boolean }>(
   ({ theme, open }) => ({
     flexGrow: 1,
-    overflow: 'hidden',
+    overflow: "hidden",
     paddingBottom: theme.spacing(8),
     paddingTop: theme.spacing(8),
     zIndex: 1,
-    [theme.breakpoints.up('lg')]: {
-      marginRight: -500
+    [theme.breakpoints.up("lg")]: {
+      marginRight: -500,
     },
-    transition: theme.transitions.create('margin', {
+    transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
+      duration: theme.transitions.duration.leavingScreen,
     }),
     ...(open && {
-      [theme.breakpoints.up('lg')]: {
-        marginRight: 0
+      [theme.breakpoints.up("lg")]: {
+        marginRight: 0,
       },
-      transition: theme.transitions.create('margin', {
+      transition: theme.transitions.create("margin", {
         easing: theme.transitions.easing.easeOut,
-        duration: theme.transitions.duration.enteringScreen
-      })
-    })
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+    }),
   })
 );
 
@@ -148,22 +131,22 @@ const OrderList: NextPage = () => {
   const isMounted = useMounted();
   const rootRef = useRef<HTMLDivElement | null>(null);
   const queryRef = useRef<HTMLInputElement | null>(null);
-  const [currentTab, setCurrentTab] = useState<TabValue>('all');
-  const [sort, setSort] = useState<SortDir>('desc');
+  const [currentTab, setCurrentTab] = useState<TabValue>("all");
+  const [sort, setSort] = useState<SortDir>("desc");
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(5);
   const [orders, setOrders] = useState<Order[]>([]);
   const [filters, setFilters] = useState<Filters>({
-    query: '',
-    status: undefined
+    query: "",
+    status: undefined,
   });
-  const [drawer, setDrawer] = useState<{ isOpen: boolean; orderId?: string; }>({
+  const [drawer, setDrawer] = useState<{ isOpen: boolean; orderId?: string }>({
     isOpen: false,
-    orderId: undefined
+    orderId: undefined,
   });
 
   useEffect(() => {
-    gtm.push({ event: 'page_view' });
+    gtm.push({ event: "page_view" });
   }, []);
 
   const getOrders = useCallback(async () => {
@@ -190,7 +173,7 @@ const OrderList: NextPage = () => {
     setCurrentTab(value);
     setFilters((prevState) => ({
       ...prevState,
-      status: value === 'all' ? undefined : value
+      status: value === "all" ? undefined : value,
     }));
   };
 
@@ -198,12 +181,12 @@ const OrderList: NextPage = () => {
     event.preventDefault();
     setFilters((prevState) => ({
       ...prevState,
-      query: queryRef.current?.value
+      query: queryRef.current?.value,
     }));
   };
 
   const handleSortChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    const value = event.target.value as 'asc' | 'desc';
+    const value = event.target.value as "asc" | "desc";
     setSort(value);
   };
 
@@ -218,14 +201,14 @@ const OrderList: NextPage = () => {
   const handleOpenDrawer = (orderId: string): void => {
     setDrawer({
       isOpen: true,
-      orderId
+      orderId,
     });
   };
 
   const handleCloseDrawer = () => {
     setDrawer({
       isOpen: false,
-      orderId: undefined
+      orderId: undefined,
     });
   };
 
@@ -237,37 +220,26 @@ const OrderList: NextPage = () => {
   return (
     <>
       <Head>
-        <title>
-          Dashboard: Order List | Material Kit Pro
-        </title>
+        <title>Dashboard: Order List | Material Kit Pro</title>
       </Head>
       <Box
         component="main"
         ref={rootRef}
         sx={{
-          backgroundColor: 'background.paper',
-          display: 'flex',
+          backgroundColor: "background.paper",
+          display: "flex",
           flexGrow: 1,
-          overflow: 'hidden'
+          overflow: "hidden",
         }}
       >
         <OrderListInner open={drawer.isOpen}>
           <Box sx={{ px: 3 }}>
-            <Grid
-              container
-              justifyContent="space-between"
-              spacing={3}
-            >
+            <Grid container justifyContent="space-between" spacing={3}>
               <Grid item>
-                <Typography variant="h4">
-                  Orders
-                </Typography>
+                <Typography variant="h4">Orders</Typography>
               </Grid>
               <Grid item>
-                <Button
-                  startIcon={<PlusIcon fontSize="small" />}
-                  variant="contained"
-                >
+                <Button startIcon={<PlusIcon fontSize="small" />} variant="contained">
                   Add
                 </Button>
               </Grid>
@@ -282,22 +254,18 @@ const OrderList: NextPage = () => {
               variant="scrollable"
             >
               {tabs.map((tab) => (
-                <Tab
-                  key={tab.value}
-                  label={tab.label}
-                  value={tab.value}
-                />
+                <Tab key={tab.value} label={tab.label} value={tab.value} />
               ))}
             </Tabs>
           </Box>
           <Divider />
           <Box
             sx={{
-              alignItems: 'center',
-              display: 'flex',
-              flexWrap: 'wrap',
+              alignItems: "center",
+              display: "flex",
+              flexWrap: "wrap",
               m: -1.5,
-              p: 3
+              p: 3,
             }}
           >
             <Box
@@ -305,7 +273,7 @@ const OrderList: NextPage = () => {
               onSubmit={handleQueryChange}
               sx={{
                 flexGrow: 1,
-                m: 1.5
+                m: 1.5,
               }}
             >
               <TextField
@@ -317,7 +285,7 @@ const OrderList: NextPage = () => {
                     <InputAdornment position="start">
                       <SearchIcon fontSize="small" />
                     </InputAdornment>
-                  )
+                  ),
                 }}
                 placeholder="Search by order number"
               />
@@ -332,10 +300,7 @@ const OrderList: NextPage = () => {
               value={sort}
             >
               {sortOptions.map((option) => (
-                <option
-                  key={option.value}
-                  value={option.value}
-                >
+                <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
               ))}
@@ -365,9 +330,7 @@ const OrderList: NextPage = () => {
 
 OrderList.getLayout = (page) => (
   <AuthGuard>
-    <DashboardLayout>
-      {page}
-    </DashboardLayout>
+    <DashboardLayout>{page}</DashboardLayout>
   </AuthGuard>
 );
 
