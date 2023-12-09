@@ -1,6 +1,3 @@
-import { useRef, useState } from "react";
-import type { ChangeEvent, FC } from "react";
-import PropTypes from "prop-types";
 import {
   Avatar,
   Box,
@@ -16,7 +13,10 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { chatApi } from "../../../api/chat-api";
+import PropTypes from "prop-types";
+import type { ChangeEvent, FC } from "react";
+import { useRef, useState } from "react";
+import { chatApi } from "../../../__fake-api__/chat-api";
 import { Search as SearchIcon } from "../../../icons/search";
 import type { Contact } from "../../../types/chat";
 import { Scrollbar } from "../../scrollbar";

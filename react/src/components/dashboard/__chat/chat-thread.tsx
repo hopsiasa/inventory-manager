@@ -1,12 +1,12 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import type { FC } from "react";
+import { Box, Divider } from "@mui/material";
 import { useRouter } from "next/router";
 import PropTypes from "prop-types";
-import { Box, Divider } from "@mui/material";
-import { chatApi } from "../../../api/chat-api";
+import type { FC } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { chatApi } from "../../../__fake-api__/chat-api";
 import { addMessage, getThread, markThreadAsSeen, setActiveThread } from "../../../slices/chat";
-import { useDispatch, useSelector } from "../../../store";
 import type { RootState } from "../../../store";
+import { useDispatch, useSelector } from "../../../store";
 import type { Participant, Thread } from "../../../types/chat";
 import { Scrollbar } from "../../scrollbar";
 import { ChatMessageAdd } from "./chat-message-add";

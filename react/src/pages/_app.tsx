@@ -19,7 +19,7 @@ import { SplashScreen } from "../components/splash-screen";
 import { AuthConsumer, AuthProvider } from "../contexts/jwt-context";
 import { SettingsConsumer, SettingsProvider } from "../contexts/settings-context";
 import "../i18n";
-import { store } from "../store";
+// import { store } from "../store";
 import { createTheme } from "../theme";
 import { createEmotionCache } from "../utils/create-emotion-cache";
 
@@ -57,42 +57,42 @@ const App: FC<EnhancedAppProps> = (props) => {
         <title>Material Kit Pro</title>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
-      <ReduxProvider store={store}>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <AuthProvider>
-            <SettingsProvider>
-              <SettingsConsumer>
-                {({ settings }) => (
-                  <ThemeProvider
-                    theme={createTheme({
-                      direction: settings.direction,
-                      responsiveFontSizes: settings.responsiveFontSizes,
-                      mode: settings.theme,
-                    })}
-                  >
-                    <RTL direction={settings.direction}>
-                      <CssBaseline />
-                      <Toaster position="top-center" />
-                      <SettingsButton />
-                      <AuthConsumer>
-                        {(auth) =>
-                          !auth.isInitialized ? (
-                            <SplashScreen />
-                          ) : (
-                            <QueryClientProvider client={queryClient}>
-                              {getLayout(<Component {...pageProps} />)}
-                            </QueryClientProvider>
-                          )
-                        }
-                      </AuthConsumer>
-                    </RTL>
-                  </ThemeProvider>
-                )}
-              </SettingsConsumer>
-            </SettingsProvider>
-          </AuthProvider>
-        </LocalizationProvider>
-      </ReduxProvider>
+      {/* <ReduxProvider store={store}> */}
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <AuthProvider>
+          <SettingsProvider>
+            <SettingsConsumer>
+              {({ settings }) => (
+                <ThemeProvider
+                  theme={createTheme({
+                    direction: settings.direction,
+                    responsiveFontSizes: settings.responsiveFontSizes,
+                    mode: settings.theme,
+                  })}
+                >
+                  <RTL direction={settings.direction}>
+                    <CssBaseline />
+                    <Toaster position="top-center" />
+                    <SettingsButton />
+                    <AuthConsumer>
+                      {(auth) =>
+                        !auth.isInitialized ? (
+                          <SplashScreen />
+                        ) : (
+                          <QueryClientProvider client={queryClient}>
+                            {getLayout(<Component {...pageProps} />)}
+                          </QueryClientProvider>
+                        )
+                      }
+                    </AuthConsumer>
+                  </RTL>
+                </ThemeProvider>
+              )}
+            </SettingsConsumer>
+          </SettingsProvider>
+        </AuthProvider>
+      </LocalizationProvider>
+      {/* </ReduxProvider> */}
     </CacheProvider>
   );
 };
