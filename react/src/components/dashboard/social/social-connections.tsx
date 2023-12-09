@@ -1,7 +1,3 @@
-import { useState, useEffect, useCallback } from "react";
-import type { FC } from "react";
-import NextLink from "next/link";
-import toast from "react-hot-toast";
 import {
   Avatar,
   Box,
@@ -16,7 +12,11 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
-import { socialApi } from "../../../api/social-api";
+import NextLink from "next/link";
+import type { FC } from "react";
+import { useCallback, useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { socialApi } from "../../../__fake-api__/social-api";
 import { useMounted } from "../../../hooks/use-mounted";
 import { DotsHorizontal as DotsHorizontalIcon } from "../../../icons/dots-horizontal";
 import { Search as SearchIcon } from "../../../icons/search";
