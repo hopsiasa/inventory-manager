@@ -1,32 +1,30 @@
-import { useEffect } from 'react';
-import type { FC } from 'react';
-import NextLink from 'next/link';
-import { useRouter } from 'next/router';
-import PropTypes from 'prop-types';
-import { Box, Button, Drawer, Link, useMediaQuery } from '@mui/material';
-import type { Theme } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import type { Theme } from "@mui/material";
+import { Box, Button, Drawer, Link, useMediaQuery } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import NextLink from "next/link";
+import { useRouter } from "next/router";
+import PropTypes from "prop-types";
+import type { FC } from "react";
+import { useEffect } from "react";
 
 interface MainSidebarProps {
   onClose?: () => void;
   open?: boolean;
 }
 
-const MainSidebarLink = styled(Link)(
-  ({ theme }) => ({
-    borderRadius: theme.shape.borderRadius,
-    display: 'block',
-    padding: theme.spacing(1.5),
-    '&:hover': {
-      backgroundColor: theme.palette.action.hover
-    }
-  })
-);
+const MainSidebarLink = styled(Link)(({ theme }) => ({
+  borderRadius: theme.shape.borderRadius,
+  display: "block",
+  padding: theme.spacing(1.5),
+  "&:hover": {
+    backgroundColor: theme.palette.action.hover,
+  },
+}));
 
 export const MainSidebar: FC<MainSidebarProps> = (props) => {
   const { onClose, open } = props;
   const router = useRouter();
-  const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'));
+  const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("lg"));
 
   const handlePathChange = () => {
     if (open) {
@@ -47,44 +45,23 @@ export const MainSidebar: FC<MainSidebarProps> = (props) => {
       open={!lgUp && open}
       PaperProps={{ sx: { width: 256 } }}
       sx={{
-        zIndex: (theme) => theme.zIndex.appBar + 100
+        zIndex: (theme) => theme.zIndex.appBar + 100,
       }}
       variant="temporary"
     >
       <Box sx={{ p: 2 }}>
-        <NextLink
-          href="/dashboard"
-          passHref
-        >
-          <MainSidebarLink
-            color="textSecondary"
-            underline="none"
-            variant="subtitle2"
-          >
+        <NextLink href="/dashboard" passHref>
+          <MainSidebarLink color="textSecondary" underline="none" variant="subtitle2">
             Live Demo
           </MainSidebarLink>
         </NextLink>
-        <NextLink
-          href="/browse"
-          passHref
-        >
-          <MainSidebarLink
-            color="textSecondary"
-            underline="none"
-            variant="subtitle2"
-          >
+        <NextLink href="/browse" passHref>
+          <MainSidebarLink color="textSecondary" underline="none" variant="subtitle2">
             Components
           </MainSidebarLink>
         </NextLink>
-        <NextLink
-          href="/docs/welcome"
-          passHref
-        >
-          <MainSidebarLink
-            color="textSecondary"
-            underline="none"
-            variant="subtitle2"
-          >
+        <NextLink href="/docs/welcome" passHref>
+          <MainSidebarLink color="textSecondary" underline="none" variant="subtitle2">
             Documentation
           </MainSidebarLink>
         </NextLink>
@@ -105,5 +82,5 @@ export const MainSidebar: FC<MainSidebarProps> = (props) => {
 
 MainSidebar.propTypes = {
   onClose: PropTypes.func,
-  open: PropTypes.bool
+  open: PropTypes.bool,
 };

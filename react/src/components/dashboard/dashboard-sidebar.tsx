@@ -123,31 +123,31 @@ const getSections = (t: TFunction): Section[] => [
       },
       {
         title: t("Products"),
-        path: "/dashboard/products",
+        path: "/products",
         icon: <ShoppingBagIcon fontSize="small" />,
         children: [
           {
             title: t("List"),
-            path: "/dashboard/products",
+            path: "/products",
           },
           {
             title: t("Create"),
-            path: "/dashboard/products/new",
+            path: "/products/new",
           },
         ],
       },
       {
         title: t("Orders"),
         icon: <ShoppingCartIcon fontSize="small" />,
-        path: "/dashboard/orders",
+        path: "/orders",
         children: [
           {
             title: t("List"),
-            path: "/dashboard/orders",
+            path: "/orders",
           },
           {
             title: t("Details"),
-            path: "/dashboard/orders/1",
+            path: "/orders/1",
           },
         ],
       },

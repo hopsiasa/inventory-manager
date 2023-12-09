@@ -9,11 +9,11 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import Router from "next/router";
 import nProgress from "nprogress";
-import type { FC } from "react";
+import { FC } from "react";
 import { Toaster } from "react-hot-toast";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { Provider as ReduxProvider } from "react-redux";
-import { RTL } from "../components/rtl";
+// import { Provider as ReduxProvider } from "react-redux";
+// import { RTL } from "../components/rtl";
 import { SettingsButton } from "../components/settings-button";
 import { SplashScreen } from "../components/splash-screen";
 import { AuthConsumer, AuthProvider } from "../contexts/jwt-context";
@@ -34,7 +34,7 @@ Router.events.on("routeChangeComplete", nProgress.done);
 
 const clientSideEmotionCache = createEmotionCache();
 
-const App: FC<EnhancedAppProps> = (props) => {
+const App: NextPage<EnhancedAppProps> = (props) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
 
   const getLayout = Component.getLayout ?? ((page) => page);
@@ -70,22 +70,20 @@ const App: FC<EnhancedAppProps> = (props) => {
                     mode: settings.theme,
                   })}
                 >
-                  <RTL direction={settings.direction}>
-                    <CssBaseline />
-                    <Toaster position="top-center" />
-                    <SettingsButton />
-                    <AuthConsumer>
-                      {(auth) =>
-                        !auth.isInitialized ? (
-                          <SplashScreen />
-                        ) : (
-                          <QueryClientProvider client={queryClient}>
-                            {getLayout(<Component {...pageProps} />)}
-                          </QueryClientProvider>
-                        )
-                      }
-                    </AuthConsumer>
-                  </RTL>
+                  <CssBaseline />
+                  <Toaster position="top-center" />
+                  <SettingsButton />
+                  <AuthConsumer>
+                    {(auth) =>
+                      !auth.isInitialized ? (
+                        <SplashScreen />
+                      ) : (
+                        <QueryClientProvider client={queryClient}>
+                          {getLayout(<Component {...pageProps} />)}
+                        </QueryClientProvider>
+                      )
+                    }
+                  </AuthConsumer>
                 </ThemeProvider>
               )}
             </SettingsConsumer>

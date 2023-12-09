@@ -18,7 +18,7 @@ import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import { useGetUsers } from "src/hooks/use-users";
 import { AuthGuard } from "../../components/authentication/auth-guard";
 import { DashboardLayout } from "../../components/dashboard/dashboard-layout";
-import { UserListTable } from "../../components/users/user-list-table";
+import { UserListTable } from "../../components/user/user-list-table";
 import { useMounted } from "../../hooks/use-mounted";
 import { Download as DownloadIcon } from "../../icons/download";
 import { Plus as PlusIcon } from "../../icons/plus";
