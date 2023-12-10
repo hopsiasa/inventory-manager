@@ -11,13 +11,23 @@ const getUser = async (userId: string | undefined) => {
   return response.data;
 };
 
-const createUser = async (formData: FormData) => {
-  const response = await api.post<User>(`/users`, formData);
+export const createUser = async (userData: {
+  email: string;
+  name: string;
+  password: string;
+}) => {
+  const response = await api.post<User>("/users", userData);
   return response.data;
 };
 
-const updateUser = async ({ userId, formData }: { userId: string; formData: FormData }) => {
-  const response = await api.put<User>(`/users/${userId}`, formData);
+export const updateUser = async ({
+  userId,
+  userData,
+}: {
+  userId: string;
+  userData: { email?: string; name?: string; password?: string };
+}) => {
+  const response = await api.put<User>(`/users/${userId}`, userData);
   return response.data;
 };
 

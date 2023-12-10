@@ -4,10 +4,7 @@ import Head from "next/head";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import { AmplifyRegister } from "../../components/authentication/amplify-register";
-import { AuthBanner } from "../../components/authentication/auth-banner";
-import { Auth0Register } from "../../components/authentication/auth0-register";
-import { FirebaseRegister } from "../../components/authentication/firebase-register";
+import { AuthGuard } from "../../components/authentication/auth-guard";
 import { GuestGuard } from "../../components/authentication/guest-guard";
 import { JWTRegister } from "../../components/authentication/jwt-register";
 import { Logo } from "../../components/logo";
@@ -41,7 +38,6 @@ const Register: NextPage = () => {
           minHeight: "100vh",
         }}
       >
-        <AuthBanner />
         <Container
           maxWidth="sm"
           sx={{
@@ -54,7 +50,8 @@ const Register: NextPage = () => {
           <Box
             sx={{
               alignItems: "center",
-              backgroundColor: (theme) => (theme.palette.mode === "dark" ? "neutral.900" : "neutral.100"),
+              backgroundColor: (theme) =>
+                theme.palette.mode === "dark" ? "neutral.900" : "neutral.100",
               borderColor: "divider",
               borderRadius: 1,
               borderStyle: "solid",
@@ -107,15 +104,16 @@ const Register: NextPage = () => {
                 mt: 3,
               }}
             >
-              {platform === "Amplify" && <AmplifyRegister />}
-              {platform === "Auth0" && <Auth0Register />}
-              {platform === "Firebase" && <FirebaseRegister />}
               {platform === "JWT" && <JWTRegister />}
             </Box>
             <Divider sx={{ my: 3 }} />
             <div>
               <NextLink
-                href={disableGuard ? `/authentication/login?disableGuard=${disableGuard}` : "/authentication/login"}
+                href={
+                  disableGuard
+                    ? `/authentication/login?disableGuard=${disableGuard}`
+                    : "/authentication/login"
+                }
                 passHref
               >
                 <Link color="textSecondary" variant="body2">
@@ -130,6 +128,6 @@ const Register: NextPage = () => {
   );
 };
 
-Register.getLayout = (page) => <GuestGuard>{page}</GuestGuard>;
+Register.getLayout = (page) => <AuthGuard>{page}</AuthGuard>;
 
 export default Register;

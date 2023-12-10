@@ -3,15 +3,11 @@ import { Avatar, Box, Chip, Container, Link, Typography } from "@mui/material";
 import type { NextPage } from "next";
 import Head from "next/head";
 import NextLink from "next/link";
-import { useCallback, useEffect, useState } from "react";
-// import { userApi } from "../../../api/user-api";
 import { useRouter } from "next/router";
 import { AuthGuard } from "../../../components/authentication/auth-guard";
 import { Layout } from "../../../components/layout/layout";
-import { CustomerEditForm } from "../../../components/user/customer-edit-form";
-import { useMounted } from "../../../hooks/use-mounted";
+import { UserEditForm } from "../../../components/user/user-edit-form";
 import { useGetUser } from "../../../hooks/use-users";
-import type { User } from "../../../types/user";
 import { getInitials } from "../../../utils/get-initials";
 
 const UserEdit: NextPage = () => {
@@ -72,7 +68,7 @@ const UserEdit: NextPage = () => {
             </Avatar>
             <div>
               <Typography noWrap variant="h4">
-                {user?.email}
+                {user?.name}
               </Typography>
               <Box
                 sx={{
@@ -89,7 +85,7 @@ const UserEdit: NextPage = () => {
             </div>
           </Box>
           <Box mt={3}>
-            <CustomerEditForm user={user} />
+            <UserEditForm user={user} />
           </Box>
         </Container>
       </Box>

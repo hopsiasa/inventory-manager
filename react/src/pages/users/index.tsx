@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import type { NextPage } from "next";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import type { ChangeEvent, MouseEvent } from "react";
 import { FormEvent, useRef, useState } from "react";
 import { AuthGuard } from "../../components/authentication/auth-guard";
@@ -177,7 +178,7 @@ const UserList: NextPage = () => {
     isProspect: undefined,
     isReturning: undefined,
   });
-
+  const router = useRouter();
   const { users, isLoading } = useGetUsers(page + 1);
 
   const handleQueryChange = (event: FormEvent<HTMLFormElement>): void => {
@@ -232,6 +233,7 @@ const UserList: NextPage = () => {
                 <Button
                   startIcon={<PlusIcon fontSize="small" />}
                   variant="contained"
+                  onClick={() => router.push("/users/new")}
                 >
                   Add
                 </Button>

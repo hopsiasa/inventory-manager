@@ -2,15 +2,22 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import userApi from "../api/user-api";
 
 export const useGetUsers = (page: number) => {
-  const { isLoading, data: users } = useQuery(["users", page], async () => await userApi.getUsers(page), {
-    select: (data) => data.data,
-  });
+  const { isLoading, data: users } = useQuery(
+    ["users", page],
+    async () => await userApi.getUsers(page),
+    {
+      select: (data) => data.data,
+    }
+  );
 
   return { users, isLoading };
 };
 
 export const useGetUser = (userId: string | undefined) => {
-  const { isLoading, data: user } = useQuery(["user", userId], async () => await userApi.getUser(userId));
+  const { isLoading, data: user } = useQuery(
+    ["user", userId],
+    async () => await userApi.getUser(userId)
+  );
 
   return { user, isLoading };
 };
@@ -18,9 +25,13 @@ export const useGetUser = (userId: string | undefined) => {
 export const useAddUser = () => {
   const queryClient = useQueryClient();
 
-  const { isLoading, mutate: createUser } = useMutation((user: FormData) => userApi.createUser(user), {
-    onSuccess: async () => await queryClient.invalidateQueries(["users"]),
-  });
+  const { isLoading, mutate: createUser } = useMutation(
+    (userData: { email: string; name: string; password: string }) =>
+      userApi.createUser(userData),
+    {
+      onSuccess: async () => await queryClient.invalidateQueries(["users"]),
+    }
+  );
 
   return { createUser, isLoading };
 };
@@ -29,7 +40,13 @@ export const useUpdateUser = () => {
   const queryClient = useQueryClient();
 
   const { isLoading, mutate: updateUser } = useMutation(
-    ({ userId, formData }: { userId: string; formData: FormData }) => userApi.updateUser({ userId, formData }),
+    ({
+      userId,
+      userData,
+    }: {
+      userId: string;
+      userData: { email?: string; name?: string; password?: string };
+    }) => userApi.updateUser({ userId, userData }),
     {
       onSuccess: async () => await queryClient.invalidateQueries(["user"]),
     }
@@ -40,9 +57,12 @@ export const useUpdateUser = () => {
 
 export const useDeleteUser = () => {
   const queryClient = useQueryClient();
-  const { mutate: deleteUser } = useMutation((id: string) => userApi.deleteUser(id), {
-    onSuccess: async () => queryClient.invalidateQueries("users"),
-  });
+  const { mutate: deleteUser } = useMutation(
+    (id: string) => userApi.deleteUser(id),
+    {
+      onSuccess: async () => queryClient.invalidateQueries("users"),
+    }
+  );
 
   return { deleteUser };
 };
