@@ -14,15 +14,15 @@ import {
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useEffect, useState } from "react";
-import { AuthGuard } from "src/components/authentication/auth-guard";
-import { DashboardLayout } from "src/components/dashboard/dashboard-layout";
-import { OverviewBanner } from "src/components/dashboard/overview/overview-banner";
-import { OverviewCryptoWallet } from "src/components/dashboard/overview/overview-crypto-wallet";
-import { OverviewInbox } from "src/components/dashboard/overview/overview-inbox";
-import { OverviewLatestTransactions } from "src/components/dashboard/overview/overview-latest-transactions";
-import { OverviewPrivateWallet } from "src/components/dashboard/overview/overview-private-wallet";
-import { OverviewTotalBalance } from "src/components/dashboard/overview/overview-total-balance";
-import { OverviewTotalTransactions } from "src/components/dashboard/overview/overview-total-transactions";
+import { AuthGuard } from "../components/authentication/auth-guard";
+import { OverviewBanner } from "../components/dashboard/overview-banner";
+import { OverviewCryptoWallet } from "../components/dashboard/overview-crypto-wallet";
+import { OverviewInbox } from "../components/dashboard/overview-inbox";
+import { OverviewLatestTransactions } from "../components/dashboard/overview-latest-transactions";
+import { OverviewPrivateWallet } from "../components/dashboard/overview-private-wallet";
+import { OverviewTotalBalance } from "../components/dashboard/overview-total-balance";
+import { OverviewTotalTransactions } from "../components/dashboard/overview-total-transactions";
+import { Layout } from "../components/layout/layout";
 import { ArrowRight as ArrowRightIcon } from "../icons/arrow-right";
 import { Briefcase as BriefcaseIcon } from "../icons/briefcase";
 import { Download as DownloadIcon } from "../icons/download";
@@ -236,7 +236,7 @@ const Home: NextPage = () => {
 
 Home.getLayout = (page) => (
   <AuthGuard>
-    <DashboardLayout>{page}</DashboardLayout>
+    <Layout>{page}</Layout>
   </AuthGuard>
 );
 

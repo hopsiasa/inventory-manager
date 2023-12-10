@@ -8,7 +8,6 @@ class AuthApi {
   async login({ email, password }: { email: string; password: string }): Promise<string> {
     await wait(500);
 
-    console.log("accessToken");
     try {
       const response = await api.post("/login", { email, password });
       const accessToken = response.data.access_token;
@@ -16,8 +15,7 @@ class AuthApi {
         maxAge: 30 * 24 * 60 * 60,
         path: "/",
       });
-      const parsedCookies = parseCookies();
-      // console.log("cookies token", parsedCookies["accessToken"]);
+
       return accessToken;
     } catch (err) {
       console.error("[Auth Api]: ", err);

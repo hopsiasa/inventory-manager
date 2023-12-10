@@ -5,21 +5,20 @@ import Head from "next/head";
 import NextLink from "next/link";
 import type { ChangeEvent } from "react";
 import { useCallback, useEffect, useState } from "react";
-import { customerApi } from "../../../api/customer-api";
+import { userApi } from "../../../api/user-api";
 import { AuthGuard } from "../../../components/authentication/auth-guard";
-import { CustomerBasicDetails } from "../../../components/dashboard/customer/customer-basic-details";
-import { CustomerDataManagement } from "../../../components/dashboard/customer/customer-data-management";
-import { CustomerEmailsSummary } from "../../../components/dashboard/customer/customer-emails-summary";
-import { CustomerInvoices } from "../../../components/dashboard/customer/customer-invoices";
-import { CustomerLogs } from "../../../components/dashboard/customer/customer-logs";
-import { CustomerPayment } from "../../../components/dashboard/customer/customer-payment";
-import { DashboardLayout } from "../../../components/dashboard/dashboard-layout";
+import { Layout } from "../../../components/dashboard/dashboard-layout";
 import { useMounted } from "../../../hooks/use-mounted";
 import { ChevronDown as ChevronDownIcon } from "../../../icons/chevron-down";
 import { PencilAlt as PencilAltIcon } from "../../../icons/pencil-alt";
-import { gtm } from "../../../lib/gtm";
 import type { Customer } from "../../../types/customer";
 import { getInitials } from "../../../utils/get-initials";
+import { CustomerBasicDetails } from "../../components/user/customer-basic-details";
+import { CustomerDataManagement } from "../../components/user/customer-data-management";
+import { CustomerEmailsSummary } from "../../components/user/customer-emails-summary";
+import { CustomerInvoices } from "../../components/user/customer-invoices";
+import { CustomerLogs } from "../../components/user/customer-logs";
+import { CustomerPayment } from "../../components/user/customer-payment";
 
 const tabs = [
   { label: "Details", value: "details" },
@@ -31,10 +30,6 @@ const CustomerDetails: NextPage = () => {
   const isMounted = useMounted();
   const [customer, setCustomer] = useState<Customer | null>(null);
   const [currentTab, setCurrentTab] = useState<string>("details");
-
-  useEffect(() => {
-    gtm.push({ event: "page_view" });
-  }, []);
 
   const getCustomer = useCallback(async () => {
     try {
@@ -187,7 +182,7 @@ const CustomerDetails: NextPage = () => {
 
 CustomerDetails.getLayout = (page) => (
   <AuthGuard>
-    <DashboardLayout>{page}</DashboardLayout>
+    <Layout>{page}</Layout>
   </AuthGuard>
 );
 

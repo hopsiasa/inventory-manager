@@ -7,19 +7,14 @@ import { useCallback, useEffect, useState } from "react";
 import { customerApi } from "../../../api/customer-api";
 import { AuthGuard } from "../../../components/authentication/auth-guard";
 import { CustomerEditForm } from "../../../components/dashboard/customer/customer-edit-form";
-import { DashboardLayout } from "../../../components/dashboard/dashboard-layout";
+import { Layout } from "../../../components/dashboard/dashboard-layout";
 import { useMounted } from "../../../hooks/use-mounted";
-import { gtm } from "../../../lib/gtm";
 import type { Customer } from "../../../types/customer";
 import { getInitials } from "../../../utils/get-initials";
 
 const CustomerEdit: NextPage = () => {
   const isMounted = useMounted();
   const [customer, setCustomer] = useState<Customer | null>(null);
-
-  useEffect(() => {
-    gtm.push({ event: "page_view" });
-  }, []);
 
   const getCustomer = useCallback(async () => {
     try {
@@ -120,7 +115,7 @@ const CustomerEdit: NextPage = () => {
 
 CustomerEdit.getLayout = (page) => (
   <AuthGuard>
-    <DashboardLayout>{page}</DashboardLayout>
+    <Layout>{page}</Layout>
   </AuthGuard>
 );
 
