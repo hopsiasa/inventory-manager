@@ -3,9 +3,9 @@ import { Avatar, Box, Divider, ListItemIcon, ListItemText, MenuItem, Popover, Ty
 import { useRouter } from "next/router";
 import type { FC } from "react";
 import toast from "react-hot-toast";
-import { getInitials } from "src/utils/get-initials";
 import { useAuth } from "../../hooks/use-auth";
 import { UserCircle as UserCircleIcon } from "../../icons/user-circle";
+import { getInitials } from "../../utils/get-initials";
 
 interface AccountPopoverProps {
   anchorEl: null | Element;

@@ -4,46 +4,30 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import NextLink from "next/link";
 import { useCallback, useEffect, useState } from "react";
-import { customerApi } from "../../../api/customer-api";
+// import { userApi } from "../../../api/user-api";
+import { useRouter } from "next/router";
 import { AuthGuard } from "../../../components/authentication/auth-guard";
-import { CustomerEditForm } from "../../../components/dashboard/customer/customer-edit-form";
-import { Layout } from "../../../components/dashboard/dashboard-layout";
+import { Layout } from "../../../components/layout/layout";
+import { CustomerEditForm } from "../../../components/user/customer-edit-form";
 import { useMounted } from "../../../hooks/use-mounted";
-import type { Customer } from "../../../types/customer";
+import { useGetUser } from "../../../hooks/use-users";
+import type { User } from "../../../types/user";
 import { getInitials } from "../../../utils/get-initials";
 
-const CustomerEdit: NextPage = () => {
-  const isMounted = useMounted();
-  const [customer, setCustomer] = useState<Customer | null>(null);
+const UserEdit: NextPage = () => {
+  const router = useRouter();
+  const { userId } = router.query;
 
-  const getCustomer = useCallback(async () => {
-    try {
-      const data = await customerApi.getCustomer();
+  const { user, isLoading } = useGetUser(userId as string);
 
-      if (isMounted()) {
-        setCustomer(data);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  }, [isMounted]);
-
-  useEffect(
-    () => {
-      getCustomer();
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
-
-  if (!customer) {
+  if (!user) {
     return null;
   }
 
   return (
     <>
       <Head>
-        <title>Dashboard: Customer Edit | Material Kit Pro</title>
+        <title>User Edit | Inventory Manager</title>
       </Head>
       <Box
         component="main"
@@ -55,7 +39,7 @@ const CustomerEdit: NextPage = () => {
       >
         <Container maxWidth="md">
           <Box sx={{ mb: 4 }}>
-            <NextLink href="/dashboard/customers" passHref>
+            <NextLink href="/users" passHref>
               <Link
                 color="textPrimary"
                 component="a"
@@ -65,7 +49,7 @@ const CustomerEdit: NextPage = () => {
                 }}
               >
                 <ArrowBackIcon fontSize="small" sx={{ mr: 1 }} />
-                <Typography variant="subtitle2">Customers</Typography>
+                <Typography variant="subtitle2">Users</Typography>
               </Link>
             </NextLink>
           </Box>
@@ -77,18 +61,18 @@ const CustomerEdit: NextPage = () => {
             }}
           >
             <Avatar
-              src={customer.avatar}
+              src={user?.avatar}
               sx={{
                 height: 64,
                 mr: 2,
                 width: 64,
               }}
             >
-              {getInitials(customer.name)}
+              {getInitials(user?.name)}
             </Avatar>
             <div>
               <Typography noWrap variant="h4">
-                {customer.email}
+                {user?.email}
               </Typography>
               <Box
                 sx={{
@@ -100,12 +84,12 @@ const CustomerEdit: NextPage = () => {
                 }}
               >
                 <Typography variant="subtitle2">user_id:</Typography>
-                <Chip label={customer.id} size="small" sx={{ ml: 1 }} />
+                <Chip label={user?.id} size="small" sx={{ ml: 1 }} />
               </Box>
             </div>
           </Box>
           <Box mt={3}>
-            <CustomerEditForm customer={customer} />
+            <CustomerEditForm user={user} />
           </Box>
         </Container>
       </Box>
@@ -113,10 +97,10 @@ const CustomerEdit: NextPage = () => {
   );
 };
 
-CustomerEdit.getLayout = (page) => (
+UserEdit.getLayout = (page) => (
   <AuthGuard>
     <Layout>{page}</Layout>
   </AuthGuard>
 );
 
-export default CustomerEdit;
+export default UserEdit;

@@ -56,10 +56,6 @@ class AuthApi {
   }
 
   async me(accessToken: string): Promise<User> {
-    if (!JWT_SECRET) {
-      throw new Error("JWT_SECRET is undefined");
-    }
-
     try {
       const response = await api.get("/user");
 

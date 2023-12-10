@@ -3,22 +3,24 @@ import { Avatar, Box, Button, Chip, Container, Divider, Grid, Link, Tab, Tabs, T
 import type { NextPage } from "next";
 import Head from "next/head";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
 import type { ChangeEvent } from "react";
 import { useCallback, useEffect, useState } from "react";
-import { userApi } from "../../../api/user-api";
+import { useGetUser } from "src/hooks/use-users";
+// import { userApi } from "../../../api/user-api";
 import { AuthGuard } from "../../../components/authentication/auth-guard";
-import { Layout } from "../../../components/dashboard/dashboard-layout";
+import { Layout } from "../../../components/layout/layout";
+import { CustomerBasicDetails } from "../../../components/user/customer-basic-details";
+import { CustomerDataManagement } from "../../../components/user/customer-data-management";
+import { CustomerEmailsSummary } from "../../../components/user/customer-emails-summary";
+import { CustomerInvoices } from "../../../components/user/customer-invoices";
+import { CustomerLogs } from "../../../components/user/customer-logs";
+import { CustomerPayment } from "../../../components/user/customer-payment";
 import { useMounted } from "../../../hooks/use-mounted";
 import { ChevronDown as ChevronDownIcon } from "../../../icons/chevron-down";
 import { PencilAlt as PencilAltIcon } from "../../../icons/pencil-alt";
-import type { Customer } from "../../../types/customer";
+import type { User } from "../../../types/user";
 import { getInitials } from "../../../utils/get-initials";
-import { CustomerBasicDetails } from "../../components/user/customer-basic-details";
-import { CustomerDataManagement } from "../../components/user/customer-data-management";
-import { CustomerEmailsSummary } from "../../components/user/customer-emails-summary";
-import { CustomerInvoices } from "../../components/user/customer-invoices";
-import { CustomerLogs } from "../../components/user/customer-logs";
-import { CustomerPayment } from "../../components/user/customer-payment";
 
 const tabs = [
   { label: "Details", value: "details" },
@@ -26,43 +28,20 @@ const tabs = [
   { label: "Logs", value: "logs" },
 ];
 
-const CustomerDetails: NextPage = () => {
-  const isMounted = useMounted();
-  const [customer, setCustomer] = useState<Customer | null>(null);
-  const [currentTab, setCurrentTab] = useState<string>("details");
+const UserDetails: NextPage = () => {
+  const router = useRouter();
+  const { userId } = router.query;
 
-  const getCustomer = useCallback(async () => {
-    try {
-      const data = await customerApi.getCustomer();
+  const { user, isLoading } = useGetUser(userId as string);
 
-      if (isMounted()) {
-        setCustomer(data);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  }, [isMounted]);
-
-  useEffect(
-    () => {
-      getCustomer();
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
-
-  const handleTabsChange = (event: ChangeEvent<{}>, value: string): void => {
-    setCurrentTab(value);
-  };
-
-  if (!customer) {
+  if (!user) {
     return null;
   }
 
   return (
     <>
       <Head>
-        <title>Dashboard: Customer Details | Material Kit Pro</title>
+        <title>User Details | Inventory Manager</title>
       </Head>
       <Box
         component="main"
@@ -84,7 +63,7 @@ const CustomerDetails: NextPage = () => {
                   }}
                 >
                   <ArrowBackIcon fontSize="small" sx={{ mr: 1 }} />
-                  <Typography variant="subtitle2">Customers</Typography>
+                  <Typography variant="subtitle2">Users</Typography>
                 </Link>
               </NextLink>
             </Box>
@@ -98,17 +77,17 @@ const CustomerDetails: NextPage = () => {
                 }}
               >
                 <Avatar
-                  src={customer.avatar}
+                  src={user.avatar}
                   sx={{
                     height: 64,
                     mr: 2,
                     width: 64,
                   }}
                 >
-                  {getInitials(customer.name)}
+                  {getInitials(user.name)}
                 </Avatar>
                 <div>
-                  <Typography variant="h4">{customer.email}</Typography>
+                  <Typography variant="h4">{user.email}</Typography>
                   <Box
                     sx={{
                       display: "flex",
@@ -116,7 +95,7 @@ const CustomerDetails: NextPage = () => {
                     }}
                   >
                     <Typography variant="subtitle2">user_id:</Typography>
-                    <Chip label={customer.id} size="small" sx={{ ml: 1 }} />
+                    <Chip label={user.id} size="small" sx={{ ml: 1 }} />
                   </Box>
                 </div>
               </Grid>
@@ -131,48 +110,21 @@ const CustomerDetails: NextPage = () => {
                 </Button>
               </Grid>
             </Grid>
-            <Tabs
-              indicatorColor="primary"
-              onChange={handleTabsChange}
-              scrollButtons="auto"
-              sx={{ mt: 3 }}
-              textColor="primary"
-              value={currentTab}
-              variant="scrollable"
-            >
-              {tabs.map((tab) => (
-                <Tab key={tab.value} label={tab.label} value={tab.value} />
-              ))}
-            </Tabs>
           </div>
-          <Divider />
           <Box sx={{ mt: 3 }}>
-            {currentTab === "details" && (
-              <Grid container spacing={3}>
-                <Grid item xs={12}>
-                  <CustomerBasicDetails
-                    address1={customer.address1}
-                    address2={customer.address2}
-                    country={customer.country}
-                    email={customer.email}
-                    isVerified={!!customer.isVerified}
-                    phone={customer.phone}
-                    state={customer.state}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <CustomerPayment />
-                </Grid>
-                <Grid item xs={12}>
-                  <CustomerEmailsSummary />
-                </Grid>
-                <Grid item xs={12}>
-                  <CustomerDataManagement />
-                </Grid>
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <CustomerBasicDetails
+                  address1={user.address1}
+                  address2={user.address2}
+                  country={user.country}
+                  email={user.email}
+                  isVerified={!!user.isVerified}
+                  phone={user.phone}
+                  state={user.state}
+                />
               </Grid>
-            )}
-            {currentTab === "invoices" && <CustomerInvoices />}
-            {currentTab === "logs" && <CustomerLogs />}
+            </Grid>
           </Box>
         </Container>
       </Box>
@@ -180,10 +132,10 @@ const CustomerDetails: NextPage = () => {
   );
 };
 
-CustomerDetails.getLayout = (page) => (
+UserDetails.getLayout = (page) => (
   <AuthGuard>
     <Layout>{page}</Layout>
   </AuthGuard>
 );
 
-export default CustomerDetails;
+export default UserDetails;
