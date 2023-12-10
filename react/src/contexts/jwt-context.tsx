@@ -123,6 +123,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
         if (accessToken) {
           const user = await authApi.me(accessToken);
 
+          console.log(user);
           dispatch({
             type: ActionType.INITIALIZE,
             payload: {

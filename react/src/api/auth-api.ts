@@ -1,7 +1,7 @@
-import { parseCookies, setCookie } from "nookies";
+import { setCookie } from "nookies";
 import type { User } from "../types/user";
 import api from "../utils/axios";
-import { JWT_EXPIRES_IN, JWT_SECRET, decode, sign } from "../utils/jwt";
+import { JWT_SECRET, decode, sign } from "../utils/jwt";
 import { wait } from "../utils/wait";
 
 class AuthApi {
@@ -11,6 +11,7 @@ class AuthApi {
     try {
       const response = await api.post("/login", { email, password });
       const accessToken = response.data.access_token;
+
       setCookie(null, "accessToken", accessToken, {
         maxAge: 30 * 24 * 60 * 60,
         path: "/",
@@ -60,15 +61,9 @@ class AuthApi {
     }
 
     try {
-      const decodedToken = decode(accessToken, JWT_SECRET);
+      const response = await api.get("/user");
 
-      const user = {
-        id: decodedToken.userId,
-        email: decodedToken.email,
-        name: decodedToken.name,
-      };
-
-      return user;
+      return response.data;
     } catch (err) {
       console.error("[Auth Api]: ", err);
       throw new Error("Internal server error");

@@ -3,6 +3,7 @@ import { Avatar, Box, Divider, ListItemIcon, ListItemText, MenuItem, Popover, Ty
 import { useRouter } from "next/router";
 import type { FC } from "react";
 import toast from "react-hot-toast";
+import { getInitials } from "src/utils/get-initials";
 import { useAuth } from "../../hooks/use-auth";
 import { UserCircle as UserCircleIcon } from "../../icons/user-circle";
 
@@ -50,7 +51,7 @@ export const AccountPopover: FC<AccountPopoverProps> = (props) => {
           display: "flex",
         }}
       >
-        <Avatar
+        {/* <Avatar
           src={`https://ui-avatars.com/api/?name=${user?.name}&background=random`}
           sx={{
             height: 40,
@@ -58,6 +59,15 @@ export const AccountPopover: FC<AccountPopoverProps> = (props) => {
           }}
         >
           <UserCircleIcon fontSize="small" />
+        </Avatar> */}
+        <Avatar
+          src={user?.avatar}
+          sx={{
+            height: 42,
+            width: 42,
+          }}
+        >
+          {getInitials(user?.name)}
         </Avatar>
         <Box
           sx={{

@@ -3,6 +3,7 @@ import { AppBar, Avatar, Box, ButtonBase, IconButton, Toolbar } from "@mui/mater
 import { styled } from "@mui/material/styles";
 import type { FC } from "react";
 import { useRef, useState } from "react";
+import { getInitials } from "src/utils/get-initials";
 import { useAuth } from "../../hooks/use-auth";
 import { Menu as MenuIcon } from "../../icons/menu";
 import { UserCircle as UserCircleIcon } from "../../icons/user-circle";
@@ -53,6 +54,15 @@ const AccountButton = () => {
         }}
       >
         <Avatar
+          src={user?.avatar}
+          sx={{
+            height: 42,
+            width: 42,
+          }}
+        >
+          {getInitials(user?.name)}
+        </Avatar>
+        {/* <Avatar
           sx={{
             height: 40,
             width: 40,
@@ -60,7 +70,7 @@ const AccountButton = () => {
           src={`https://ui-avatars.com/api/?name=${user?.name}&background=random`}
         >
           <UserCircleIcon fontSize="small" />
-        </Avatar>
+        </Avatar> */}
       </Box>
       <AccountPopover anchorEl={anchorRef.current} onClose={handleClosePopover} open={openPopover} />
     </>
