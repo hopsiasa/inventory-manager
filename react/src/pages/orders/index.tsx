@@ -6,13 +6,12 @@ import type { ChangeEvent, MouseEvent } from "react";
 import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import { orderApi } from "../../api/order-api";
 import { AuthGuard } from "../../components/authentication/auth-guard";
-import { DashboardLayout } from "../../components/dashboard/dashboard-layout";
+import { Layout } from "../../components/layout/layout";
 import { OrderDrawer } from "../../components/order/order-drawer";
 import { OrderListTable } from "../../components/order/order-list-table";
 import { useMounted } from "../../hooks/use-mounted";
 import { Plus as PlusIcon } from "../../icons/plus";
 import { Search as SearchIcon } from "../../icons/search";
-import { gtm } from "../../lib/gtm";
 import type { Order, OrderStatus } from "../../types/order";
 
 interface Filters {
@@ -144,10 +143,6 @@ const OrderList: NextPage = () => {
     isOpen: false,
     orderId: undefined,
   });
-
-  useEffect(() => {
-    gtm.push({ event: "page_view" });
-  }, []);
 
   const getOrders = useCallback(async () => {
     try {
@@ -330,7 +325,7 @@ const OrderList: NextPage = () => {
 
 OrderList.getLayout = (page) => (
   <AuthGuard>
-    <DashboardLayout>{page}</DashboardLayout>
+    <Layout>{page}</Layout>
   </AuthGuard>
 );
 

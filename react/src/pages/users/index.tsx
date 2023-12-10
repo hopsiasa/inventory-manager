@@ -16,7 +16,7 @@ import Head from "next/head";
 import type { ChangeEvent, MouseEvent } from "react";
 import { FormEvent, useRef, useState } from "react";
 import { AuthGuard } from "../../components/authentication/auth-guard";
-import { DashboardLayout } from "../../components/dashboard/dashboard-layout";
+import { Layout } from "../../components/layout/layout";
 import { UserListTable } from "../../components/user/user-list-table";
 import { useMounted } from "../../hooks/use-mounted";
 import { useGetUsers } from "../../hooks/use-users";
@@ -339,7 +339,7 @@ const UserList: NextPage = () => {
 
 UserList.getLayout = (page) => (
   <AuthGuard>
-    <DashboardLayout>{page}</DashboardLayout>
+    <Layout>{page}</Layout>
   </AuthGuard>
 );
 

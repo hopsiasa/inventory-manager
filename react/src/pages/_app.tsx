@@ -9,17 +9,11 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import Router from "next/router";
 import nProgress from "nprogress";
-import { FC } from "react";
 import { Toaster } from "react-hot-toast";
 import { QueryClient, QueryClientProvider } from "react-query";
-// import { Provider as ReduxProvider } from "react-redux";
-// import { RTL } from "../components/rtl";
-import { SettingsButton } from "../components/settings-button";
 import { SplashScreen } from "../components/splash-screen";
 import { AuthConsumer, AuthProvider } from "../contexts/jwt-context";
-import { SettingsConsumer, SettingsProvider } from "../contexts/settings-context";
 import "../i18n";
-// import { store } from "../store";
 import { createTheme } from "../theme";
 import { createEmotionCache } from "../utils/create-emotion-cache";
 
@@ -57,40 +51,31 @@ const App: NextPage<EnhancedAppProps> = (props) => {
         <title>Material Kit Pro</title>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
-      {/* <ReduxProvider store={store}> */}
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <AuthProvider>
-          <SettingsProvider>
-            <SettingsConsumer>
-              {({ settings }) => (
-                <ThemeProvider
-                  theme={createTheme({
-                    direction: settings.direction,
-                    responsiveFontSizes: settings.responsiveFontSizes,
-                    mode: settings.theme,
-                  })}
-                >
-                  <CssBaseline />
-                  <Toaster position="top-center" />
-                  <SettingsButton />
-                  <AuthConsumer>
-                    {(auth) =>
-                      !auth.isInitialized ? (
-                        <SplashScreen />
-                      ) : (
-                        <QueryClientProvider client={queryClient}>
-                          {getLayout(<Component {...pageProps} />)}
-                        </QueryClientProvider>
-                      )
-                    }
-                  </AuthConsumer>
-                </ThemeProvider>
-              )}
-            </SettingsConsumer>
-          </SettingsProvider>
+          <ThemeProvider
+            theme={createTheme({
+              direction: "ltr",
+              responsiveFontSizes: true,
+              mode: "dark",
+            })}
+          >
+            <CssBaseline />
+            <Toaster position="top-center" />
+            <AuthConsumer>
+              {(auth) =>
+                !auth.isInitialized ? (
+                  <SplashScreen />
+                ) : (
+                  <QueryClientProvider client={queryClient}>
+                    {getLayout(<Component {...pageProps} />)}
+                  </QueryClientProvider>
+                )
+              }
+            </AuthConsumer>
+          </ThemeProvider>
         </AuthProvider>
       </LocalizationProvider>
-      {/* </ReduxProvider> */}
     </CacheProvider>
   );
 };

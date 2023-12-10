@@ -4,15 +4,10 @@ import Head from "next/head";
 import NextLink from "next/link";
 import { useEffect } from "react";
 import { AuthGuard } from "../../components/authentication/auth-guard";
-import { DashboardLayout } from "../../components/dashboard/dashboard-layout";
+import { Layout } from "../../components/layout/layout";
 import { ProductCreateForm } from "../../components/product/product-create-form";
-import { gtm } from "../../lib/gtm";
 
 const ProductCreate: NextPage = () => {
-  useEffect(() => {
-    gtm.push({ event: "page_view" });
-  }, []);
-
   return (
     <>
       <Head>
@@ -51,7 +46,7 @@ const ProductCreate: NextPage = () => {
 
 ProductCreate.getLayout = (page) => (
   <AuthGuard>
-    <DashboardLayout>{page}</DashboardLayout>
+    <Layout>{page}</Layout>
   </AuthGuard>
 );
 

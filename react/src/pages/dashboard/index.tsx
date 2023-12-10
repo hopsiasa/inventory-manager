@@ -15,14 +15,14 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import { AuthGuard } from "../../components/authentication/auth-guard";
-import { DashboardLayout } from "../../components/dashboard/dashboard-layout";
-import { OverviewBanner } from "../../components/dashboard/overview/overview-banner";
-import { OverviewCryptoWallet } from "../../components/dashboard/overview/overview-crypto-wallet";
-import { OverviewInbox } from "../../components/dashboard/overview/overview-inbox";
-import { OverviewLatestTransactions } from "../../components/dashboard/overview/overview-latest-transactions";
-import { OverviewPrivateWallet } from "../../components/dashboard/overview/overview-private-wallet";
-import { OverviewTotalBalance } from "../../components/dashboard/overview/overview-total-balance";
-import { OverviewTotalTransactions } from "../../components/dashboard/overview/overview-total-transactions";
+import { OverviewBanner } from "../../components/dashboard/overview-banner";
+import { OverviewCryptoWallet } from "../../components/dashboard/overview-crypto-wallet";
+import { OverviewInbox } from "../../components/dashboard/overview-inbox";
+import { OverviewLatestTransactions } from "../../components/dashboard/overview-latest-transactions";
+import { OverviewPrivateWallet } from "../../components/dashboard/overview-private-wallet";
+import { OverviewTotalBalance } from "../../components/dashboard/overview-total-balance";
+import { OverviewTotalTransactions } from "../../components/dashboard/overview-total-transactions";
+import { Layout } from "../../components/layout/layout";
 import { ArrowRight as ArrowRightIcon } from "../../icons/arrow-right";
 import { Briefcase as BriefcaseIcon } from "../../icons/briefcase";
 import { Download as DownloadIcon } from "../../icons/download";
@@ -31,7 +31,7 @@ import { InformationCircleOutlined as InformationCircleOutlinedIcon } from "../.
 import { Reports as ReportsIcon } from "../../icons/reports";
 import { Users as UsersIcon } from "../../icons/users";
 
-const Overview: NextPage = () => {
+const Dashboard: NextPage = () => {
   const [displayBanner, setDisplayBanner] = useState<boolean>(true);
 
   useEffect(() => {
@@ -237,10 +237,10 @@ const Overview: NextPage = () => {
   );
 };
 
-Overview.getLayout = (page) => (
+Dashboard.getLayout = (page) => (
   <AuthGuard>
-    <DashboardLayout>{page}</DashboardLayout>
+    <Layout>{page}</Layout>
   </AuthGuard>
 );
 
-export default Overview;
+export default Dashboard;

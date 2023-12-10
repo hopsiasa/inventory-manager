@@ -7,7 +7,7 @@ import NextLink from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { orderApi } from "../../api/order-api";
 import { AuthGuard } from "../../components/authentication/auth-guard";
-import { DashboardLayout } from "../../components/dashboard/dashboard-layout";
+import { Layout } from "../../components/layout/layout";
 import { OrderItems } from "../../components/order/order-items";
 import { OrderLogs } from "../../components/order/order-logs";
 import { OrderSummary } from "../../components/order/order-summary";
@@ -15,16 +15,11 @@ import { useMounted } from "../../hooks/use-mounted";
 import { Calendar as CalendarIcon } from "../../icons/calendar";
 import { ChevronDown as ChevronDownIcon } from "../../icons/chevron-down";
 import { PencilAlt as PencilAltIcon } from "../../icons/pencil-alt";
-import { gtm } from "../../lib/gtm";
 import type { Order } from "../../types/order";
 
 const OrderDetails: NextPage = () => {
   const isMounted = useMounted();
   const [order, setOrder] = useState<Order | null>(null);
-
-  useEffect(() => {
-    gtm.push({ event: "page_view" });
-  }, []);
 
   const getOrder = useCallback(async () => {
     try {
@@ -124,7 +119,7 @@ const OrderDetails: NextPage = () => {
 
 OrderDetails.getLayout = (page) => (
   <AuthGuard>
-    <DashboardLayout>{page}</DashboardLayout>
+    <Layout>{page}</Layout>
   </AuthGuard>
 );
 

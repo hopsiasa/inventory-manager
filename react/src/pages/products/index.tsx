@@ -5,7 +5,7 @@ import NextLink from "next/link";
 import { ChangeEvent, MouseEvent, useCallback, useEffect, useState } from "react";
 import { productApi } from "../../api/product-api";
 import { AuthGuard } from "../../components/authentication/auth-guard";
-import { DashboardLayout } from "../../components/dashboard/dashboard-layout";
+import { Layout } from "../../components/layout/layout";
 import type { Filters } from "../../components/product/product-list-filters";
 import { ProjectListFilters } from "../../components/product/product-list-filters";
 import { ProductListTable } from "../../components/product/product-list-table";
@@ -13,7 +13,6 @@ import { useMounted } from "../../hooks/use-mounted";
 import { Download as DownloadIcon } from "../../icons/download";
 import { Plus as PlusIcon } from "../../icons/plus";
 import { Upload as UploadIcon } from "../../icons/upload";
-import { gtm } from "../../lib/gtm";
 import type { Product } from "../../types/product";
 
 const applyFilters = (products: Product[], filters: Filters): Product[] =>
@@ -70,10 +69,6 @@ const ProductList: NextPage = () => {
     status: [],
     inStock: undefined,
   });
-
-  useEffect(() => {
-    gtm.push({ event: "page_view" });
-  }, []);
 
   const getProducts = useCallback(async () => {
     try {
@@ -170,7 +165,7 @@ const ProductList: NextPage = () => {
 
 ProductList.getLayout = (page) => (
   <AuthGuard>
-    <DashboardLayout>{page}</DashboardLayout>
+    <Layout>{page}</Layout>
   </AuthGuard>
 );
 
