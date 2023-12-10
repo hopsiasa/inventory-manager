@@ -4,7 +4,7 @@ import { styled } from "@mui/material/styles";
 import PropTypes from "prop-types";
 import type { FC } from "react";
 import { useRef, useState } from "react";
-import { useAuth } from "src/hooks/use-auth";
+import { useAuth } from "../../hooks/use-auth";
 import { Menu as MenuIcon } from "../../icons/menu";
 import { UserCircle as UserCircleIcon } from "../../icons/user-circle";
 import { AccountPopover } from "./account-popover";

@@ -14,12 +14,12 @@ import {
 import type { NextPage } from "next";
 import Head from "next/head";
 import type { ChangeEvent, MouseEvent } from "react";
-import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
-import { useGetUsers } from "src/hooks/use-users";
+import { FormEvent, useRef, useState } from "react";
 import { AuthGuard } from "../../components/authentication/auth-guard";
 import { DashboardLayout } from "../../components/dashboard/dashboard-layout";
 import { UserListTable } from "../../components/user/user-list-table";
 import { useMounted } from "../../hooks/use-mounted";
+import { useGetUsers } from "../../hooks/use-users";
 import { Download as DownloadIcon } from "../../icons/download";
 import { Plus as PlusIcon } from "../../icons/plus";
 import { Search as SearchIcon } from "../../icons/search";

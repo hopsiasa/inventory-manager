@@ -1,5 +1,5 @@
-import api from "src/utils/axios";
 import type { User } from "../types/user";
+import api from "../utils/axios";
 
 const getUsers = async (page: number) => {
   const response = await api.get<User>(`/users?page=${page}`);

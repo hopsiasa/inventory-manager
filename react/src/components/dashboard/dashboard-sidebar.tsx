@@ -32,7 +32,6 @@ import { XCircle as XCircleIcon } from "../../icons/x-circle";
 import { Logo } from "../logo";
 import { Scrollbar } from "../scrollbar";
 import { DashboardSidebarSection } from "./dashboard-sidebar-section";
-import { OrganizationPopover } from "./organization-popover";
 
 interface DashboardSidebarProps {
   onClose?: () => void;
@@ -57,7 +56,7 @@ const getSections = (t: TFunction): Section[] => [
     title: t("General"),
     items: [
       {
-        title: t("Overview"),
+        title: t("Dashboard"),
         path: "/dashboard",
         icon: <HomeIcon fontSize="small" />,
       },
@@ -426,7 +425,7 @@ export const DashboardSidebar: FC<DashboardSidebarProps> = (props) => {
               />
             ))}
           </Box>
-          <Divider
+          {/* <Divider
             sx={{
               borderColor: "#2D3748", // dark divider
             }}
@@ -443,14 +442,14 @@ export const DashboardSidebar: FC<DashboardSidebarProps> = (props) => {
                 {t("Documentation")}
               </Button>
             </NextLink>
-          </Box>
+          </Box> */}
         </Box>
       </Scrollbar>
-      <OrganizationPopover
+      {/* <OrganizationPopover
         anchorEl={organizationsRef.current}
         onClose={handleCloseOrganizationsPopover}
         open={openOrganizationsPopover}
-      />
+      /> */}
     </>
   );
 
