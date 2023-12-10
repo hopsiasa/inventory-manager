@@ -8,16 +8,15 @@ import {
   Grid,
   TextField,
 } from "@mui/material";
-import { ro } from "date-fns/locale";
 import { useFormik } from "formik";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
-import type { FC } from "react";
+import { useState, type FC } from "react";
 import toast from "react-hot-toast";
 import * as Yup from "yup";
 import { useDeleteUser, useUpdateUser } from "../../hooks/use-users";
 import type { User } from "../../types/user";
-import { wait } from "../../utils/wait";
+import { ConfirmationModal } from "../confirmation-modal";
 
 interface UserEditFormProps {
   user: User;
@@ -29,6 +28,7 @@ export const UserEditForm: FC<UserEditFormProps> = (props) => {
   const userId = router.query.userId as string;
   const { updateUser } = useUpdateUser();
   const { deleteUser } = useDeleteUser();
+  const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -79,8 +79,9 @@ export const UserEditForm: FC<UserEditFormProps> = (props) => {
   const handleDelete = async (userId: string) => {
     try {
       deleteUser(userId);
+      setConfirmationModalOpen(false);
       toast.success("User deleted!");
-      // Redirect or handle success as needed
+      router.push("/users");
     } catch (err) {
       console.error(err);
       toast.error("Failed to delete user.");
@@ -188,10 +189,18 @@ export const UserEditForm: FC<UserEditFormProps> = (props) => {
           <Button
             color="error"
             disabled={formik.isSubmitting}
-            onClick={() => handleDelete(user.id)}
+            onClick={() => setConfirmationModalOpen(true)}
           >
             Delete user
           </Button>
+          <ConfirmationModal
+            open={isConfirmationModalOpen}
+            onClose={() => setConfirmationModalOpen(false)}
+            onConfirm={() => handleDelete(user.id)}
+            title="Confirm Deletion"
+            message="Are you sure you want to delete this user? This action cannot be undone."
+            confirmButtonText="Delete"
+          />
         </CardActions>
       </Card>
     </form>
