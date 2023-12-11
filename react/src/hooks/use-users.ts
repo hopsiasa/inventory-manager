@@ -1,10 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import userApi from "../api/user-api";
 
-export const useGetUsers = (page: number) => {
+export const useGetUsers = (page: number, pageSize: number) => {
   const { isLoading, data: users } = useQuery(
     ["users", page],
-    async () => await userApi.getUsers(page),
+    async () => await userApi.getUsers(page, pageSize),
     {
       select: (data) => data.data,
     }
@@ -26,8 +26,12 @@ export const useAddUser = () => {
   const queryClient = useQueryClient();
 
   const { isLoading, mutate: createUser } = useMutation(
-    (userData: { email: string; name: string; password: string }) =>
-      userApi.createUser(userData),
+    (userData: {
+      email: string;
+      name: string;
+      role: string;
+      password: string;
+    }) => userApi.createUser(userData),
     {
       onSuccess: async () => await queryClient.invalidateQueries(["users"]),
     }
@@ -45,7 +49,12 @@ export const useUpdateUser = () => {
       userData,
     }: {
       userId: string;
-      userData: { email?: string; name?: string; password?: string };
+      userData: {
+        email?: string;
+        name?: string;
+        role?: string;
+        password?: string;
+      };
     }) => userApi.updateUser({ userId, userData }),
     {
       onSuccess: async () => await queryClient.invalidateQueries(["user"]),

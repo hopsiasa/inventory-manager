@@ -1,4 +1,4 @@
-import { Box, Button, Checkbox, Link } from "@mui/material";
+import { Link } from "@mui/material";
 import {
   DataGrid,
   GridActionsCellItem,
@@ -8,35 +8,20 @@ import {
 } from "@mui/x-data-grid";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
-import type { ChangeEvent, FC, MouseEvent } from "react";
-import { useEffect, useState } from "react";
+import type { FC } from "react";
 import { PencilAlt as PencilAltIcon } from "../../icons/pencil-alt";
-import { Trash as TrashIcon } from "../../icons/trash";
 import type { User } from "../../types/user";
 import { Scrollbar } from "../scrollbar";
 
 interface UserListTableProps {
   users: User[];
   usersCount: number;
-  onPageChange: (
-    event: MouseEvent<HTMLButtonElement> | null,
-    newPage: number
-  ) => void;
-  onRowsPerPageChange?: (event: ChangeEvent<HTMLInputElement>) => void;
   page: number;
   rowsPerPage: number;
 }
 
 export const UserListTable: FC<UserListTableProps> = (props) => {
-  const {
-    users,
-    usersCount,
-    onPageChange,
-    onRowsPerPageChange,
-    page,
-    rowsPerPage,
-    ...other
-  } = props;
+  const { users, usersCount, page, rowsPerPage, ...other } = props;
   const router = useRouter();
 
   const columns: GridColDef[] = [
@@ -63,12 +48,6 @@ export const UserListTable: FC<UserListTableProps> = (props) => {
           icon={<PencilAltIcon />}
           label="Edit"
           onClick={() => router.push(`/users/${params.id}/edit`)}
-        />,
-        <GridActionsCellItem
-          key={params.id}
-          icon={<TrashIcon />}
-          label="Delete"
-          onClick={() => console.log(params.id)}
         />,
       ],
     },

@@ -5,7 +5,11 @@ import {
   CardContent,
   CardHeader,
   Divider,
+  FormControl,
   Grid,
+  InputLabel,
+  MenuItem,
+  Select,
   TextField,
 } from "@mui/material";
 import { useFormik } from "formik";
@@ -106,6 +110,7 @@ export const UserEditForm: FC<UserEditFormProps> = (props) => {
                 onChange={formik.handleChange}
                 required
                 value={formik.values.name}
+                InputLabelProps={{ shrink: true }}
               />
             </Grid>
             <Grid item md={6} xs={12}>
@@ -119,9 +124,19 @@ export const UserEditForm: FC<UserEditFormProps> = (props) => {
                 onChange={formik.handleChange}
                 required
                 value={formik.values.email}
+                InputLabelProps={{ shrink: true }}
               />
             </Grid>
-            <Grid item md={6} xs={12}>
+            <Grid item md={4} xs={12}>
+              <FormControl fullWidth variant="outlined" sx={{ my: 2 }}>
+                <InputLabel shrink>Role</InputLabel>
+                <Select label="Role" notched>
+                  <MenuItem value="programming">Programming</MenuItem>
+                  <MenuItem value="design">Design</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item md={4} xs={12}>
               <TextField
                 error={Boolean(
                   formik.touched.password && formik.errors.password
@@ -135,9 +150,10 @@ export const UserEditForm: FC<UserEditFormProps> = (props) => {
                 onChange={formik.handleChange}
                 type="password"
                 value={formik.values.password}
+                InputLabelProps={{ shrink: true }}
               />
             </Grid>
-            <Grid item md={6} xs={12}>
+            <Grid item md={4} xs={12}>
               <TextField
                 error={Boolean(
                   formik.touched.password_confirmation &&
@@ -155,6 +171,7 @@ export const UserEditForm: FC<UserEditFormProps> = (props) => {
                 onChange={formik.handleChange}
                 type="password"
                 value={formik.values.password_confirmation}
+                InputLabelProps={{ shrink: true }}
               />
             </Grid>
           </Grid>

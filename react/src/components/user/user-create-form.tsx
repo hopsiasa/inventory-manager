@@ -2,37 +2,37 @@ import {
   Box,
   Button,
   Card,
-  CardActions,
   CardContent,
   CardHeader,
-  Checkbox,
   Divider,
+  FormControl,
   FormHelperText,
   Grid,
-  Link,
+  InputLabel,
+  MenuItem,
+  Select,
   TextField,
-  Typography,
 } from "@mui/material";
-import { useFormik } from "formik";
+import { FormikHelpers, useFormik } from "formik";
 import router from "next/router";
-import { register } from "numeral";
 import type { FC } from "react";
 import * as Yup from "yup";
 import { useAddUser } from "../../hooks/use-users";
-import type { User } from "../../types/user";
+import type { UserRequest } from "../../types/user";
 
-interface UserEditFormProps {
-  user: User;
+interface FormValues extends UserRequest {
+  password: string;
+  password_confirmation: string;
+  submit: null | string;
 }
-
-export const UserCreateForm: FC<UserEditFormProps> = (props) => {
-  const { user, ...other } = props;
+export const UserCreateForm: FC = () => {
   const { createUser, isLoading } = useAddUser();
 
-  const formik = useFormik({
+  const formik = useFormik<FormValues>({
     initialValues: {
       email: "",
       name: "",
+      role: "",
       password: "",
       password_confirmation: "",
       submit: null,
@@ -43,16 +43,29 @@ export const UserCreateForm: FC<UserEditFormProps> = (props) => {
         .max(255)
         .required("Email is required"),
       name: Yup.string().max(255).required("Name is required"),
-      password: Yup.string().min(8).max(255).required("Password is required"),
+      role: Yup.string()
+        .required()
+        .oneOf(["Programming", "Design"])
+        .label("Role"),
+      password: Yup.string()
+        .min(8)
+        .max(255)
+        .required("Password is required")
+        .label("Password"),
       password_confirmation: Yup.string()
         .min(8)
         .max(255)
         .required("Please re-type your password")
-        .oneOf([Yup.ref("password"), null], "Passwords does not match"),
+        .oneOf([Yup.ref("password"), null], "Passwords does not match")
+        .label("Password Confirmation"),
     }),
-    onSubmit: async (values, helpers): Promise<void> => {
+    onSubmit: async (
+      values: FormValues,
+      helpers: FormikHelpers<FormValues>
+    ): Promise<void> => {
       try {
-        createUser(values);
+        const { submit, password, password_confirmation, ...user } = values;
+        createUser({ ...user, password });
 
         const returnUrl =
           (router.query.returnUrl as string | undefined) || "/users";
@@ -68,76 +81,83 @@ export const UserCreateForm: FC<UserEditFormProps> = (props) => {
   });
 
   return (
-    <form noValidate onSubmit={formik.handleSubmit} {...props}>
-      <TextField
-        error={Boolean(formik.touched.name && formik.errors.name)}
-        fullWidth
-        helperText={formik.touched.name && formik.errors.name}
-        label="Name"
-        margin="normal"
-        name="name"
-        onBlur={formik.handleBlur}
-        onChange={formik.handleChange}
-        value={formik.values.name}
-      />
-      <TextField
-        error={Boolean(formik.touched.email && formik.errors.email)}
-        fullWidth
-        helperText={formik.touched.email && formik.errors.email}
-        label="Email Address"
-        margin="normal"
-        name="email"
-        onBlur={formik.handleBlur}
-        onChange={formik.handleChange}
-        type="email"
-        value={formik.values.email}
-      />
-      <TextField
-        error={Boolean(formik.touched.password && formik.errors.password)}
-        fullWidth
-        helperText={formik.touched.password && formik.errors.password}
-        label="Password"
-        margin="normal"
-        name="password"
-        onBlur={formik.handleBlur}
-        onChange={formik.handleChange}
-        type="password"
-        value={formik.values.password}
-      />
-      <TextField
-        error={Boolean(
-          formik.touched.password_confirmation &&
-            formik.errors.password_confirmation
-        )}
-        fullWidth
-        helperText={
-          formik.touched.password_confirmation &&
-          formik.errors.password_confirmation
-        }
-        label="Password Confirmation"
-        margin="normal"
-        name="password_confirmation"
-        onBlur={formik.handleBlur}
-        onChange={formik.handleChange}
-        type="password"
-        value={formik.values.password_confirmation}
-      />
-      {formik.errors.submit && (
-        <Box sx={{ mt: 3 }}>
-          <FormHelperText error>{formik.errors.submit}</FormHelperText>
-        </Box>
-      )}
-      <Box sx={{ mt: 2 }}>
-        <Button
-          disabled={formik.isSubmitting}
-          fullWidth
-          size="large"
-          type="submit"
-          variant="contained"
-        >
-          Save
-        </Button>
-      </Box>
+    <form noValidate onSubmit={formik.handleSubmit}>
+      <Card>
+        <CardHeader title="Create new user" />
+        <Divider />
+        <CardContent>
+          <Grid container spacing={3}>
+            <Grid item md={6} xs={12}>
+              <TextField
+                fullWidth
+                label="Name"
+                name="name"
+                onChange={formik.handleChange}
+                required
+                value={formik.values.name}
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item md={6} xs={12}>
+              <TextField
+                fullWidth
+                label="Email"
+                name="email"
+                onChange={formik.handleChange}
+                required
+                value={formik.values.email}
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item md={4} xs={12}>
+              <FormControl fullWidth variant="outlined">
+                <InputLabel shrink>Role</InputLabel>
+                <Select label="Role" notched>
+                  <MenuItem value="programming">Programming</MenuItem>
+                  <MenuItem value="design">Design</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item md={4} xs={12}>
+              <TextField
+                fullWidth
+                label="Password"
+                name="password"
+                onChange={formik.handleChange}
+                required
+                value={formik.values.password}
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item md={4} xs={12}>
+              <TextField
+                fullWidth
+                label="Password Confirmation"
+                name="password_confirmation"
+                onChange={formik.handleChange}
+                required
+                value={formik.values.password_confirmation}
+                variant="outlined"
+              />
+            </Grid>
+          </Grid>
+          {formik.errors.submit && (
+            <Box sx={{ mt: 3 }}>
+              <FormHelperText error>{formik.errors.submit}</FormHelperText>
+            </Box>
+          )}
+          <Box sx={{ mt: 2 }}>
+            <Button
+              disabled={formik.isSubmitting}
+              size="large"
+              type="submit"
+              variant="contained"
+            >
+              Save
+            </Button>
+          </Box>
+        </CardContent>
+      </Card>
     </form>
   );
 };

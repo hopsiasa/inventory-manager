@@ -1,11 +1,8 @@
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { Avatar, Box, Chip, Container, Link, Typography } from "@mui/material";
+import { Box, Container, Link, Typography } from "@mui/material";
 import type { NextPage } from "next";
 import Head from "next/head";
 import NextLink from "next/link";
-import { useRouter } from "next/router";
-import { useGetUser } from "../../../hooks/use-users";
-import { getInitials } from "../../../utils/get-initials";
 import { AuthGuard } from "../../components/authentication/auth-guard";
 import { Layout } from "../../components/layout/layout";
 import { UserCreateForm } from "../../components/user/user-create-form";
@@ -19,15 +16,30 @@ const UserCreate: NextPage = () => {
       <Box
         component="main"
         sx={{
+          backgroundColor: "background.default",
           flexGrow: 1,
           py: 8,
         }}
       >
         <Container maxWidth="md">
-          <Box sx={{ mb: 3 }}>
-            <Typography variant="h4">Create new user</Typography>
+          <Box sx={{ mb: 4 }}>
+            <NextLink href="/users" passHref>
+              <Link
+                color="textPrimary"
+                component="a"
+                sx={{
+                  alignItems: "center",
+                  display: "flex",
+                }}
+              >
+                <ArrowBackIcon fontSize="small" sx={{ mr: 1 }} />
+                <Typography variant="subtitle2">Users</Typography>
+              </Link>
+            </NextLink>
           </Box>
-          <UserCreateForm />
+          <Box mt={3}>
+            <UserCreateForm />
+          </Box>
         </Container>
       </Box>
     </>
