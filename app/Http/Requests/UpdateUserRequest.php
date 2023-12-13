@@ -25,12 +25,13 @@ class UpdateUserRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:55',
-            'email' => 'required|email|unique:users,email,'.$this->id,
+            'email' => 'required|email'.$this->id,
+            'role' => 'required|string|exists:roles,name',
             'password' => [
                 'confirmed',
                 Password::min(8)
                     ->letters()
-                    ->symbols()
+                    ->symbols(),
             ],
         ];
     }

@@ -22,11 +22,11 @@ class PermissionSeeder extends Seeder
         $permissionNames = [
             'admin',
             'manager',
-            'customer'
+            'customer',
         ];
 
         $permissions = collect($permissionNames)->map(function ($permission) {
-            return ['name' => $permission, 'guard_name' => 'web'];
+            return ['name' => $permission, 'guard_name' => 'api'];
         });
 
         Permission::insert($permissions->toArray());

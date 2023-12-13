@@ -9,6 +9,7 @@ use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -44,13 +45,10 @@ class UserController extends Controller
         // return UserResource::collection(User::query()->orderBy('id', 'desc')->paginate());
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreUserRequest $request)
     {
         $data = $request->validated();
-        $data['password'] = bcrypt($data['password']);
+        $data['password'] = Hash::make($data['password']);
 
         $user = User::create($data);
 
@@ -59,33 +57,25 @@ class UserController extends Controller
         return response(new UserResource($user), 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(User $user): UserResource
     {
         return new UserResource($user);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateUserRequest $request, User $user): UserResource
     {
         $data = $request->validated();
 
         if (isset($data['password'])) {
-            $data['password'] = bcrypt($data['password']);
+            $data['password'] = Hash::make($data['password']);
         }
 
         $user->update($data);
+        $user->syncRoles($request->input('role'));
 
         return new UserResource($user);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(User $user)
     {
         $user->delete();

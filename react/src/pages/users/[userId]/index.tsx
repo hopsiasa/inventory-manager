@@ -17,7 +17,6 @@ import { useGetUser } from "src/hooks/use-users";
 import { AuthGuard } from "../../../components/authentication/auth-guard";
 import { Layout } from "../../../components/layout/layout";
 import { UserBasicDetails } from "../../../components/user/user-basic-details";
-import { ChevronDown as ChevronDownIcon } from "../../../icons/chevron-down";
 import { PencilAlt as PencilAltIcon } from "../../../icons/pencil-alt";
 import { getInitials } from "../../../utils/get-initials";
 

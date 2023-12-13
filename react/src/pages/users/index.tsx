@@ -2,7 +2,7 @@ import { Box, Button, Card, Container, Grid, Typography } from "@mui/material";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AuthGuard } from "../../components/authentication/auth-guard";
 import { Layout } from "../../components/layout/layout";
 import { UserListTable } from "../../components/user/user-list-table";
@@ -11,11 +11,41 @@ import { Plus as PlusIcon } from "../../icons/plus";
 import { User, Users } from "../../types/user";
 
 const UserList: NextPage = () => {
-  const [page, setPage] = useState<number>(0);
-  const [rowsPerPage, setRowsPerPage] = useState<number>(10);
+  const [paginationModel, setPaginationModel] = useState({
+    page: 0,
+    pageSize: 10,
+  });
 
   const router = useRouter();
-  const { users, isLoading } = useGetUsers(page + 1, rowsPerPage);
+  const { users, isLoading } = useGetUsers(
+    paginationModel.page + 1,
+    paginationModel.pageSize
+  );
+
+  const [rowCountState, setRowCountState] = useState(
+    users?.pagination?.total || 0
+  );
+  useEffect(() => {
+    setRowCountState((prevRowCountState: number) =>
+      users?.pagination?.total !== undefined
+        ? users?.pagination?.total
+        : prevRowCountState
+    );
+  }, [users?.pagination?.total, setRowCountState]);
+
+  const handlePageChange = (newPage: number) => {
+    setPaginationModel((prevPaginationModel) => ({
+      ...prevPaginationModel,
+      page: newPage,
+    }));
+  };
+
+  const handlePageSizeChange = (newPageSize: number) => {
+    setPaginationModel((prevPaginationModel) => ({
+      ...prevPaginationModel,
+      pageSize: newPageSize,
+    }));
+  };
 
   return (
     <>
@@ -48,10 +78,11 @@ const UserList: NextPage = () => {
           </Box>
           <Card>
             <UserListTable
-              users={users?.data ?? []}
-              usersCount={users?.data?.length ?? 0}
-              rowsPerPage={rowsPerPage}
-              page={page}
+              users={users?.data || []}
+              rowCount={rowCountState}
+              paginationModel={paginationModel}
+              onPaginationModelChange={setPaginationModel}
+              isLoading={isLoading}
             />
           </Card>
         </Container>

@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CategoryController;
 use App\Http\Controllers\API\OrderController;
 use App\Http\Controllers\API\ProductController;
@@ -21,16 +20,6 @@ use Illuminate\Support\Facades\Route;
 
 require __DIR__.'/auth.php';
 
-// Route::middleware('auth:api')->group(function () {
-//     Route::get('/users', [UserController::class, 'show'])
-//         ->name('users.show');
-// });
-
-// Route::middleware(['auth:api', 'verified'])->group(function () {
-//     Route::patch('/users', [UserController::class, 'update'])
-//         ->name('users.update');
-// });
-
 Route::group(['middleware' => 'auth:api'], function () {
     Route::apiResource('/categories', CategoryController::class);
     Route::apiResource('/users', UserController::class);
@@ -38,5 +27,3 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::apiResource('/orders', OrderController::class);
     Route::apiResource('/roles', RoleController::class);
 });
-
-// Route::post('/login', [AuthController::class, 'login']);
