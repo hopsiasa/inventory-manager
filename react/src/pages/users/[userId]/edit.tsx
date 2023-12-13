@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import { AuthGuard } from "../../../components/authentication/auth-guard";
 import { Layout } from "../../../components/layout/layout";
 import { UserEditForm } from "../../../components/user/user-edit-form";
+import { useGetRoles } from "../../../hooks/use-roles";
 import { useGetUser } from "../../../hooks/use-users";
 import { getInitials } from "../../../utils/get-initials";
 
@@ -14,7 +15,8 @@ const UserEdit: NextPage = () => {
   const router = useRouter();
   const { userId } = router.query;
 
-  const { user, isLoading } = useGetUser(userId as string);
+  const { user, isLoading: isUserLoading } = useGetUser(userId as string);
+  const { roles, isLoading: isRolesLoading } = useGetRoles();
 
   if (!user) {
     return null;
@@ -57,7 +59,7 @@ const UserEdit: NextPage = () => {
             }}
           >
             <Avatar
-              src={user?.avatar}
+              // src={user?.avatar}
               sx={{
                 height: 64,
                 mr: 2,
@@ -85,7 +87,7 @@ const UserEdit: NextPage = () => {
             </div>
           </Box>
           <Box mt={3}>
-            <UserEditForm user={user} />
+            <UserEditForm user={user || {}} roles={roles || []} />
           </Box>
         </Container>
       </Box>

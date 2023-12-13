@@ -5,11 +5,8 @@ import {
   CardContent,
   CardHeader,
   Divider,
-  FormControl,
   Grid,
-  InputLabel,
   MenuItem,
-  Select,
   TextField,
 } from "@mui/material";
 import { useFormik } from "formik";
@@ -19,15 +16,17 @@ import { useState, type FC } from "react";
 import toast from "react-hot-toast";
 import * as Yup from "yup";
 import { useDeleteUser, useUpdateUser } from "../../hooks/use-users";
+import { Role } from "../../types/role";
 import type { User } from "../../types/user";
 import { ConfirmationModal } from "../confirmation-modal";
 
 interface UserEditFormProps {
   user: User;
+  roles: Role[];
 }
 
 export const UserEditForm: FC<UserEditFormProps> = (props) => {
-  const { user, ...other } = props;
+  const { user, roles, ...other } = props;
   const router = useRouter();
   const userId = router.query.userId as string;
   const { updateUser } = useUpdateUser();
@@ -38,6 +37,7 @@ export const UserEditForm: FC<UserEditFormProps> = (props) => {
     initialValues: {
       email: user?.email || "",
       name: user?.name || "",
+      role: user?.role || "",
       password: user?.password || "",
       password_confirmation: user?.password_confirmation || "",
       submit: null,
@@ -48,6 +48,7 @@ export const UserEditForm: FC<UserEditFormProps> = (props) => {
         .max(255)
         .required("Email is required"),
       name: Yup.string().max(255).required("Name is required"),
+      role: Yup.string().required().label("Role"),
       password: Yup.string().min(8).max(255),
       password_confirmation: Yup.string()
         .min(8)
@@ -59,6 +60,7 @@ export const UserEditForm: FC<UserEditFormProps> = (props) => {
         const userData = {
           email: values.email,
           name: values.name,
+          role: values.role,
           ...(values.password && { password: values.password }),
           ...(values.password_confirmation && {
             password_confirmation: values.password_confirmation,
@@ -128,13 +130,29 @@ export const UserEditForm: FC<UserEditFormProps> = (props) => {
               />
             </Grid>
             <Grid item md={4} xs={12}>
-              <FormControl fullWidth variant="outlined" sx={{ my: 2 }}>
-                <InputLabel shrink>Role</InputLabel>
-                <Select label="Role" notched>
-                  <MenuItem value="programming">Programming</MenuItem>
-                  <MenuItem value="design">Design</MenuItem>
-                </Select>
-              </FormControl>
+              <TextField
+                select
+                name="role"
+                label="Role"
+                value={formik.values.role}
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
+                helperText={formik.touched.role && formik.errors.role}
+                error={Boolean(formik.touched.role && formik.errors.role)}
+                margin="normal"
+                InputLabelProps={{ shrink: true }}
+                fullWidth
+              >
+                {roles?.length ? (
+                  roles.map((role) => (
+                    <MenuItem key={role.id} value={role.name}>
+                      {role.name}
+                    </MenuItem>
+                  ))
+                ) : (
+                  <MenuItem value="">No roles available</MenuItem>
+                )}
+              </TextField>
             </Grid>
             <Grid item md={4} xs={12}>
               <TextField
@@ -190,7 +208,7 @@ export const UserEditForm: FC<UserEditFormProps> = (props) => {
           >
             Update
           </Button>
-          <NextLink href={`/users/${user.id}`} passHref>
+          <NextLink href={`/users/${user?.id}`} passHref>
             <Button
               component="a"
               disabled={formik.isSubmitting}
@@ -213,7 +231,7 @@ export const UserEditForm: FC<UserEditFormProps> = (props) => {
           <ConfirmationModal
             open={isConfirmationModalOpen}
             onClose={() => setConfirmationModalOpen(false)}
-            onConfirm={() => handleDelete(user.id)}
+            onConfirm={() => handleDelete(user?.id)}
             title="Confirm Deletion"
             message="Are you sure you want to delete this user? This action cannot be undone."
             confirmButtonText="Delete"

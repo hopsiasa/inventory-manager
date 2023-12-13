@@ -1,8 +1,8 @@
-import type { User } from "../types/user";
+import type { User, Users } from "../types/user";
 import api from "../utils/axios";
 
 const getUsers = async (page: number, pageSize: number) => {
-  const response = await api.get<User>(`/users?page=${page}`);
+  const response = await api.get<Users>(`/users?page=${page}`);
   return response.data;
 };
 
@@ -14,6 +14,7 @@ const getUser = async (userId: string | undefined) => {
 export const createUser = async (userData: {
   email: string;
   name: string;
+  role: string;
   password: string;
 }) => {
   const response = await api.post<User>("/users", userData);
@@ -25,7 +26,7 @@ export const updateUser = async ({
   userData,
 }: {
   userId: string;
-  userData: { email?: string; name?: string; password?: string };
+  userData: { email?: string; name?: string; role?: string; password?: string };
 }) => {
   const response = await api.put<User>(`/users/${userId}`, userData);
   return response.data;

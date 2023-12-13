@@ -6,8 +6,15 @@ import NextLink from "next/link";
 import { AuthGuard } from "../../components/authentication/auth-guard";
 import { Layout } from "../../components/layout/layout";
 import { UserCreateForm } from "../../components/user/user-create-form";
+import { useGetRoles } from "../../hooks/use-roles";
 
 const UserCreate: NextPage = () => {
+  const { roles, isLoading } = useGetRoles();
+
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
+
   return (
     <>
       <Head>
@@ -38,7 +45,7 @@ const UserCreate: NextPage = () => {
             </NextLink>
           </Box>
           <Box mt={3}>
-            <UserCreateForm />
+            <UserCreateForm roles={roles || []} />
           </Box>
         </Container>
       </Box>

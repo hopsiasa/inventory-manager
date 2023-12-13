@@ -38,6 +38,7 @@ export const UserListTable: FC<UserListTableProps> = (props) => {
       ),
     },
     { field: "email", headerName: "Email", width: 150, flex: 1 },
+    { field: "role", headerName: "Role", width: 150, flex: 1 },
     { field: "created_at", headerName: "Date created", width: 150, flex: 1 },
     {
       field: "actions",

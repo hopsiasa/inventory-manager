@@ -13,11 +13,12 @@ import { PropertyListItem } from "../property-list-item";
 
 interface UserBasicDetailsProps {
   email: string;
+  role: string;
   dateCreated: string;
 }
 
 export const UserBasicDetails: FC<UserBasicDetailsProps> = (props) => {
-  const { email, dateCreated, ...other } = props;
+  const { email, role, dateCreated, ...other } = props;
   const mdUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("md"));
 
   const align = mdUp ? "horizontal" : "vertical";
@@ -28,6 +29,7 @@ export const UserBasicDetails: FC<UserBasicDetailsProps> = (props) => {
       <Divider />
       <PropertyList>
         <PropertyListItem align={align} divider label="Email" value={email} />
+        <PropertyListItem align={align} divider label="Role" value={role} />
         <PropertyListItem
           align={align}
           divider

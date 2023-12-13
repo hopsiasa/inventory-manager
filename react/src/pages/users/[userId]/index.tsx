@@ -111,6 +111,7 @@ const UserDetails: NextPage = () => {
               <Grid item xs={12}>
                 <UserBasicDetails
                   email={user.email}
+                  role={user.role}
                   dateCreated={user.created_at}
                 />
               </Grid>
