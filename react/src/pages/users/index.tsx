@@ -6,26 +6,23 @@ import { useEffect, useState } from "react";
 import { AuthGuard } from "../../components/authentication/auth-guard";
 import { Layout } from "../../components/layout/layout";
 import { UserListTable } from "../../components/user/user-list-table";
-import { withRoles } from "../../hocs/with-roles";
 import { useGetUsers } from "../../hooks/use-users";
 import { Plus as PlusIcon } from "../../icons/plus";
-import { User, Users } from "../../types/user";
 
 const UserList: NextPage = () => {
+  const router = useRouter();
   const [paginationModel, setPaginationModel] = useState({
     page: 0,
-    pageSize: 10,
+    pageSize: 25,
   });
-
-  const router = useRouter();
   const { users, isLoading } = useGetUsers(
     paginationModel.page + 1,
     paginationModel.pageSize
   );
-
   const [rowCountState, setRowCountState] = useState(
     users?.pagination?.total || 0
   );
+
   useEffect(() => {
     setRowCountState((prevRowCountState: number) =>
       users?.pagination?.total !== undefined
@@ -33,20 +30,6 @@ const UserList: NextPage = () => {
         : prevRowCountState
     );
   }, [users?.pagination?.total, setRowCountState]);
-
-  const handlePageChange = (newPage: number) => {
-    setPaginationModel((prevPaginationModel) => ({
-      ...prevPaginationModel,
-      page: newPage,
-    }));
-  };
-
-  const handlePageSizeChange = (newPageSize: number) => {
-    setPaginationModel((prevPaginationModel) => ({
-      ...prevPaginationModel,
-      pageSize: newPageSize,
-    }));
-  };
 
   return (
     <>

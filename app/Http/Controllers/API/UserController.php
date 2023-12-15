@@ -27,7 +27,7 @@ class UserController extends Controller
         //            abort(403, 'Unauthorized');
         //        }
 
-        $perPage = $request->input('per_page', 10);
+        $perPage = $request->input('per_page', 25);
         $users = User::query()->orderBy('id', 'desc')->paginate($perPage);
 
         $data = [

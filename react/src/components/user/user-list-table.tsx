@@ -6,7 +6,6 @@ import {
   GridRenderCellParams,
   GridRowParams,
 } from "@mui/x-data-grid";
-import { on } from "events";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import type { FC } from "react";
@@ -69,14 +68,14 @@ export const UserListTable: FC<UserListTableProps> = (props) => {
   return (
     <Scrollbar>
       <DataGrid
-        rows={users || []}
+        rows={users}
         rowCount={rowCount}
         columns={columns}
-        pagination
         checkboxSelection
         disableRowSelectionOnClick
         autoHeight
         loading={isLoading}
+        pageSizeOptions={[15, 25, 50, 100]}
         paginationModel={paginationModel}
         paginationMode="server"
         onPaginationModelChange={onPaginationModelChange}

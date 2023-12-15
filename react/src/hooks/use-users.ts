@@ -3,7 +3,7 @@ import userApi from "../api/user-api";
 
 export const useGetUsers = (page: number, pageSize: number) => {
   const { isLoading, data: users } = useQuery(
-    ["users", page],
+    ["users", page, pageSize],
     async () => await userApi.getUsers(page, pageSize)
   );
 

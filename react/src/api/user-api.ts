@@ -2,7 +2,9 @@ import type { User, Users } from "../types/user";
 import api from "../utils/axios";
 
 const getUsers = async (page: number, pageSize: number) => {
-  const response = await api.get<Users>(`/users?page=${page}`);
+  const response = await api.get<Users>(
+    `/users?page=${page}&per_page=${pageSize}`
+  );
   return response.data;
 };
 
