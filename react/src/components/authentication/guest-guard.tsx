@@ -1,5 +1,4 @@
 import { useRouter } from "next/router";
-import PropTypes from "prop-types";
 import type { FC, ReactNode } from "react";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../hooks/use-auth";
@@ -38,8 +37,4 @@ export const GuestGuard: FC<GuestGuardProps> = (props) => {
   // not authenticated / authorized.
 
   return <>{children}</>;
-};
-
-GuestGuard.propTypes = {
-  children: PropTypes.node,
 };

@@ -17,7 +17,10 @@ export const JWTLogin: FC = (props) => {
       submit: null,
     },
     validationSchema: Yup.object({
-      email: Yup.string().email("Must be a valid email").max(255).required("Email is required"),
+      email: Yup.string()
+        .email("Must be a valid email")
+        .max(255)
+        .required("Email is required"),
       password: Yup.string().max(255).required("Password is required"),
     }),
     onSubmit: async (values, helpers): Promise<void> => {
@@ -25,7 +28,8 @@ export const JWTLogin: FC = (props) => {
         await login(values.email, values.password);
 
         if (isMounted()) {
-          const returnUrl = (router.query.returnUrl as string | undefined) || "/dashboard";
+          const returnUrl =
+            (router.query.returnUrl as string | undefined) || "/dashboard";
           router.push(returnUrl).catch(console.error);
         }
       } catch (err) {
@@ -73,7 +77,13 @@ export const JWTLogin: FC = (props) => {
         </Box>
       )}
       <Box sx={{ mt: 2 }}>
-        <Button disabled={formik.isSubmitting} fullWidth size="large" type="submit" variant="contained">
+        <Button
+          disabled={formik.isSubmitting}
+          fullWidth
+          size="large"
+          type="submit"
+          variant="contained"
+        >
           Log In
         </Button>
       </Box>

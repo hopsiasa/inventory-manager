@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { AuthGuard } from "../../components/authentication/auth-guard";
 import { Layout } from "../../components/layout/layout";
 import { UserListTable } from "../../components/user/user-list-table";
+import { withRoles } from "../../hocs/with-roles";
 import { useGetUsers } from "../../hooks/use-users";
 import { Plus as PlusIcon } from "../../icons/plus";
 import { User, Users } from "../../types/user";
