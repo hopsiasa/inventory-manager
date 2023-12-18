@@ -10,9 +10,9 @@ import {
   TextField,
 } from "@mui/material";
 import { useFormik } from "formik";
-import NextLink from "next/link";
+import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState, type FC } from "react";
+import { type FC, useState } from "react";
 import toast from "react-hot-toast";
 import * as Yup from "yup";
 import { useDeleteUser, useUpdateUser } from "../../hooks/use-users";
@@ -157,7 +157,7 @@ export const UserEditForm: FC<UserEditFormProps> = (props) => {
             <Grid item md={4} xs={12}>
               <TextField
                 error={Boolean(
-                  formik.touched.password && formik.errors.password
+                  formik.touched.password && formik.errors.password,
                 )}
                 fullWidth
                 helperText={formik.touched.password && formik.errors.password}
@@ -175,7 +175,7 @@ export const UserEditForm: FC<UserEditFormProps> = (props) => {
               <TextField
                 error={Boolean(
                   formik.touched.password_confirmation &&
-                    formik.errors.password_confirmation
+                    formik.errors.password_confirmation,
                 )}
                 fullWidth
                 helperText={
@@ -208,9 +208,8 @@ export const UserEditForm: FC<UserEditFormProps> = (props) => {
           >
             Update
           </Button>
-          <NextLink href={`/users/${user?.id}`} passHref>
+          <Link href={`/users/${user?.id}`} passHref>
             <Button
-              component="a"
               disabled={formik.isSubmitting}
               sx={{
                 m: 1,
@@ -220,7 +219,7 @@ export const UserEditForm: FC<UserEditFormProps> = (props) => {
             >
               Cancel
             </Button>
-          </NextLink>
+          </Link>
           <Button
             color="error"
             disabled={formik.isSubmitting}

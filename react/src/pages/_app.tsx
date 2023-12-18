@@ -15,6 +15,7 @@ import { SplashScreen } from "../components/splash-screen";
 import { AuthConsumer, AuthProvider } from "../contexts/jwt-context";
 import "../i18n";
 import { createTheme } from "../theme";
+import "../styles/global.css";
 import { createEmotionCache } from "../utils/create-emotion-cache";
 
 type EnhancedAppProps = AppProps & {

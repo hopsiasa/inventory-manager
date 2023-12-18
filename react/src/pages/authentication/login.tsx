@@ -1,7 +1,7 @@
 import { Box, Card, Container, Typography } from "@mui/material";
 import type { NextPage } from "next";
 import Head from "next/head";
-import NextLink from "next/link";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { GuestGuard } from "../../components/authentication/guest-guard";
 import { JWTLogin } from "../../components/authentication/jwt-login";
@@ -40,16 +40,14 @@ const Login: NextPage = () => {
                 justifyContent: "center",
               }}
             >
-              <NextLink href="/" passHref>
-                <a>
+              <Link href="/" passHref>
                   <Logo
                     sx={{
                       height: 40,
                       width: 40,
                     }}
                   />
-                </a>
-              </NextLink>
+              </Link>
               <Typography variant="h4">Log in</Typography>
             </Box>
             <Box

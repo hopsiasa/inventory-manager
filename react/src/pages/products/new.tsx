@@ -1,8 +1,7 @@
-import { Box, Breadcrumbs, Container, Link, Typography } from "@mui/material";
+import { Box, Breadcrumbs, Container, Typography } from "@mui/material";
 import type { NextPage } from "next";
 import Head from "next/head";
-import NextLink from "next/link";
-import { useEffect } from "react";
+import Link from "next/link";
 import { AuthGuard } from "../../components/authentication/auth-guard";
 import { Layout } from "../../components/layout/layout";
 import { ProductCreateForm } from "../../components/product/product-create-form";
@@ -24,14 +23,14 @@ const ProductCreate: NextPage = () => {
           <Box sx={{ mb: 3 }}>
             <Typography variant="h4">Create a new product</Typography>
             <Breadcrumbs separator="/" sx={{ mt: 1 }}>
-              <NextLink href="/dashboard" passHref>
-                <Link variant="subtitle2">Dashboard</Link>
-              </NextLink>
-              <NextLink href="/dashboard" passHref>
-                <Link color="primary" variant="subtitle2">
+              <Link href="/dashboard" passHref>
+                <Typography variant="subtitle2">Dashboard</Typography>
+              </Link>
+              <Link href="/dashboard" passHref>
+                <Typography color="primary" variant="subtitle2">
                   Management
-                </Link>
-              </NextLink>
+                </Typography>
+              </Link>
               <Typography color="textSecondary" variant="subtitle2">
                 Products
               </Typography>

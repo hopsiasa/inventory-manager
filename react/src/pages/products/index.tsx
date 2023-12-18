@@ -1,8 +1,14 @@
 import { Box, Button, Card, Container, Grid, Typography } from "@mui/material";
 import type { NextPage } from "next";
 import Head from "next/head";
-import NextLink from "next/link";
-import { ChangeEvent, MouseEvent, useCallback, useEffect, useState } from "react";
+import Link from "next/link";
+import {
+  ChangeEvent,
+  MouseEvent,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { productApi } from "../../api/product-api";
 import { AuthGuard } from "../../components/authentication/auth-guard";
 import { Layout } from "../../components/layout/layout";
@@ -18,7 +24,9 @@ import type { Product } from "../../types/product";
 const applyFilters = (products: Product[], filters: Filters): Product[] =>
   products.filter((product) => {
     if (filters.name) {
-      const nameMatched = product.name.toLowerCase().includes(filters.name.toLowerCase());
+      const nameMatched = product.name
+        .toLowerCase()
+        .includes(filters.name.toLowerCase());
 
       if (!nameMatched) {
         return false;
@@ -55,7 +63,11 @@ const applyFilters = (products: Product[], filters: Filters): Product[] =>
     return true;
   });
 
-const applyPagination = (products: Product[], page: number, rowsPerPage: number): Product[] =>
+const applyPagination = (
+  products: Product[],
+  page: number,
+  rowsPerPage: number,
+): Product[] =>
   products.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
 const ProductList: NextPage = () => {
@@ -87,24 +99,33 @@ const ProductList: NextPage = () => {
       getProducts();
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [],
   );
 
   const handleFiltersChange = (filters: Filters): void => {
     setFilters(filters);
   };
 
-  const handlePageChange = (event: MouseEvent<HTMLButtonElement> | null, newPage: number): void => {
+  const handlePageChange = (
+    event: MouseEvent<HTMLButtonElement> | null,
+    newPage: number,
+  ): void => {
     setPage(newPage);
   };
 
-  const handleRowsPerPageChange = (event: ChangeEvent<HTMLInputElement>): void => {
+  const handleRowsPerPageChange = (
+    event: ChangeEvent<HTMLInputElement>,
+  ): void => {
     setRowsPerPage(parseInt(event.target.value, 10));
   };
 
   // Usually query is done on backend with indexing solutions
   const filteredProducts = applyFilters(products, filters);
-  const paginatedProducts = applyPagination(filteredProducts, page, rowsPerPage);
+  const paginatedProducts = applyPagination(
+    filteredProducts,
+    page,
+    rowsPerPage,
+  );
 
   return (
     <>
@@ -125,11 +146,14 @@ const ProductList: NextPage = () => {
                 <Typography variant="h4">Products</Typography>
               </Grid>
               <Grid item>
-                <NextLink href="/dashboard/products/new" passHref>
-                  <Button component="a" startIcon={<PlusIcon fontSize="small" />} variant="contained">
+                <Link href="/dashboard/products/new" passHref>
+                  <Button
+                    startIcon={<PlusIcon fontSize="small" />}
+                    variant="contained"
+                  >
                     Add
                   </Button>
-                </NextLink>
+                </Link>
               </Grid>
             </Grid>
             <Box
@@ -141,7 +165,10 @@ const ProductList: NextPage = () => {
               <Button startIcon={<UploadIcon fontSize="small" />} sx={{ m: 1 }}>
                 Import
               </Button>
-              <Button startIcon={<DownloadIcon fontSize="small" />} sx={{ m: 1 }}>
+              <Button
+                startIcon={<DownloadIcon fontSize="small" />}
+                sx={{ m: 1 }}
+              >
                 Export
               </Button>
             </Box>

@@ -1,18 +1,17 @@
-import type { Theme } from "@mui/material";
-import { Box, Drawer, useMediaQuery } from "@mui/material";
-import NextLink from "next/link";
-import { useRouter } from "next/router";
-import type { FC } from "react";
-import { ReactNode, useEffect, useMemo } from "react";
-import type { TFunction } from "react-i18next";
-import { useTranslation } from "react-i18next";
-import { Home as HomeIcon } from "../../icons/home";
-import { ShoppingBag as ShoppingBagIcon } from "../../icons/shopping-bag";
-import { ShoppingCart as ShoppingCartIcon } from "../../icons/shopping-cart";
-import { Users as UsersIcon } from "../../icons/users";
-import { Logo } from "../logo";
-import { Scrollbar } from "../scrollbar";
-import { SidebarSection } from "./sidebar-section";
+import { Box, Drawer, Theme, useMediaQuery } from '@mui/material';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import type { FC } from 'react';
+import { ReactNode, useEffect, useMemo } from 'react';
+import type { TFunction } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
+import { Home as HomeIcon } from '../../icons/home';
+import { ShoppingBag as ShoppingBagIcon } from '../../icons/shopping-bag';
+import { ShoppingCart as ShoppingCartIcon } from '../../icons/shopping-cart';
+import { Users as UsersIcon } from '../../icons/users';
+import { Logo } from '../logo';
+import { Scrollbar } from '../scrollbar';
+import { SidebarSection } from './sidebar-section';
 
 interface SidebarProps {
   onClose?: () => void;
@@ -129,16 +128,14 @@ export const Sidebar: FC<SidebarProps> = (props) => {
         >
           <div>
             <Box sx={{ p: 3 }}>
-              <NextLink href="/" passHref>
-                <a>
-                  <Logo
-                    sx={{
-                      height: 42,
-                      width: 42,
-                    }}
-                  />
-                </a>
-              </NextLink>
+              <Link href="/" passHref>
+                <Logo
+                  sx={{
+                    height: 42,
+                    width: 42,
+                  }}
+                />
+              </Link>
             </Box>
           </div>
 

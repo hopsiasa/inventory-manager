@@ -1,8 +1,14 @@
-import { Box, Button, Container, Typography, useMediaQuery } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import type { NextPage } from "next";
 import Head from "next/head";
-import NextLink from "next/link";
+import Link from "next/link";
 
 const ServerError: NextPage = () => {
   const theme = useTheme();
@@ -27,8 +33,14 @@ const ServerError: NextPage = () => {
           <Typography align="center" variant={mobileDevice ? "h4" : "h1"}>
             500: Internal Server Error
           </Typography>
-          <Typography align="center" color="textSecondary" sx={{ mt: 0.5 }} variant="subtitle2">
-            You either tried some shady route or you came here by mistake. Whichever it is, try using the navigation.
+          <Typography
+            align="center"
+            color="textSecondary"
+            sx={{ mt: 0.5 }}
+            variant="subtitle2"
+          >
+            You either tried some shady route or you came here by mistake.
+            Whichever it is, try using the navigation.
           </Typography>
           <Box
             sx={{
@@ -55,11 +67,9 @@ const ServerError: NextPage = () => {
               mt: 6,
             }}
           >
-            <NextLink href="/dashboard" passHref>
-              <Button component="a" variant="outlined">
-                Back to Dashboard
-              </Button>
-            </NextLink>
+            <Link href="/dashboard" passHref>
+              <Button variant="outlined">Back to Dashboard</Button>
+            </Link>
           </Box>
         </Container>
       </Box>

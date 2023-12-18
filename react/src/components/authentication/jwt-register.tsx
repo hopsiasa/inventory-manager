@@ -107,10 +107,7 @@ export const JWTRegister: FC = (props) => {
           onChange={formik.handleChange}
         />
         <Typography color="textSecondary" variant="body2">
-          I have read the{" "}
-          <Link component="a" href="#">
-            Terms and Conditions
-          </Link>
+          I have read the <Link href="#">Terms and Conditions</Link>
         </Typography>
       </Box>
       {Boolean(formik.touched.policy && formik.errors.policy) && (
