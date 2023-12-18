@@ -1,6 +1,6 @@
 import type { ListItemProps } from "@mui/material";
 import { Box, Button, Collapse, ListItem } from "@mui/material";
-import NextLink from "next/link";
+import Link from "next/link";
 import type { FC, ReactNode } from "react";
 import { useState } from "react";
 import { ChevronDown as ChevronDownIcon } from "../../icons/chevron-down";
@@ -19,7 +19,18 @@ interface SidebarItemProps extends ListItemProps {
 }
 
 export const SidebarItem: FC<SidebarItemProps> = (props) => {
-  const { active, children, chip, depth, icon, info, open: openProp, path, title, ...other } = props;
+  const {
+    active,
+    children,
+    chip,
+    depth,
+    icon,
+    info,
+    open: openProp,
+    path,
+    title,
+    ...other
+  } = props;
   const [open, setOpen] = useState<boolean>(!!openProp);
 
   const handleToggle = (): void => {
@@ -46,7 +57,13 @@ export const SidebarItem: FC<SidebarItemProps> = (props) => {
         {...other}
       >
         <Button
-          endIcon={!open ? <ChevronRightIcon fontSize="small" /> : <ChevronDownIcon fontSize="small" />}
+          endIcon={
+            !open ? (
+              <ChevronRightIcon fontSize="small" />
+            ) : (
+              <ChevronDownIcon fontSize="small" />
+            )
+          }
           disableRipple
           onClick={handleToggle}
           startIcon={icon}
@@ -90,9 +107,8 @@ export const SidebarItem: FC<SidebarItemProps> = (props) => {
         px: 2,
       }}
     >
-      <NextLink href={path as string} passHref>
+      <Link href={path as string} passHref>
         <Button
-          component="a"
           startIcon={icon}
           endIcon={chip}
           disableRipple
@@ -121,7 +137,7 @@ export const SidebarItem: FC<SidebarItemProps> = (props) => {
           <Box sx={{ flexGrow: 1 }}>{title}</Box>
           {info}
         </Button>
-      </NextLink>
+      </Link>
     </ListItem>
   );
 };

@@ -6,12 +6,11 @@ import {
   Chip,
   Container,
   Grid,
-  Link,
   Typography,
 } from "@mui/material";
 import type { NextPage } from "next";
 import Head from "next/head";
-import NextLink from "next/link";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useGetUser } from "src/hooks/use-users";
 import { AuthGuard } from "../../../components/authentication/auth-guard";
@@ -45,19 +44,19 @@ const UserDetails: NextPage = () => {
         <Container maxWidth="md">
           <div>
             <Box sx={{ mb: 4 }}>
-              <NextLink href="/users" passHref>
-                <Link
+              <Link href="/users" passHref>
+                <Typography
+                  variant="subtitle2"
                   color="textPrimary"
-                  component="a"
                   sx={{
                     alignItems: "center",
                     display: "flex",
                   }}
                 >
                   <ArrowBackIcon fontSize="small" sx={{ mr: 1 }} />
-                  <Typography variant="subtitle2">Users</Typography>
-                </Link>
-              </NextLink>
+                  Users
+                </Typography>
+              </Link>
             </Box>
             <Grid container justifyContent="space-between" spacing={3}>
               <Grid
@@ -92,16 +91,15 @@ const UserDetails: NextPage = () => {
                 </div>
               </Grid>
               <Grid item sx={{ m: -1 }}>
-                <NextLink href={`/users/${user.id}/edit`} passHref>
+                <Link href={`/users/${user.id}/edit`} passHref>
                   <Button
-                    component="a"
                     endIcon={<PencilAltIcon fontSize="small" />}
                     sx={{ m: 1 }}
                     variant="outlined"
                   >
                     Edit
                   </Button>
-                </NextLink>
+                </Link>
               </Grid>
             </Grid>
           </div>

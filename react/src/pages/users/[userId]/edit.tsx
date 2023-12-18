@@ -1,8 +1,8 @@
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { Avatar, Box, Chip, Container, Link, Typography } from "@mui/material";
+import { Avatar, Box, Chip, Container, Typography } from "@mui/material";
 import type { NextPage } from "next";
 import Head from "next/head";
-import NextLink from "next/link";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { AuthGuard } from "../../../components/authentication/auth-guard";
 import { Layout } from "../../../components/layout/layout";
@@ -37,19 +37,19 @@ const UserEdit: NextPage = () => {
       >
         <Container maxWidth="md">
           <Box sx={{ mb: 4 }}>
-            <NextLink href="/users" passHref>
-              <Link
+            <Link href="/users" passHref>
+              <Typography
+                variant="subtitle2"
                 color="textPrimary"
-                component="a"
                 sx={{
                   alignItems: "center",
                   display: "flex",
                 }}
               >
                 <ArrowBackIcon fontSize="small" sx={{ mr: 1 }} />
-                <Typography variant="subtitle2">Users</Typography>
-              </Link>
-            </NextLink>
+                Users
+              </Typography>
+            </Link>
           </Box>
           <Box
             sx={{

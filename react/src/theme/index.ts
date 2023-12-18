@@ -1,8 +1,10 @@
 import type { Direction, Theme } from "@mui/material";
-import { createTheme as createMuiTheme, responsiveFontSizes } from "@mui/material/styles";
+import {
+  createTheme as createMuiTheme,
+  responsiveFontSizes,
+} from "@mui/material/styles";
 import { baseThemeOptions } from "./base-theme-options";
 import { darkThemeOptions } from "./dark-theme-options";
-// import { lightThemeOptions } from './light-theme-options';
 
 interface Neutral {
   100: string;
@@ -33,9 +35,13 @@ interface ThemeConfig {
 }
 
 export const createTheme = (config: ThemeConfig): Theme => {
-  let theme = createMuiTheme(baseThemeOptions, config.mode === "dark" ? darkThemeOptions : {}, {
-    direction: config.direction,
-  });
+  let theme = createMuiTheme(
+    baseThemeOptions,
+    config.mode === "dark" ? darkThemeOptions : {},
+    {
+      direction: config.direction,
+    },
+  );
 
   if (config.responsiveFontSizes) {
     theme = responsiveFontSizes(theme);

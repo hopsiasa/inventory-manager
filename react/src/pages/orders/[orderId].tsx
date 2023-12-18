@@ -1,9 +1,9 @@
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { Box, Button, Container, Grid, Link, Typography } from "@mui/material";
+import { Box, Button, Container, Grid, Typography } from "@mui/material";
 import { format } from "date-fns";
 import type { NextPage } from "next";
 import Head from "next/head";
-import NextLink from "next/link";
+import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { orderApi } from "../../api/order-api";
 import { AuthGuard } from "../../components/authentication/auth-guard";
@@ -38,7 +38,7 @@ const OrderDetails: NextPage = () => {
       getOrder();
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [],
   );
 
   if (!order) {
@@ -59,19 +59,19 @@ const OrderDetails: NextPage = () => {
       >
         <Container maxWidth="md">
           <Box sx={{ mb: 4 }}>
-            <NextLink href="/dashboard/orders" passHref>
-              <Link
+            <Link href="/dashboard/orders" passHref>
+              <Typography
+                variant="subtitle2"
                 color="textPrimary"
-                component="a"
                 sx={{
                   alignItems: "center",
                   display: "flex",
                 }}
               >
                 <ArrowBackIcon fontSize="small" sx={{ mr: 1 }} />
-                <Typography variant="subtitle2">Orders</Typography>
-              </Link>
-            </NextLink>
+                Orders
+              </Typography>
+            </Link>
           </Box>
           <Box sx={{ mb: 4 }}>
             <Grid container justifyContent="space-between" spacing={3}>
@@ -85,20 +85,36 @@ const OrderDetails: NextPage = () => {
                     mt: 1,
                   }}
                 >
-                  <Typography color="textSecondary" variant="body2" sx={{ ml: 1 }}>
+                  <Typography
+                    color="textSecondary"
+                    variant="body2"
+                    sx={{ ml: 1 }}
+                  >
                     Placed on
                   </Typography>
-                  <CalendarIcon color="action" fontSize="small" sx={{ ml: 1 }} />
+                  <CalendarIcon
+                    color="action"
+                    fontSize="small"
+                    sx={{ ml: 1 }}
+                  />
                   <Typography variant="body2" sx={{ ml: 1 }}>
                     {format(order.createdAt, "dd/MM/yyyy HH:mm")}
                   </Typography>
                 </Box>
               </Grid>
               <Grid item sx={{ ml: -2 }}>
-                <Button endIcon={<PencilAltIcon fontSize="small" />} variant="outlined" sx={{ ml: 2 }}>
+                <Button
+                  endIcon={<PencilAltIcon fontSize="small" />}
+                  variant="outlined"
+                  sx={{ ml: 2 }}
+                >
                   Edit
                 </Button>
-                <Button endIcon={<ChevronDownIcon fontSize="small" />} variant="contained" sx={{ ml: 2 }}>
+                <Button
+                  endIcon={<ChevronDownIcon fontSize="small" />}
+                  variant="contained"
+                  sx={{ ml: 2 }}
+                >
                   Action
                 </Button>
               </Grid>
