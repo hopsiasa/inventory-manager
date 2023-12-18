@@ -107,7 +107,7 @@ export const SidebarItem: FC<SidebarItemProps> = (props) => {
         px: 2,
       }}
     >
-      <Link href={path as string} passHref>
+      <Link href={path as string} passHref style={{ width: "100%" }}>
         <Button
           startIcon={icon}
           endIcon={chip}

@@ -1,9 +1,9 @@
 a {
-    color: #0070f3;
-    text-decoration: none;
+  color: #0070f3;
+  text-decoration: none;
 }
 
 a:hover {
-    text-decoration: underline;
-    text-decoration-color: white;
+  text-decoration: underline;
+  text-decoration-color: white;
 }

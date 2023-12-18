@@ -3,14 +3,14 @@ import {
   GridActionsCellItem,
   GridColDef,
   GridRenderCellParams,
-  GridRowParams
-} from '@mui/x-data-grid';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import type { FC } from 'react';
-import { PencilAlt as PencilAltIcon } from '../../icons/pencil-alt';
-import type { User } from '../../types/user';
-import { Scrollbar } from '../scrollbar';
+  GridRowParams,
+} from "@mui/x-data-grid";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import type { FC } from "react";
+import { PencilAlt as PencilAltIcon } from "../../icons/pencil-alt";
+import type { User } from "../../types/user";
+import { Scrollbar } from "../scrollbar";
 
 interface UserListTableProps {
   users: User[];
@@ -35,33 +35,33 @@ export const UserListTable: FC<UserListTableProps> = (props) => {
   const router = useRouter();
 
   const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', width: 150, flex: 1 },
+    { field: "id", headerName: "ID", width: 150, flex: 1 },
     {
-      field: 'name',
-      headerName: 'Name',
+      field: "name",
+      headerName: "Name",
       width: 150,
       flex: 1,
       renderCell: (params: GridRenderCellParams<any, Date>) => (
-        <Link href={`/users/${params.id}`} passHref>
+        <Link href={`/users/${params.id}`} passHref style={{ color: "white" }}>
           {params.row.name}
         </Link>
-      )
+      ),
     },
-    { field: 'email', headerName: 'Email', width: 150, flex: 1 },
-    { field: 'role', headerName: 'Role', width: 150, flex: 1 },
-    { field: 'created_at', headerName: 'Date created', width: 150, flex: 1 },
+    { field: "email", headerName: "Email", width: 150, flex: 1 },
+    { field: "role", headerName: "Role", width: 150, flex: 1 },
+    { field: "created_at", headerName: "Date created", width: 150, flex: 1 },
     {
-      field: 'actions',
-      type: 'actions',
+      field: "actions",
+      type: "actions",
       getActions: (params: GridRowParams) => [
         <GridActionsCellItem
           key={params.id}
           icon={<PencilAltIcon />}
-          label='Edit'
+          label="Edit"
           onClick={() => router.push(`/users/${params.id}/edit`)}
-        />
-      ]
-    }
+        />,
+      ],
+    },
   ];
 
   return (
@@ -76,7 +76,7 @@ export const UserListTable: FC<UserListTableProps> = (props) => {
         loading={isLoading}
         pageSizeOptions={[15, 25, 50, 100]}
         paginationModel={paginationModel}
-        paginationMode='server'
+        paginationMode="server"
         onPaginationModelChange={onPaginationModelChange}
       />
     </Scrollbar>
