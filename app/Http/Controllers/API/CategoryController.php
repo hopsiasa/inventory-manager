@@ -10,13 +10,10 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request): JsonResponse
     {
         $perPage = $request->input('per_page', 25);
-        $categories = Category::paginate($perPage);
+        $categories = Category::query()->orderBy('id', 'desc')->paginate($perPage);
 
         $data = [
             'data' => CategoryResource::collection($categories),
@@ -31,9 +28,6 @@ class CategoryController extends Controller
         return response()->json($data);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         try {
@@ -49,17 +43,11 @@ class CategoryController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Category $category): CategoryResource
     {
         return new CategoryResource($category);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Category $category)
     {
         try {
@@ -75,9 +63,6 @@ class CategoryController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Category $category): JsonResponse
     {
         $category->delete();
