@@ -1,17 +1,18 @@
-import { Box, Drawer, Theme, useMediaQuery } from '@mui/material';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import type { FC } from 'react';
-import { ReactNode, useEffect, useMemo } from 'react';
-import type { TFunction } from 'react-i18next';
-import { useTranslation } from 'react-i18next';
-import { Home as HomeIcon } from '../../icons/home';
-import { ShoppingBag as ShoppingBagIcon } from '../../icons/shopping-bag';
-import { ShoppingCart as ShoppingCartIcon } from '../../icons/shopping-cart';
-import { Users as UsersIcon } from '../../icons/users';
-import { Logo } from '../logo';
-import { Scrollbar } from '../scrollbar';
-import { SidebarSection } from './sidebar-section';
+import { Box, Drawer, Theme, useMediaQuery } from "@mui/material";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import type { FC } from "react";
+import { ReactNode, useEffect, useMemo } from "react";
+import type { TFunction } from "react-i18next";
+import { useTranslation } from "react-i18next";
+import { Home as HomeIcon } from "../../icons/home";
+import { ShoppingBag as ShoppingBagIcon } from "../../icons/shopping-bag";
+import { ShoppingCart as ShoppingCartIcon } from "../../icons/shopping-cart";
+import { Users as UsersIcon } from "../../icons/users";
+import { Logo } from "../logo";
+import { Scrollbar } from "../scrollbar";
+import { SidebarSection } from "./sidebar-section";
+import { Category as CategoryIcon } from "@mui/icons-material";
 
 interface SidebarProps {
   onClose?: () => void;
@@ -49,6 +50,11 @@ const getSections = (t: TFunction): Section[] => [
         title: t("Users"),
         path: "/users",
         icon: <UsersIcon fontSize="small" />,
+      },
+      {
+        title: t("Categories"),
+        path: "/categories",
+        icon: <CategoryIcon fontSize="small" />,
       },
       {
         title: t("Products"),
@@ -106,7 +112,7 @@ export const Sidebar: FC<SidebarProps> = (props) => {
   useEffect(
     handlePathChange,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [router.isReady, router.asPath]
+    [router.isReady, router.asPath],
   );
 
   const content = (
@@ -169,7 +175,8 @@ export const Sidebar: FC<SidebarProps> = (props) => {
             backgroundColor: "neutral.900",
             borderRightColor: "divider",
             borderRightStyle: "solid",
-            borderRightWidth: (theme) => (theme.palette.mode === "dark" ? 1 : 0),
+            borderRightWidth: (theme) =>
+              theme.palette.mode === "dark" ? 1 : 0,
             color: "#FFFFFF",
             width: 280,
           },
