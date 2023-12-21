@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import categoryApi from "../api/category-api";
 
-export const useGetCategories = (page: number, pageSize: number) => {
+export const useGetCategories = (page: number = 1, pageSize: number = 25) => {
   const { isLoading, data: categories } = useQuery(
     ["categories", page, pageSize],
     async () => await categoryApi.getCategories(page, pageSize),

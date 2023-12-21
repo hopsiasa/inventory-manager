@@ -1,18 +1,20 @@
+import { User } from "./user";
+import { Category } from "./category";
+
 export interface Product {
   id: string;
-  attributes: string[];
-  category: string;
-  createdAt: number;
-  currency: string;
-  image: string | null;
-  inStock: boolean;
-  isAvailable: boolean;
-  isShippable: boolean;
   name: string;
   price: number;
+  category_id: Category;
+  user: User;
   quantity: number;
-  sku: string;
-  status: 'published' | 'draft';
-  updatedAt: number;
-  variants: number;
+  description: string;
+  created_at: string;
+  updated_at: string;
+
+  [key: string]: any;
+}
+
+export interface Products extends Product {
+  data: Product[];
 }
