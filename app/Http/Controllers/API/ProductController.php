@@ -7,16 +7,14 @@ use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request): JsonResponse
     {
         $perPage = $request->input('per_page', 25);
-        $products = Product::paginate($perPage);
+        $products = Product::query()->orderBy('id', 'desc')->paginate($perPage);
 
         $data = [
             'data' => ProductResource::collection($products),
@@ -31,18 +29,17 @@ class ProductController extends Controller
         return response()->json($data);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         try {
             $validatedData = $request->validate([
                 'name' => 'required|string|max:255',
-                'price' => 'required|numeric|decimal:2',
+                'price' => 'required|numeric|between:0,1000',
                 'quantity' => 'required|numeric|between:0,100',
                 'description' => 'string|max:500',
+                'category_id' => 'exists:categories,id',
             ]);
+            $validatedData['user_id'] = auth()->id();
 
             $products = Product::create($validatedData);
             return new ProductResource($products);
@@ -51,26 +48,22 @@ class ProductController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Product $product): ProductResource
     {
         return new ProductResource($product);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Product $product)
     {
         try {
             $validatedData = $request->validate([
                 'name' => 'required|string|max:255',
-                'price' => 'required|numeric|decimal:2',
+                'price' => 'required|numeric|between:0,1000',
                 'quantity' => 'required|numeric|between:0,100',
                 'description' => 'string|max:500',
+                'category_id' => 'exists:categories,id',
             ]);
+            $validatedData['user_id'] = auth()->id();
 
             $product->update($validatedData);
             return new ProductResource($product);
@@ -79,9 +72,6 @@ class ProductController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Product $product): JsonResponse
     {
         $product->delete();
