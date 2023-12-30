@@ -1,136 +1,43 @@
 import { Box, Button, Card, Container, Grid, Typography } from "@mui/material";
 import type { NextPage } from "next";
 import Head from "next/head";
-import Link from "next/link";
-import {
-  ChangeEvent,
-  MouseEvent,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
-import { productApi } from "../../api/product-api";
+import { useRouter } from "next/router";
+import { useCallback, useEffect, useState } from "react";
 import { AuthGuard } from "../../components/authentication/auth-guard";
 import { Layout } from "../../components/layout/layout";
-import type { Filters } from "../../components/product/product-list-filters";
-import { ProjectListFilters } from "../../components/product/product-list-filters";
-import { ProductListTable } from "../../components/product/product-list-table";
-import { useMounted } from "../../hooks/use-mounted";
-import { Download as DownloadIcon } from "../../icons/download";
 import { Plus as PlusIcon } from "../../icons/plus";
-import { Upload as UploadIcon } from "../../icons/upload";
-import type { Product } from "../../types/product";
-
-const applyFilters = (products: Product[], filters: Filters): Product[] =>
-  products.filter((product) => {
-    if (filters.name) {
-      const nameMatched = product.name
-        .toLowerCase()
-        .includes(filters.name.toLowerCase());
-
-      if (!nameMatched) {
-        return false;
-      }
-    }
-
-    // It is possible to select multiple category options
-    if (filters.category?.length > 0) {
-      const categoryMatched = filters.category.includes(product.category);
-
-      if (!categoryMatched) {
-        return false;
-      }
-    }
-
-    // It is possible to select multiple status options
-    if (filters.status?.length > 0) {
-      const statusMatched = filters.status.includes(product.status);
-
-      if (!statusMatched) {
-        return false;
-      }
-    }
-
-    // Present only if filter required
-    if (typeof filters.inStock !== "undefined") {
-      const stockMatched = product.inStock === filters.inStock;
-
-      if (!stockMatched) {
-        return false;
-      }
-    }
-
-    return true;
-  });
-
-const applyPagination = (
-  products: Product[],
-  page: number,
-  rowsPerPage: number,
-): Product[] =>
-  products.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+import { useGetProducts } from "../../hooks/use-products";
+import { ProductListTable } from "../../components/product/product-list-table";
+import { GridRowParams } from "@mui/x-data-grid";
+import { ProductEditForm } from "../../components/product/product-edit-form";
 
 const ProductList: NextPage = () => {
-  const isMounted = useMounted();
-  const [products, setProducts] = useState<Product[]>([]);
-  const [page, setPage] = useState<number>(0);
-  const [rowsPerPage, setRowsPerPage] = useState<number>(5);
-  const [filters, setFilters] = useState<Filters>({
-    name: undefined,
-    category: [],
-    status: [],
-    inStock: undefined,
+  const router = useRouter();
+  const [paginationModel, setPaginationModel] = useState({
+    page: 0,
+    pageSize: 25,
   });
-
-  const getProducts = useCallback(async () => {
-    try {
-      const data = await productApi.getProducts();
-
-      if (isMounted()) {
-        setProducts(data);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  }, [isMounted]);
-
-  useEffect(
-    () => {
-      getProducts();
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
+  const { products, isLoading } = useGetProducts(
+    paginationModel.page + 1,
+    paginationModel.pageSize,
   );
 
-  const handleFiltersChange = (filters: Filters): void => {
-    setFilters(filters);
-  };
-
-  const handlePageChange = (
-    event: MouseEvent<HTMLButtonElement> | null,
-    newPage: number,
-  ): void => {
-    setPage(newPage);
-  };
-
-  const handleRowsPerPageChange = (
-    event: ChangeEvent<HTMLInputElement>,
-  ): void => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-  };
-
-  // Usually query is done on backend with indexing solutions
-  const filteredProducts = applyFilters(products, filters);
-  const paginatedProducts = applyPagination(
-    filteredProducts,
-    page,
-    rowsPerPage,
+  const [rowCountState, setRowCountState] = useState(
+    products?.pagination?.total || 0,
   );
+
+  useEffect(() => {
+    setRowCountState((prevRowCountState: number) =>
+      products?.pagination?.total !== undefined
+        ? products?.pagination?.total
+        : prevRowCountState,
+    );
+  }, [products?.pagination?.total, setRowCountState]);
 
   return (
     <>
       <Head>
-        <title>Dashboard: Product List | Material Kit Pro</title>
+        <title>Product List | Inventory Manager</title>
       </Head>
       <Box
         component="main"
@@ -146,42 +53,23 @@ const ProductList: NextPage = () => {
                 <Typography variant="h4">Products</Typography>
               </Grid>
               <Grid item>
-                <Link href="/dashboard/products/new" passHref>
-                  <Button
-                    startIcon={<PlusIcon fontSize="small" />}
-                    variant="contained"
-                  >
-                    Add
-                  </Button>
-                </Link>
+                <Button
+                  startIcon={<PlusIcon fontSize="small" />}
+                  variant="contained"
+                  onClick={() => router.push("/products/new")}
+                >
+                  Add
+                </Button>
               </Grid>
             </Grid>
-            <Box
-              sx={{
-                m: -1,
-                mt: 3,
-              }}
-            >
-              <Button startIcon={<UploadIcon fontSize="small" />} sx={{ m: 1 }}>
-                Import
-              </Button>
-              <Button
-                startIcon={<DownloadIcon fontSize="small" />}
-                sx={{ m: 1 }}
-              >
-                Export
-              </Button>
-            </Box>
           </Box>
           <Card>
-            <ProjectListFilters onChange={handleFiltersChange} />
             <ProductListTable
-              onPageChange={handlePageChange}
-              onRowsPerPageChange={handleRowsPerPageChange}
-              page={page}
-              products={paginatedProducts}
-              productsCount={filteredProducts.length}
-              rowsPerPage={rowsPerPage}
+              products={products?.data || []}
+              rowCount={rowCountState}
+              paginationModel={paginationModel}
+              onPaginationModelChange={setPaginationModel}
+              isLoading={isLoading}
             />
           </Card>
         </Container>

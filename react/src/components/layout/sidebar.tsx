@@ -60,16 +60,6 @@ const getSections = (t: TFunction): Section[] => [
         title: t("Products"),
         path: "/products",
         icon: <ShoppingBagIcon fontSize="small" />,
-        children: [
-          {
-            title: t("List"),
-            path: "/products",
-          },
-          {
-            title: t("Create"),
-            path: "/products/new",
-          },
-        ],
       },
       {
         title: t("Orders"),

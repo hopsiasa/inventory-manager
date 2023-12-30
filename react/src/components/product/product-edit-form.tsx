@@ -22,38 +22,56 @@ import { FileDropzone } from "../file-dropzone";
 import { QuillEditor } from "../quill-editor";
 import { useGetCategories } from "../../hooks/use-categories";
 import { Category } from "../../types/category";
-import { useAddProduct } from "../../hooks/use-products";
+import { useAddProduct, useUpdateProduct } from "../../hooks/use-products";
+import { createProduct } from "../../api/product-api";
+import { Product } from "../../types/product";
+import { updateCategory } from "../../api/category-api";
+import categoryId from "../../pages/categories/[categoryId]";
 
-interface ProductCreateFormProps {
-  categories: Category[];
+interface ProductEditFormProps {
+  product?: Product;
+  categories?: Category[];
 }
 
-export const ProductCreateForm: FC<ProductCreateFormProps> = (props) => {
+export const ProductEditForm: FC<ProductEditFormProps> = (props) => {
+  const { product, ...other } = props;
   const router = useRouter();
   // const [files, setFiles] = useState<File[]>([]);
+  const productId = router.query.productId as string;
   const { categories, isLoading } = useGetCategories();
-  const { createProduct } = useAddProduct();
+  const { updateProduct } = useUpdateProduct();
+  const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
   const formik = useFormik({
     initialValues: {
-      name: "",
-      price: 0,
-      category_id: "",
-      description: "",
-      quantity: 0,
+      name: product?.name || "",
+      price: product?.price || 0,
+      category_id: product?.category?.id || "",
+      description: product?.description || "",
+      quantity: product?.quantity || 0,
       // images: [],
       submit: null,
     },
     validationSchema: Yup.object({
       name: Yup.string().max(255).required(),
       price: Yup.number().min(0).required(),
-      category_id: Yup.string(),
+      category_id: Yup.number(),
       description: Yup.string().max(5000),
       quantity: Yup.number().min(0).required(),
       // images: Yup.array(),
     }),
     onSubmit: async (values, helpers): Promise<void> => {
       try {
-        createProduct(values);
+        console.log(values);
+        const productData = {
+          name: values.name,
+          price: values.price,
+          category_id: values.category_id,
+          description: values.description,
+          quantity: values.quantity,
+        };
+
+        updateProduct({ productId, productData });
+
         toast.success("Product created!");
         router.push("/products").catch(console.error);
       } catch (err) {
@@ -93,10 +111,11 @@ export const ProductCreateForm: FC<ProductCreateFormProps> = (props) => {
                 error={Boolean(formik.touched.name && formik.errors.name)}
                 fullWidth
                 helperText={formik.touched.name && formik.errors.name}
-                label="Product Name"
+                label="Name"
                 name="name"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
+                required
                 value={formik.values.name}
                 InputLabelProps={{ shrink: true }}
               />
@@ -133,7 +152,9 @@ export const ProductCreateForm: FC<ProductCreateFormProps> = (props) => {
             <Grid item md={4} xs={12}></Grid>
             <Grid item md={8} xs={12}>
               <TextField
-                error={Boolean(formik.touched.price && formik.errors.quantity)}
+                error={Boolean(
+                  formik.touched.quantity && formik.errors.quantity,
+                )}
                 fullWidth
                 label="Quantity"
                 name="quantity"
@@ -210,14 +231,14 @@ export const ProductCreateForm: FC<ProductCreateFormProps> = (props) => {
                 name="category_id"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                select
-                value={formik.values.category_id}
-                disabled={isLoading}
                 InputLabelProps={{ shrink: true }}
+                select
+                value={categories?.data.length ? formik.values.category_id : ""}
+                disabled={isLoading}
               >
                 {isLoading ? (
-                  <MenuItem value="">loading...</MenuItem>
-                ) : categories?.data?.length ? (
+                  <MenuItem>loading...</MenuItem>
+                ) : categories?.data.length ? (
                   categories.data.map((category: Category) => (
                     <MenuItem key={category.id} value={category.id}>
                       {category.name}
@@ -244,11 +265,7 @@ export const ProductCreateForm: FC<ProductCreateFormProps> = (props) => {
         <Button sx={{ m: 1 }} type="submit" variant="contained">
           Create
         </Button>
-        <Button
-          sx={{ m: 1 }}
-          variant="outlined"
-          onClick={() => router.push("/products")}
-        >
+        <Button sx={{ m: 1 }} variant="outlined">
           Cancel
         </Button>
       </Box>

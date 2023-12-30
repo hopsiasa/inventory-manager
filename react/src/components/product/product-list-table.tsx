@@ -1,365 +1,123 @@
 import {
-  Box,
-  Button,
-  CardContent,
-  Divider,
-  Grid,
-  IconButton,
-  InputAdornment,
-  LinearProgress,
-  MenuItem,
-  Switch,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TablePagination,
-  TableRow,
-  TextField,
-  Typography,
-} from "@mui/material";
-import numeral from "numeral";
-import PropTypes from "prop-types";
+  DataGrid,
+  GridActionsCellItem,
+  GridColDef,
+  GridRenderCellParams,
+  GridRowParams,
+} from "@mui/x-data-grid";
+import Link from "next/link";
+import { useRouter } from "next/router";
 import type { FC } from "react";
-import { ChangeEvent, Fragment, MouseEvent, useState } from "react";
-import { toast } from "react-hot-toast";
-import { ChevronDown as ChevronDownIcon } from "../../icons/chevron-down";
-import { ChevronRight as ChevronRightIcon } from "../../icons/chevron-right";
-import { DotsHorizontal as DotsHorizontalIcon } from "../../icons/dots-horizontal";
-import { Image as ImageIcon } from "../../icons/image";
+import { PencilAlt as PencilAltIcon } from "../../icons/pencil-alt";
 import type { Product } from "../../types/product";
 import { Scrollbar } from "../scrollbar";
-import { SeverityPill } from "../severity-pill";
+import { getActions } from "next/dist/build/webpack/loaders/utils";
 
 interface ProductListTableProps {
-  onPageChange: (event: MouseEvent<HTMLButtonElement> | null, newPage: number) => void;
-  onRowsPerPageChange?: (event: ChangeEvent<HTMLInputElement>) => void;
-  page: number;
   products: Product[];
-  productsCount: number;
-  rowsPerPage: number;
+  isLoading: boolean;
+  paginationModel: {
+    page: number;
+    pageSize: number;
+  };
+  rowCount: number;
+  onPaginationModelChange: (newModel: any) => void;
 }
 
-const categoryOptions = [
-  {
-    label: "Healthcare",
-    value: "healthcare",
-  },
-  {
-    label: "Makeup",
-    value: "makeup",
-  },
-  {
-    label: "Dress",
-    value: "dress",
-  },
-  {
-    label: "Skincare",
-    value: "skincare",
-  },
-  {
-    label: "Jewelry",
-    value: "jewelry",
-  },
-  {
-    label: "Blouse",
-    value: "blouse",
-  },
-];
-
 export const ProductListTable: FC<ProductListTableProps> = (props) => {
-  const { onPageChange, onRowsPerPageChange, page, products, productsCount, rowsPerPage, ...other } = props;
-  const [openProduct, setOpenProduct] = useState<string | null>(null);
+  const {
+    products,
+    isLoading,
+    paginationModel,
+    onPaginationModelChange,
+    rowCount,
+    ...other
+  } = props;
+  const router = useRouter();
 
-  const handleOpenProduct = (productId: string): void => {
-    setOpenProduct((prevValue) => (prevValue === productId ? null : productId));
-  };
-
-  const handleUpdateProduct = (): void => {
-    setOpenProduct(null);
-    toast.success("Product updated");
-  };
-
-  const handleCancelEdit = (): void => {
-    setOpenProduct(null);
-  };
-
-  const handleDeleteProduct = (): void => {
-    toast.error("Product cannot be deleted");
-  };
+  const columns: GridColDef[] = [
+    { field: "id", headerName: "ID", width: 100 },
+    {
+      field: "name",
+      headerName: "Name",
+      width: 200,
+      renderCell: (params: GridRenderCellParams<any, Date>) => (
+        <Link
+          href={`/products/${params.id}`}
+          passHref
+          style={{ color: "white" }}
+        >
+          {params.row.name}
+        </Link>
+      ),
+    },
+    {
+      field: "price",
+      headerName: "Price",
+      width: 100,
+      flex: 1,
+      type: "number",
+    },
+    {
+      field: "quantity",
+      headerName: "Quantity",
+      width: 100,
+      flex: 1,
+      type: "number",
+    },
+    {
+      field: "category",
+      headerName: "Category",
+      width: 300,
+      flex: 1,
+      renderCell: (params) => (
+        <Link
+          href={`/categories/${params.value.id}`}
+          passHref
+          style={{ color: "white" }}
+        >
+          {params.value.name}
+        </Link>
+      ),
+    },
+    // {
+    //   field: "user",
+    //   headerName: "User",
+    //   width: 300,
+    //   flex: 1,
+    //   renderCell: (params) => params.value.name,
+    // },
+    { field: "description", headerName: "Description", width: 300, flex: 1 },
+    { field: "created_at", headerName: "Date created", width: 200 },
+    {
+      field: "actions",
+      type: "actions",
+      getActions: (params: GridRowParams) => [
+        <GridActionsCellItem
+          key={params.id}
+          icon={<PencilAltIcon />}
+          label="Edit"
+          onClick={() => router.push(`/products/${params.id}/edit`)}
+        />,
+      ],
+    },
+  ];
 
   return (
-    <div {...other}>
-      <Scrollbar>
-        <Table sx={{ minWidth: 1200 }}>
-          <TableHead>
-            <TableRow>
-              <TableCell />
-              <TableCell width="25%">Name</TableCell>
-              <TableCell width="25%">Stock</TableCell>
-              <TableCell>Price</TableCell>
-              <TableCell>sku</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell align="right">Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {products.map((product) => {
-              const open = product.id === openProduct;
-
-              return (
-                <Fragment key={product.id}>
-                  <TableRow hover key={product.id}>
-                    <TableCell
-                      padding="checkbox"
-                      sx={{
-                        ...(open && {
-                          position: "relative",
-                          "&:after": {
-                            position: "absolute",
-                            content: '" "',
-                            top: 0,
-                            left: 0,
-                            backgroundColor: "primary.main",
-                            width: 3,
-                            height: "calc(100% + 1px)",
-                          },
-                        }),
-                      }}
-                      width="25%"
-                    >
-                      <IconButton onClick={() => handleOpenProduct(product.id)}>
-                        {open ? <ChevronDownIcon fontSize="small" /> : <ChevronRightIcon fontSize="small" />}
-                      </IconButton>
-                    </TableCell>
-                    <TableCell width="25%">
-                      <Box
-                        sx={{
-                          alignItems: "center",
-                          display: "flex",
-                        }}
-                      >
-                        {product.image ? (
-                          <Box
-                            sx={{
-                              alignItems: "center",
-                              backgroundColor: "background.default",
-                              backgroundImage: `url(${product.image})`,
-                              backgroundPosition: "center",
-                              backgroundSize: "cover",
-                              borderRadius: 1,
-                              display: "flex",
-                              height: 80,
-                              justifyContent: "center",
-                              overflow: "hidden",
-                              width: 80,
-                            }}
-                          />
-                        ) : (
-                          <Box
-                            sx={{
-                              alignItems: "center",
-                              backgroundColor: "background.default",
-                              borderRadius: 1,
-                              display: "flex",
-                              height: 80,
-                              justifyContent: "center",
-                              width: 80,
-                            }}
-                          >
-                            <ImageIcon fontSize="small" />
-                          </Box>
-                        )}
-                        <Box
-                          sx={{
-                            cursor: "pointer",
-                            ml: 2,
-                          }}
-                        >
-                          <Typography variant="subtitle2">{product.name}</Typography>
-                          <Typography color="textSecondary" variant="body2">
-                            in {product.category}
-                          </Typography>
-                        </Box>
-                      </Box>
-                    </TableCell>
-                    <TableCell width="25%">
-                      <LinearProgress
-                        value={product.quantity}
-                        variant="determinate"
-                        color={product.quantity >= 10 ? "success" : "error"}
-                        sx={{
-                          height: 8,
-                          width: 36,
-                        }}
-                      />
-                      <Typography color="textSecondary" variant="body2">
-                        {product.quantity} in stock
-                        {product.variants > 1 && ` in ${product.variants} variants`}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>{numeral(product.price).format(`${product.currency}0,0.00`)}</TableCell>
-                    <TableCell>{product.sku}</TableCell>
-                    <TableCell>
-                      <SeverityPill color={product.status === "published" ? "success" : "info"}>
-                        {product.status}
-                      </SeverityPill>
-                    </TableCell>
-                    <TableCell align="right">
-                      <IconButton>
-                        <DotsHorizontalIcon fontSize="small" />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                  {open && (
-                    <TableRow>
-                      <TableCell
-                        colSpan={7}
-                        sx={{
-                          p: 0,
-                          position: "relative",
-                          "&:after": {
-                            position: "absolute",
-                            content: '" "',
-                            top: 0,
-                            left: 0,
-                            backgroundColor: "primary.main",
-                            width: 3,
-                            height: "calc(100% + 1px)",
-                          },
-                        }}
-                      >
-                        <CardContent>
-                          <Grid container spacing={3}>
-                            <Grid item md={6} xs={12}>
-                              <Typography variant="h6">Basic details</Typography>
-                              <Divider sx={{ my: 2 }} />
-                              <Grid container spacing={3}>
-                                <Grid item md={6} xs={12}>
-                                  <TextField defaultValue={product.name} fullWidth label="Product name" name="name" />
-                                </Grid>
-                                <Grid item md={6} xs={12}>
-                                  <TextField defaultValue={product.sku} disabled fullWidth label="SKU" name="sku" />
-                                </Grid>
-                                <Grid item md={6} xs={12}>
-                                  <TextField defaultValue={product.category} fullWidth label="Category" select>
-                                    {categoryOptions.map((option) => (
-                                      <MenuItem key={option.value} value={option.value}>
-                                        {option.label}
-                                      </MenuItem>
-                                    ))}
-                                  </TextField>
-                                </Grid>
-                                <Grid item md={6} xs={12}>
-                                  <TextField
-                                    defaultValue={product.id}
-                                    disabled
-                                    fullWidth
-                                    label="Barcode"
-                                    name="barcode"
-                                  />
-                                </Grid>
-                              </Grid>
-                            </Grid>
-                            <Grid item md={6} xs={12}>
-                              <Typography variant="h6">Pricing and stocks</Typography>
-                              <Divider sx={{ my: 2 }} />
-                              <Grid container spacing={3}>
-                                <Grid item md={6} xs={12}>
-                                  <TextField
-                                    defaultValue={product.price}
-                                    fullWidth
-                                    label="Old price"
-                                    name="old-price"
-                                    InputProps={{
-                                      startAdornment: (
-                                        <InputAdornment position="start">{product.currency}</InputAdornment>
-                                      ),
-                                    }}
-                                    type="number"
-                                  />
-                                </Grid>
-                                <Grid item md={6} xs={12}>
-                                  <TextField
-                                    defaultValue={product.price}
-                                    fullWidth
-                                    label="New price"
-                                    name="new-price"
-                                    InputProps={{
-                                      startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                                    }}
-                                    type="number"
-                                  />
-                                </Grid>
-                                <Grid
-                                  item
-                                  md={6}
-                                  xs={12}
-                                  sx={{
-                                    alignItems: "center",
-                                    display: "flex",
-                                  }}
-                                >
-                                  <Switch />
-                                  <Typography variant="subtitle2">Keep selling when stock is empty</Typography>
-                                </Grid>
-                              </Grid>
-                            </Grid>
-                          </Grid>
-                        </CardContent>
-                        <Divider />
-                        <Box
-                          sx={{
-                            display: "flex",
-                            flexWrap: "wrap",
-                            px: 2,
-                            py: 1,
-                          }}
-                        >
-                          <Button onClick={handleUpdateProduct} sx={{ m: 1 }} type="submit" variant="contained">
-                            Update
-                          </Button>
-                          <Button onClick={handleCancelEdit} sx={{ m: 1 }} variant="outlined">
-                            Cancel
-                          </Button>
-                          <Button
-                            onClick={handleDeleteProduct}
-                            color="error"
-                            sx={{
-                              m: 1,
-                              ml: "auto",
-                            }}
-                          >
-                            Delete product
-                          </Button>
-                        </Box>
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </Fragment>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </Scrollbar>
-      <TablePagination
-        component="div"
-        count={productsCount}
-        onPageChange={onPageChange}
-        onRowsPerPageChange={onRowsPerPageChange}
-        page={page}
-        rowsPerPage={rowsPerPage}
-        rowsPerPageOptions={[5, 10, 25]}
+    <Scrollbar>
+      <DataGrid
+        rows={products}
+        rowCount={rowCount}
+        columns={columns}
+        checkboxSelection
+        disableRowSelectionOnClick
+        autoHeight
+        loading={isLoading}
+        pageSizeOptions={[15, 25, 50, 100]}
+        paginationModel={paginationModel}
+        paginationMode="server"
+        onPaginationModelChange={onPaginationModelChange}
       />
-    </div>
+    </Scrollbar>
   );
-};
-
-ProductListTable.propTypes = {
-  products: PropTypes.array.isRequired,
-  productsCount: PropTypes.number.isRequired,
-  onPageChange: PropTypes.func.isRequired,
-  onRowsPerPageChange: PropTypes.func,
-  page: PropTypes.number.isRequired,
-  rowsPerPage: PropTypes.number.isRequired,
 };
