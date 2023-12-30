@@ -38,7 +38,7 @@ class OrderController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                'client_name' => 'required|string|max:255',
+                'customer' => 'required|string|max:255',
                 'quantity' => 'required|numeric|between:0,100',
                 'total' => 'required|numeric|decimal:2',
                 'paid' => 'required|numeric|decimal:2',
@@ -68,7 +68,7 @@ class OrderController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                'client_name' => 'required|string|max:255',
+                'customer' => 'required|string|max:255',
                 'quantity' => 'required|numeric|between:0,100',
                 'total' => 'required|numeric|decimal:2',
                 'paid' => 'required|numeric|decimal:2',

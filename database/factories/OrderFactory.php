@@ -19,7 +19,7 @@ class OrderFactory extends Factory
     {
         return [
             'product_id' => fake()->numberBetween(1,50),
-            'client_name' => fake()->name(),
+            'customer' => fake()->name(),
             'quantity' => fake()->numberBetween(1,20),
             'status' => fake()->numberBetween(1,3),
             'total' => fake()->randomFloat(1, 1, 1000),
