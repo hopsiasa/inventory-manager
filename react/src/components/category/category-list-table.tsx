@@ -35,7 +35,7 @@ export const CategoryListTable: FC<CategoryListTableProps> = (props) => {
   const router = useRouter();
 
   const columns: GridColDef[] = [
-    { field: "id", headerName: "ID", width: 100 },
+    { field: "id", headerName: "ID", width: 50, type: "number" },
     {
       field: "name",
       headerName: "Name",

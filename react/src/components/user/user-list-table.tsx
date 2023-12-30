@@ -35,7 +35,7 @@ export const UserListTable: FC<UserListTableProps> = (props) => {
   const router = useRouter();
 
   const columns: GridColDef[] = [
-    { field: "id", headerName: "ID", width: 150, flex: 1 },
+    { field: "id", headerName: "ID", width: 50, type: "number" },
     {
       field: "name",
       headerName: "Name",
