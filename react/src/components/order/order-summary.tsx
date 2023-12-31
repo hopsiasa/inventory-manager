@@ -9,7 +9,6 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import PropTypes from "prop-types";
 import type { ChangeEvent, FC } from "react";
 import { useState } from "react";
 import type { Order } from "../../types/order";
@@ -27,7 +26,7 @@ export const OrderSummary: FC<OrderDetailsProps> = (props) => {
   const { order, ...other } = props;
   const smDown = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
   const [status, setStatus] = useState<string>(statusOptions[0]);
-  console.log(order);
+
   const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setStatus(event.target.value);
   };
@@ -39,25 +38,20 @@ export const OrderSummary: FC<OrderDetailsProps> = (props) => {
       <CardHeader title="Basic info" />
       <Divider />
       <PropertyList>
+        <PropertyListItem align={align} label="ID" value={order.id} />
+        <Divider />
+        <PropertyListItem
+          align={align}
+          label="Order ID"
+          value={order.order_id}
+        />
+        <Divider />
         <PropertyListItem align={align} label="Customer">
           <Typography color="primary" variant="body2">
             {order.customer}
           </Typography>
-          {/*<Typography color="textSecondary" variant="body2">*/}
-          {/*  {order.customer.address1}*/}
-          {/*</Typography>*/}
-          {/*<Typography color="textSecondary" variant="body2">*/}
-          {/*  {order.customer.city}*/}
-          {/*</Typography>*/}
-          {/*<Typography color="textSecondary" variant="body2">*/}
-          {/*  {order.customer.country}*/}
-          {/*</Typography>*/}
         </PropertyListItem>
         <Divider />
-        <PropertyListItem align={align} label="ID" value={order.id} />
-        <Divider />
-        {/*<PropertyListItem align={align} label="Invoice" value={order.number} />*/}
-        {/*<Divider />*/}
         <PropertyListItem
           align={align}
           label="Date"

@@ -31,12 +31,24 @@ export const OrderListTable: FC<OrderListTableProps> = (props) => {
     paginationModel,
     onPaginationModelChange,
     rowCount,
-    ...other
   } = props;
   const router = useRouter();
 
   const columns: GridColDef[] = [
-    { field: "id", headerName: "ID", width: 50 },
+    {
+      field: "order_id",
+      headerName: "Order ID",
+      width: 120,
+      renderCell: (params: GridRenderCellParams) => (
+        <Link
+          href={`/orders/${params.row.id}`}
+          passHref
+          style={{ color: "white" }}
+        >
+          {params.row.order_id}
+        </Link>
+      ),
+    },
     {
       field: "customer",
       headerName: "Customer",

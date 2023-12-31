@@ -1,4 +1,5 @@
 import { User } from "./user";
+import { Product } from "./product";
 
 export interface OrderItem {
   id: string;
@@ -25,4 +26,16 @@ export interface Order {
 
 export interface Orders extends Order {
   data: Order[];
+}
+
+export interface OrderProducts {
+  id: string;
+  order_id: string;
+  order: Order;
+  product: Product;
+  quantity: number;
+  created_at: string;
+  updated_at: string;
+
+  [key: string]: any;
 }

@@ -1,9 +1,20 @@
 import api from "../utils/axios";
-import { Orders, Order } from "../types/order";
+import { Order, Orders, OrderProducts } from "../types/order";
 
 const getOrders = async (page: number, pageSize: number) => {
   const response = await api.get<Orders>(
     `/orders?page=${page}&per_page=${pageSize}`,
+  );
+  return response.data;
+};
+
+const getOrderProducts = async (
+  orderId: string | undefined,
+  page: number,
+  pageSize: number,
+) => {
+  const response = await api.get<OrderProducts>(
+    `/order-products/${orderId}?page=${page}&per_page=${pageSize}`,
   );
   return response.data;
 };
@@ -56,6 +67,7 @@ const deleteOrder = async (orderId: string) => {
 
 const orderApi = {
   getOrders,
+  getOrderProducts,
   getOrder,
   createOrder,
   updateOrder,

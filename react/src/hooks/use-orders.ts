@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import orderApi from "../api/order-api";
+import orders from "../pages/orders";
 
 export const useGetOrders = (page: number = 1, pageSize: number = 25) => {
   const { isLoading, data: orders } = useQuery(
@@ -8,6 +9,19 @@ export const useGetOrders = (page: number = 1, pageSize: number = 25) => {
   );
 
   return { orders, isLoading };
+};
+
+export const useGetOrderProducts = (
+  orderId: string | undefined,
+  page: number = 1,
+  pageSize: number = 25,
+) => {
+  const { isLoading, data: orderProducts } = useQuery(
+    ["order-products", orderId, page, pageSize],
+    async () => await orderApi.getOrderProducts(orderId, page, pageSize),
+  );
+
+  return { orderProducts, isLoading };
 };
 
 export const useGetOrder = (orderId: string | undefined) => {

@@ -12,13 +12,38 @@ import { Calendar as CalendarIcon } from "../../../icons/calendar";
 import { ChevronDown as ChevronDownIcon } from "../../../icons/chevron-down";
 import { PencilAlt as PencilAltIcon } from "../../../icons/pencil-alt";
 import { useRouter } from "next/router";
-import { useGetOrder } from "../../../hooks/use-orders";
+import { useGetOrder, useGetOrderProducts } from "../../../hooks/use-orders";
 import dayjs from "dayjs";
+import { useEffect, useState } from "react";
 
 const OrderDetails: NextPage = () => {
   const router = useRouter();
   const { orderId } = router.query;
   const { order, isLoading: isOrderLoading } = useGetOrder(orderId as string);
+  const [paginationModel, setPaginationModel] = useState({
+    page: 0,
+    pageSize: 25,
+  });
+
+  const { orderProducts, isLoading: isOrderProductsLoading } =
+    useGetOrderProducts(
+      orderId as string,
+      paginationModel.page + 1,
+      paginationModel.pageSize,
+    );
+
+  const [rowCountState, setRowCountState] = useState(
+    orderProducts?.pagination?.total || 0,
+  );
+
+  useEffect(() => {
+    setRowCountState((prevRowCountState: number) =>
+      orderProducts?.pagination?.total !== undefined
+        ? orderProducts?.pagination?.total
+        : prevRowCountState,
+    );
+  }, [orderProducts?.pagination?.total, setRowCountState]);
+
   if (!order) {
     return null;
   }
@@ -26,7 +51,7 @@ const OrderDetails: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Dashboard: Order Details | Material Kit Pro</title>
+        <title>Order Details | Inventory Manager</title>
       </Head>
       <Box
         component="main"
@@ -54,7 +79,7 @@ const OrderDetails: NextPage = () => {
           <Box sx={{ mb: 4 }}>
             <Grid container justifyContent="space-between" spacing={3}>
               <Grid item>
-                <Typography variant="h4">{order.number}</Typography>
+                <Typography variant="h4">{order.order_id}</Typography>
                 <Box
                   sx={{
                     alignItems: "center",
@@ -88,19 +113,25 @@ const OrderDetails: NextPage = () => {
                 >
                   Edit
                 </Button>
-                <Button
-                  endIcon={<ChevronDownIcon fontSize="small" />}
-                  variant="contained"
-                  sx={{ ml: 2 }}
-                >
-                  Action
-                </Button>
+                {/*<Button*/}
+                {/*  endIcon={<ChevronDownIcon fontSize="small" />}*/}
+                {/*  variant="contained"*/}
+                {/*  sx={{ ml: 2 }}*/}
+                {/*>*/}
+                {/*  Action*/}
+                {/*</Button>*/}
               </Grid>
             </Grid>
           </Box>
           <OrderSummary order={order} />
           <Box sx={{ mt: 4 }}>
-            <OrderItems orderItems={order.items || []} />
+            <OrderItems
+              orderItems={orderProducts?.data || []}
+              isLoading={isOrderProductsLoading}
+              rowCount={rowCountState}
+              paginationModel={paginationModel}
+              onPaginationModelChange={setPaginationModel}
+            />
           </Box>
           <Box sx={{ mt: 4 }}>
             <OrderLogs order={order} />

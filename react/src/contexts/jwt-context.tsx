@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import type { FC, ReactNode } from "react";
 import { createContext, useEffect, useReducer } from "react";
 import { authApi } from "../api/auth-api";
@@ -172,7 +171,11 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     dispatch({ type: ActionType.LOGOUT });
   };
 
-  const register = async (email: string, name: string, password: string): Promise<void> => {
+  const register = async (
+    email: string,
+    name: string,
+    password: string,
+  ): Promise<void> => {
     const accessToken = await authApi.register({ email, name, password });
     const user = await authApi.me(accessToken);
 
@@ -199,10 +202,6 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
       {children}
     </AuthContext.Provider>
   );
-};
-
-AuthProvider.propTypes = {
-  children: PropTypes.node.isRequired,
 };
 
 export const AuthConsumer = AuthContext.Consumer;

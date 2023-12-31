@@ -1,6 +1,5 @@
 import { Box, Button, Card, Chip, Typography } from "@mui/material";
 import axios from "axios";
-import PropTypes from "prop-types";
 import type { FC } from "react";
 
 interface OverviewBannerProps {
@@ -46,7 +45,8 @@ export const OverviewBanner: FC<OverviewBannerProps> = (props) => {
           Welcome to Material Kit Pro v5!
         </Typography>
         <Typography color="inherit" sx={{ mt: 1 }} variant="subtitle2">
-          Your dashboard has been improved! Explore new features like Notifications, Search, Jobs Platform and more.
+          Your dashboard has been improved! Explore new features like
+          Notifications, Search, Jobs Platform and more.
         </Typography>
         <Box sx={{ mt: 2 }}>
           <Button color="secondary" onClick={onDismiss} variant="contained">
@@ -56,8 +56,4 @@ export const OverviewBanner: FC<OverviewBannerProps> = (props) => {
       </div>
     </Card>
   );
-};
-
-OverviewBanner.propTypes = {
-  onDismiss: PropTypes.func,
 };

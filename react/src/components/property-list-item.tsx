@@ -1,5 +1,4 @@
 import type { FC } from "react";
-import PropTypes from "prop-types";
 import { Box, ListItem, ListItemText, Typography } from "@mui/material";
 import type { ListItemProps } from "@mui/material";
 

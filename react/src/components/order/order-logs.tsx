@@ -1,7 +1,22 @@
-import { Timeline, TimelineConnector, TimelineContent, TimelineDot, TimelineItem, TimelineSeparator } from "@mui/lab";
-import { Avatar, Box, Button, Card, CardContent, CardHeader, Divider, Typography } from "@mui/material";
+import {
+  Timeline,
+  TimelineConnector,
+  TimelineContent,
+  TimelineDot,
+  TimelineItem,
+  TimelineSeparator,
+} from "@mui/lab";
+import {
+  Avatar,
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Divider,
+  Typography,
+} from "@mui/material";
 import { format, subHours } from "date-fns";
-import PropTypes from "prop-types";
 import type { FC } from "react";
 import { ShoppingCart as ShoppingCartIcon } from "../../icons/shopping-cart";
 import type { Order } from "../../types/order";
@@ -66,7 +81,11 @@ export const OrderLogs: FC<OrderLogsProps> = (props) => {
               </TimelineSeparator>
               <TimelineContent>
                 <Typography variant="body2">{activity.log}</Typography>
-                <Typography color="textSecondary" sx={{ mt: 1 }} variant="caption">
+                <Typography
+                  color="textSecondary"
+                  sx={{ mt: 1 }}
+                  variant="caption"
+                >
                   {format(activity.date, "MMM dd, h:mm a")}
                 </Typography>
               </TimelineContent>
@@ -77,9 +96,4 @@ export const OrderLogs: FC<OrderLogsProps> = (props) => {
       </CardContent>
     </Card>
   );
-};
-
-OrderLogs.propTypes = {
-  // @ts-ignore
-  order: PropTypes.object.isRequired,
 };

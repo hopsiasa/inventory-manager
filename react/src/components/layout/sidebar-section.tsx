@@ -18,9 +18,21 @@ interface SidebarSectionProps extends ListProps {
   title: string;
 }
 
-const renderNavItems = ({ depth = 0, items, path }: { depth?: number; items: Item[]; path: string }): JSX.Element => (
+const renderNavItems = ({
+  depth = 0,
+  items,
+  path,
+}: {
+  depth?: number;
+  items: Item[];
+  path: string;
+}): JSX.Element => (
   <List disablePadding>
-    {items.reduce((acc: JSX.Element[], item) => reduceChildRoutes({ acc, depth, item, path }), [])}
+    {items.reduce(
+      (acc: JSX.Element[], item) =>
+        reduceChildRoutes({ acc, depth, item, path }),
+      [],
+    )}
   </List>
 );
 
@@ -57,12 +69,12 @@ const reduceChildRoutes = ({
           items: item.children,
           path,
         })}
-      </SidebarItem>
+      </SidebarItem>,
     );
   } else {
     acc.push(
       <SidebarItem
-        active={exactMatch}
+        active={partialMatch}
         chip={item.chip}
         depth={depth}
         icon={item.icon}
@@ -70,7 +82,7 @@ const reduceChildRoutes = ({
         key={key}
         path={item.path}
         title={item.title}
-      />
+      />,
     );
   }
 
