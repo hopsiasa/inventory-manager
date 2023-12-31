@@ -11,7 +11,6 @@ class RoleController
 {
     public function index(): JsonResponse
     {
-
         return response()->json(RoleResource::collection(Role::all()));
     }
 }

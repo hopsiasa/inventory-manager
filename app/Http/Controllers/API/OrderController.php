@@ -16,7 +16,7 @@ class OrderController extends Controller
     public function index(Request $request): JsonResponse
     {
         $perPage = $request->input('per_page', 25);
-        $orders = Order::paginate($perPage);
+        $orders = Order::query()->orderBy('id', 'desc')->paginate($perPage);
 
         $data = [
             'data' => OrderResource::collection($orders),

@@ -1,46 +1,24 @@
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { Box, Button, Container, Grid, Typography } from "@mui/material";
-import { format } from "date-fns";
 import type { NextPage } from "next";
-import Head from "next/head";
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
-import { orderApi } from "../../api/order-api";
-import { AuthGuard } from "../../components/authentication/auth-guard";
-import { Layout } from "../../components/layout/layout";
-import { OrderItems } from "../../components/order/order-items";
-import { OrderLogs } from "../../components/order/order-logs";
-import { OrderSummary } from "../../components/order/order-summary";
-import { useMounted } from "../../hooks/use-mounted";
-import { Calendar as CalendarIcon } from "../../icons/calendar";
-import { ChevronDown as ChevronDownIcon } from "../../icons/chevron-down";
-import { PencilAlt as PencilAltIcon } from "../../icons/pencil-alt";
-import type { Order } from "../../types/order";
+import Head from "next/head";
+import { Box, Button, Container, Grid, Typography } from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { AuthGuard } from "../../../components/authentication/auth-guard";
+import { Layout } from "../../../components/layout/layout";
+import { OrderItems } from "../../../components/order/order-items";
+import { OrderLogs } from "../../../components/order/order-logs";
+import { OrderSummary } from "../../../components/order/order-summary";
+import { Calendar as CalendarIcon } from "../../../icons/calendar";
+import { ChevronDown as ChevronDownIcon } from "../../../icons/chevron-down";
+import { PencilAlt as PencilAltIcon } from "../../../icons/pencil-alt";
+import { useRouter } from "next/router";
+import { useGetOrder } from "../../../hooks/use-orders";
+import dayjs from "dayjs";
 
 const OrderDetails: NextPage = () => {
-  const isMounted = useMounted();
-  const [order, setOrder] = useState<Order | null>(null);
-
-  const getOrder = useCallback(async () => {
-    try {
-      const data = await orderApi.getOrder();
-
-      if (isMounted()) {
-        setOrder(data);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  }, [isMounted]);
-
-  useEffect(
-    () => {
-      getOrder();
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
-  );
-
+  const router = useRouter();
+  const { orderId } = router.query;
+  const { order, isLoading: isOrderLoading } = useGetOrder(orderId as string);
   if (!order) {
     return null;
   }
@@ -59,7 +37,7 @@ const OrderDetails: NextPage = () => {
       >
         <Container maxWidth="md">
           <Box sx={{ mb: 4 }}>
-            <Link href="/dashboard/orders" passHref>
+            <Link href="/orders" passHref>
               <Typography
                 variant="subtitle2"
                 color="textPrimary"
@@ -98,7 +76,7 @@ const OrderDetails: NextPage = () => {
                     sx={{ ml: 1 }}
                   />
                   <Typography variant="body2" sx={{ ml: 1 }}>
-                    {format(order.createdAt, "dd/MM/yyyy HH:mm")}
+                    {dayjs(order.created_at).format("YYYY-MM-DD H:m:s")}
                   </Typography>
                 </Box>
               </Grid>

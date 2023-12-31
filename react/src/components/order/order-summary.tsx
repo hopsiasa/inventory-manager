@@ -1,12 +1,21 @@
-import type { Theme } from "@mui/material";
-import { Box, Button, Card, CardHeader, Divider, TextField, Typography, useMediaQuery } from "@mui/material";
-import { format } from "date-fns";
+import {
+  Box,
+  Button,
+  Card,
+  CardHeader,
+  Divider,
+  TextField,
+  Theme,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import PropTypes from "prop-types";
 import type { ChangeEvent, FC } from "react";
 import { useState } from "react";
 import type { Order } from "../../types/order";
 import { PropertyList } from "../property-list";
 import { PropertyListItem } from "../property-list-item";
+import dayjs from "dayjs";
 
 interface OrderDetailsProps {
   order: Order;
@@ -18,7 +27,7 @@ export const OrderSummary: FC<OrderDetailsProps> = (props) => {
   const { order, ...other } = props;
   const smDown = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
   const [status, setStatus] = useState<string>(statusOptions[0]);
-
+  console.log(order);
   const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setStatus(event.target.value);
   };
@@ -32,28 +41,46 @@ export const OrderSummary: FC<OrderDetailsProps> = (props) => {
       <PropertyList>
         <PropertyListItem align={align} label="Customer">
           <Typography color="primary" variant="body2">
-            {order.customer.name}
+            {order.customer}
           </Typography>
-          <Typography color="textSecondary" variant="body2">
-            {order.customer.address1}
-          </Typography>
-          <Typography color="textSecondary" variant="body2">
-            {order.customer.city}
-          </Typography>
-          <Typography color="textSecondary" variant="body2">
-            {order.customer.country}
-          </Typography>
+          {/*<Typography color="textSecondary" variant="body2">*/}
+          {/*  {order.customer.address1}*/}
+          {/*</Typography>*/}
+          {/*<Typography color="textSecondary" variant="body2">*/}
+          {/*  {order.customer.city}*/}
+          {/*</Typography>*/}
+          {/*<Typography color="textSecondary" variant="body2">*/}
+          {/*  {order.customer.country}*/}
+          {/*</Typography>*/}
         </PropertyListItem>
         <Divider />
         <PropertyListItem align={align} label="ID" value={order.id} />
         <Divider />
-        <PropertyListItem align={align} label="Invoice" value={order.number} />
+        {/*<PropertyListItem align={align} label="Invoice" value={order.number} />*/}
+        {/*<Divider />*/}
+        <PropertyListItem
+          align={align}
+          label="Date"
+          value={dayjs(order.created_at).format("YYYY-MM-DD H:m:s")}
+        />
         <Divider />
-        <PropertyListItem align={align} label="Date" value={format(order.createdAt, "dd/MM/yyyy HH:mm")} />
+        <PropertyListItem
+          align={align}
+          label="Total Amount"
+          value={`RON ${order.total}`}
+        />
         <Divider />
-        <PropertyListItem align={align} label="Promotion Code" value={order.promotionCode} />
+        <PropertyListItem
+          align={align}
+          label="Paid Amount"
+          value={`RON ${order.paid}`}
+        />
         <Divider />
-        <PropertyListItem align={align} label="Total Amount" value={`${order.currency}${order.totalAmount}`} />
+        <PropertyListItem
+          align={align}
+          label="Remaining Amount"
+          value={`RON ${order.remaining_amount}`}
+        />
         <Divider />
         <PropertyListItem align={align} label="Status">
           <Box
@@ -98,9 +125,4 @@ export const OrderSummary: FC<OrderDetailsProps> = (props) => {
       </PropertyList>
     </Card>
   );
-};
-
-OrderSummary.propTypes = {
-  // @ts-ignore
-  order: PropTypes.object.isRequired,
 };

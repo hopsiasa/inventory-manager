@@ -47,7 +47,9 @@ export const OrderItems: FC<OrderItemsProps> = (props) => {
                     </Typography>
                   </TableCell>
                   <TableCell>{item.billingCycle}</TableCell>
-                  <TableCell>{numeral(item.unitAmount).format(`${item.currency}0,0.00`)}</TableCell>
+                  <TableCell>
+                    {numeral(item.unitAmount).format(`${item.currency}0,0.00`)}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -65,8 +67,4 @@ export const OrderItems: FC<OrderItemsProps> = (props) => {
       />
     </Card>
   );
-};
-
-OrderItems.propTypes = {
-  orderItems: PropTypes.array.isRequired,
 };

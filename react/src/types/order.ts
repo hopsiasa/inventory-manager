@@ -1,38 +1,28 @@
-interface OrderCustomer {
-  address1?: string;
-  address2?: string;
-  avatar?: string;
-  city?: string;
-  country?: string;
-  email: string;
-  name: string;
-}
+import { User } from "./user";
 
 export interface OrderItem {
   id: string;
-  billingCycle: 'daily' | 'weekly' | 'monthly' | 'yearly';
-  currency: string;
   name: string;
   quantity: number;
   unitAmount: number;
 }
 
-export type OrderStatus =
-  | 'canceled'
-  | 'complete'
-  | 'pending'
-  | 'rejected';
+export type OrderStatus = "canceled" | "complete" | "pending" | "rejected";
 
 export interface Order {
   id: string;
-  coupon?: string | null;
-  createdAt: number;
-  currency?: string;
-  customer: OrderCustomer;
+  created_at: string;
+  customer: string;
   items?: OrderItem[];
-  number?: string;
-  paymentMethod: string;
-  promotionCode?: string;
   status: OrderStatus;
-  totalAmount?: number;
+  total?: number;
+  paid?: number;
+  remaining_amount?: number;
+  description: string;
+
+  [key: string]: any;
+}
+
+export interface Orders extends Order {
+  data: Order[];
 }

@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { List } from "@mui/material";
 
 interface PropertyListProps {
-  children: ReactNode;
+  children: ReactNode | string;
 }
 
 export const PropertyList: FC<PropertyListProps> = (props) => {
