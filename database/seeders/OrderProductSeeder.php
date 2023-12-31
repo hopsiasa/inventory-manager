@@ -16,7 +16,7 @@ class OrderProductSeeder extends Seeder
     public function run()
     {
         // Assuming you have 10 orders and 20 products
-        for ($i = 1; $i <= 10; $i++) {
+        for ($i = 1; $i <= 30; $i++) {
             for ($j = 1; $j <= 20; $j++) {
                 DB::table('order_product')->insert([
                     'order_id' => $i,

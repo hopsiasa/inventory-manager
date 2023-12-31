@@ -47,6 +47,8 @@ class OrderController extends Controller
             ]);
 
             $orders = Order::create($validatedData);
+            $orders->order_id = strtoupper(substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyz"), 0, 8));
+
             return new OrderResource($orders);
         } catch (\Exception $e) {
             return response()->json(['error' => 'An error occurred while creating the order.'], 400);
@@ -77,6 +79,7 @@ class OrderController extends Controller
             ]);
 
             $order->update($validatedData);
+
             return new OrderResource($order);
         } catch (\Exception $e) {
             return response()->json(['error' => 'An error occurred while updating the order.'], 400);

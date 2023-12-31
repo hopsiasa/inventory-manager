@@ -18,6 +18,7 @@ class OrderFactory extends Factory
     public function definition(): array
     {
         return [
+            'order_id' => fake()->regexify('[A-Z]{5}[0-9]{3}'),
             'product_id' => fake()->numberBetween(1,50),
             'customer' => fake()->name(),
             'quantity' => fake()->numberBetween(1,20),
