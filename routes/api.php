@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\CategoryController;
 use App\Http\Controllers\API\OrderController;
+use App\Http\Controllers\API\OrderProductController;
 use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\RoleController;
 use App\Http\Controllers\API\UserController;
@@ -26,4 +27,6 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::apiResource('/products', ProductController::class);
     Route::apiResource('/orders', OrderController::class);
     Route::apiResource('/roles', RoleController::class);
+
+    Route::get('/order-products/{orderId}', [OrderProductController::class, 'show']);
 });
